@@ -1,6 +1,5 @@
 <?php
 if (file_exists('includes/Database.php')) {
-    // If installed, redirect to index
     header('Location: index.php');
     exit;
 }
