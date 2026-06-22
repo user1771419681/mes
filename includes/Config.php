@@ -1,5 +1,5 @@
 <?php
-$siteBaseUrl = "http://localhost/mes/";
+$siteBaseUrl = "http://localhost:8082/mes/";
 define('INCLUDE_PATH', $_SERVER['DOCUMENT_ROOT'] . '/mes/includes/');
 
 $configFilePath = $_SERVER['DOCUMENT_ROOT'] . '/mes/db.properties';

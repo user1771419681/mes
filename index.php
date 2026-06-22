@@ -5,8 +5,6 @@ if (!file_exists(__DIR__ . '/includes/Database.php')) {
 }
 
 require_once __DIR__ . '/includes/Database.php';
-
-// --- DATABASE AUTO-HEAL START ---
 $sqlFile = __DIR__ . '/sql/schema_mariadb.sql'; 
 
 if (file_exists($sqlFile) && isset($pdo)) {
@@ -15,50 +13,25 @@ if (file_exists($sqlFile) && isset($pdo)) {
         $existingTables = $stmt->fetchAll(PDO::FETCH_COLUMN);
         
         $sqlContent = file_get_contents($sqlFile);
-        preg_match_all('/CREATE TABLE (IF NOT EXISTS )?`([a-zA-Z0-9_]+)`/i', $sqlContent, $matches);
-        $requiredTables = $matches[2] ?? [];
+        preg_match_all('/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?\`?([a-zA-Z0-9_]+)\`?/i', $sqlContent, $matches);
+        $requiredTables = $matches[1] ?? [];
         
         $missingTables = array_diff($requiredTables, $existingTables);
         
         if (!empty($missingTables)) {
-            $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
-            
-            $lines = file($sqlFile);
-            $query = '';
-            
-            foreach ($lines as $line) {
-                $trimLine = trim($line);
-                
-                if (empty($trimLine) || strpos($trimLine, '--') === 0 || strpos($trimLine, '/*') === 0) {
-                    continue;
-                }
-                
-                $query .= $line;
-                
-                if (substr(rtrim($query), -1) === ';') {
-                    $execute = false;
-                    
-                    if (preg_match('/CREATE TABLE `([a-zA-Z0-9_]+)`/i', $query, $match)) {
-                        if (in_array($match[1], $missingTables)) $execute = true;
-                    } 
-                    elseif (preg_match('/ALTER TABLE `([a-zA-Z0-9_]+)`/i', $query, $match)) {
-                        if (in_array($match[1], $missingTables)) $execute = true;
-                    }
-                    
-                    if ($execute) {
-                        $pdo->exec($query);
-                    }
-                    
-                    $query = ''; 
-                }
-            }
-            $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
+            error_log("[MES-Check] Tabele lipsă detectate: " . implode(', ', $missingTables));
+            header('Location: install.php?action=heal');
+            exit;
         }
     } catch (PDOException $e) {
-        error_log("Auto-heal database error: " . $e->getMessage());
+        error_log("[MES-Check] Eroare Bază de date (Posibil ștearsă complet): " . $e->getMessage());
+        header('Location: install.php?action=heal');
+        exit;
     }
+} else {
+    error_log("[MES-Check] Avertisment: schema_mariadb.sql lipsește sau \$pdo nu e setat.");
 }
-// --- DATABASE AUTO-HEAL END ---
+// --- CHECK DEPENDENCIES END ---
 
 session_start();
 

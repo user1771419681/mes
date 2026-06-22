@@ -3,12 +3,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/mes/includes/Config.php';
 require_once INCLUDE_PATH . 'IsAdmin.php';
 require_once INCLUDE_PATH . 'Database.php';
 require_once INCLUDE_PATH . 'ArticleManager.php'; 
+include_once INCLUDE_PATH . 'HeadHelper.php';
 
 $isAdmin = isAdmin();
 
 $articleManager = new ArticleManager($pdo);
 
-$articles = $articleManager->listArticles();
+$search = $_GET['search'] ?? null;
+$filterQC = $_GET['qc'] ?? null;
+
+$articles = $articleManager->listArticles($search, $filterQC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete']) && $isAdmin) {
@@ -24,15 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MES Backoffice - Articles</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="<?= $siteBaseUrl ?>styles/backoffice.css" rel="stylesheet" />
-</head>
+<?php renderHead("Products", $siteBaseUrl) ?>
 
 <body>
     <?php include INCLUDE_PATH . 'Sidebar.php'; ?>
@@ -43,47 +39,90 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
         <?php endif; ?>
 
+        <div class="card mb-4">
+            <div class="card-header bg-light"><i class="fa-solid fa-filter me-1"></i> Search & Filter</div>
+            <div class="card-body py-3">
+                <form method="GET" class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small">Search Article Name</label>
+                        <input type="text" name="search" class="form-control form-control-sm" placeholder="e.g. Widget" value="<?= htmlspecialchars($search ?? '') ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small">Quality Control</label>
+                        <select name="qc" class="form-select form-select-sm">
+                            <option value="">All Statuses</option>
+                            <option value="Passed" <?= $filterQC === 'Passed' ? 'selected' : '' ?>>Passed</option>
+                            <option value="Failed" <?= $filterQC === 'Failed' ? 'selected' : '' ?>>Failed</option>
+                            <option value="Pending" <?= $filterQC === 'Pending' ? 'selected' : '' ?>>Pending</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="fa-solid fa-search"></i> Filter</button>
+                    </div>
+                    <div class="col-md-2">
+                         <a href="articles.php" class="btn btn-secondary btn-sm w-100">Clear</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <?php if ($isAdmin): ?>
-            <?php include INCLUDE_PATH . 'pages/articles/articles-add.php'; ?>
+            <div class="mb-3">
+                <?php include INCLUDE_PATH . 'pages/articles/articles-add.php'; ?>
+            </div>
         <?php endif; ?>
 
         <h3 class="mt-4">Article List</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Image Path</th>
-                    <th>Quality Control</th>
-                    <th>Created</th>
-                    <th>Updated</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($articles as $article): ?>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle">
+                <thead class="table-dark">
                     <tr>
-                        <td><?php echo htmlspecialchars($article['ArticleID']); ?></td>
-                        <td><?php echo htmlspecialchars($article['Name']); ?></td>
-                        <td><?php echo htmlspecialchars($article['Description'] ?? 'N/A'); ?></td>
-                        <td><?php echo htmlspecialchars($article['ImagePath'] ?? 'N/A'); ?></td>
-                        <td><?php echo htmlspecialchars($article['QualityControl']); ?></td>
-                        <td><?php echo htmlspecialchars($article['CreatedAt']); ?></td>
-                        <td><?php echo htmlspecialchars($article['UpdatedAt']); ?></td>
-                        <td>
-                            <?php if ($isAdmin): ?>
-                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                    data-bs-target="#editModal<?php echo $article['ArticleID']; ?>">
-                                    Edit
-                                </button>
-                                <?php include INCLUDE_PATH . 'pages/articles/articles-edit.php'; ?>
-                            <?php endif; ?>
-                        </td>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Image Path</th>
+                        <th>Quality Control</th>
+                        <th>Created</th>
+                        <th>Updated</th>
+                        <th>Actions</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php if (count($articles) > 0): ?>
+                        <?php foreach ($articles as $article): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($article['ArticleID']); ?></td>
+                                <td class="fw-bold"><?php echo htmlspecialchars($article['Name']); ?></td>
+                                <td><?php echo htmlspecialchars($article['Description'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars($article['ImagePath'] ?? 'N/A'); ?></td>
+                                <td>
+                                    <?php if($article['QualityControl'] == 'Passed'): ?>
+                                        <span class="badge bg-success">Passed</span>
+                                    <?php elseif($article['QualityControl'] == 'Failed'): ?>
+                                        <span class="badge bg-danger">Failed</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-warning text-dark"><?php echo htmlspecialchars($article['QualityControl']); ?></span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo htmlspecialchars($article['CreatedAt']); ?></td>
+                                <td><?php echo htmlspecialchars($article['UpdatedAt']); ?></td>
+                                <td>
+                                    <?php if ($isAdmin): ?>
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                            data-bs-target="#editModal<?php echo $article['ArticleID']; ?>">
+                                            <i class="fa-solid fa-pen"></i> Edit
+                                        </button>
+                                        <?php include INCLUDE_PATH . 'pages/articles/articles-edit.php'; ?>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr><td colspan="8" class="text-center text-muted">No articles found.</td></tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

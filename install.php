@@ -1,13 +1,108 @@
 <?php
-if (file_exists('includes/Database.php')) {
-    header('Location: index.php');
-    exit;
-}
-
 $message = '';
 $status = ''; // 'success' or 'error'
+$needsInstall = true;
+$isHealing = false;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (file_exists(__DIR__ . '/includes/Database.php')) {
+    $needsInstall = false;
+    require_once __DIR__ . '/includes/Database.php';
+    
+    // --- DATABASE AUTO-HEAL START ---
+    $sqlFile = __DIR__ . '/sql/schema_mariadb.sql'; 
+    
+    if (file_exists($sqlFile) && isset($pdo)) {
+        try {
+            $stmt = $pdo->query("SHOW TABLES");
+            $existingTables = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            
+            $sqlContent = file_get_contents($sqlFile);
+            // REGEX CORECTAT și aici
+            preg_match_all('/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?\`?([a-zA-Z0-9_]+)\`?/i', $sqlContent, $matches);
+            $requiredTables = $matches[1] ?? [];
+            
+            $missingTables = array_diff($requiredTables, $existingTables);
+            
+            if (!empty($missingTables)) {
+                $isHealing = true;
+                error_log("[MES-Heal] Începe Auto-Heal. Lipsesc tabelele: " . implode(', ', $missingTables));
+                
+                $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
+                
+                $lines = file($sqlFile);
+                $query = '';
+                $healedCount = 0;
+                
+                foreach ($lines as $line) {
+                    $trimLine = trim($line);
+                    
+                    if (empty($trimLine) || strpos($trimLine, '--') === 0 || strpos($trimLine, '/*') === 0) {
+                        continue;
+                    }
+                    
+                    $query .= $line . "\n";
+                    
+                    if (substr(rtrim($trimLine), -1) === ';') {
+                        $execute = false;
+                        $tableNameToHeal = '';
+                        
+                        // Extragem tabelul din interogarea curentă
+                        if (preg_match('/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?\`?([a-zA-Z0-9_]+)\`?/i', $query, $match)) {
+                            $tableNameToHeal = $match[1];
+                            if (in_array($tableNameToHeal, $missingTables)) $execute = true;
+                        } 
+                        elseif (preg_match('/ALTER\s+TABLE\s+\`?([a-zA-Z0-9_]+)\`?/i', $query, $match)) {
+                            $tableNameToHeal = $match[1];
+                            if (in_array($tableNameToHeal, $missingTables)) $execute = true;
+                        }
+                        
+                        if ($execute) {
+                            try {
+                                $pdo->exec($query);
+                                $healedCount++;
+                                error_log("[MES-Heal] Reparat cu succes tabelul: " . $tableNameToHeal);
+                            } catch (PDOException $ex) {
+                                error_log("[MES-Heal] Eroare reparare tabel $tableNameToHeal: " . $ex->getMessage());
+                            }
+                        }
+                        
+                        $query = ''; 
+                    }
+                }
+                $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
+                
+                if ($healedCount > 0) {
+                    $message = "Baza de date a fost reparată automat ($healedCount operațiuni)! Redirecționare...";
+                    $status = 'success';
+                    error_log("[MES-Heal] Auto-heal complet. Fac redirect către index.");
+                    header("refresh:3;url=index.php");
+                } else {
+                    $message = "Atenție: Tabele lipsesc, dar query-urile nu au putut fi generate. Verifică log-urile.";
+                    $status = 'error';
+                    error_log("[MES-Heal] Eroare Logică: Tabele lipsesc, dar au fost executate 0 query-uri!");
+                }
+            } else {
+                if (!isset($_GET['action']) || $_GET['action'] !== 'heal') {
+                    header('Location: index.php');
+                    exit;
+                }
+            }
+        } catch (PDOException $e) {
+            $message = "Eroare la repararea automată (Auto-heal): " . $e->getMessage();
+            $status = 'error';
+            $isHealing = true;
+            error_log("[MES-Heal] Eroare critică DB: " . $e->getMessage());
+        }
+    } else {
+        error_log("[MES-Heal] Fișierul .sql nu a fost găsit sau baza de date e inaccesibilă.");
+        header('Location: index.php');
+        exit;
+    }
+    // --- DATABASE AUTO-HEAL END ---
+}
+
+// Instalarea inițială (Doar dacă nu avem config-ul și s-a trimis POST)
+if ($needsInstall && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $host = $_POST['host'] ?? 'localhost';
     $dbname = $_POST['dbname'] ?? 'mes';
     $user = $_POST['user'] ?? 'root';
@@ -26,7 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         // 2. Create Database
-        // We validated $dbname so it is safe to use in query
         $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
         $pdo->exec("USE `$dbname`");
 
@@ -192,7 +286,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // 4. Seed Data
-        // Users
         $users = [
             ['admin', 'admin123', 'admin'],
             ['operator1', 'op123', 'operator'],
@@ -202,7 +295,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         $stmt = $pdo->prepare("INSERT INTO user (OperatorUsername, OperatorPassword, OperatorRoles) VALUES (?, ?, ?)");
         foreach ($users as $u) {
-            // Check if user exists
             $check = $pdo->prepare("SELECT COUNT(*) FROM user WHERE OperatorUsername = ?");
             $check->execute([$u[0]]);
             if ($check->fetchColumn() == 0) {
@@ -247,14 +339,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("INSERT INTO machine (Name, Status, Capacity, LastMaintenanceDate, Location, Model, PlantID, SectionID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         for ($i = 1; $i <= 50; $i++) {
             $pid = getRandom($pdo, 'plant', 'PlantID');
-            // get a section from this plant
             $sid = $pdo->query("SELECT SectionID FROM section WHERE PlantID = $pid ORDER BY RAND() LIMIT 1")->fetchColumn();
             if (!$sid) $sid = null;
-
             $stmt->execute(["Machine $i", 'Active', rand(100, 500), date('Y-m-d'), "Loc $i", "Model $i", $pid, $sid]);
         }
 
-        // Articles (Parts) - 4 forms
+        // Articles (Parts)
         $forms = ['Raw Steel Coil', 'Stamped Part', 'Washed Part', 'Packaged Part'];
         $stmt = $pdo->prepare("INSERT INTO article (Name, Description, QualityControl) VALUES (?, ?, ?)");
         for ($i = 1; $i <= 50; $i++) {
@@ -274,7 +364,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("INSERT INTO production_order (ArticleID, RecipeID, TargetQuantity, PlannedStartDate, PlannedEndDate, Status) VALUES (?, ?, ?, ?, ?, ?)");
         for ($i = 1; $i <= 50; $i++) {
             $rid = getRandom($pdo, 'production_recipes', 'RecipeID');
-            // Get article from recipe
             $r = $pdo->query("SELECT ArticleID, EstimatedTime FROM production_recipes WHERE RecipeID = $rid")->fetch(PDO::FETCH_ASSOC);
             $aid = $r['ArticleID'];
             $qty = rand(100, 1000);
@@ -297,10 +386,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("INSERT INTO reject_reason (ReasonName, CategoryID, PlantID) VALUES (?, ?, ?)");
         for ($i = 1; $i <= 50; $i++) {
              $cid = getRandom($pdo, 'reject_category', 'CategoryID');
-             // get plant from cat
              $cat = $pdo->query("SELECT PlantID FROM reject_category WHERE CategoryID = $cid")->fetch(PDO::FETCH_ASSOC);
              $pid = $cat['PlantID'];
-
              $stmt->execute(["Reason $i", $cid, $pid]);
         }
 
@@ -347,7 +434,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MES Installation</title>
+    <title><?= $isHealing ? 'MES Auto-Heal' : 'MES Installation' ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -356,7 +443,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">MES System Installation</h4>
+                        <h4 class="mb-0"><?= $isHealing ? 'MES System Auto-Heal' : 'MES System Installation' ?></h4>
                     </div>
                     <div class="card-body">
                         <?php if ($message): ?>
@@ -365,31 +452,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         <?php endif; ?>
 
-                        <?php if ($status !== 'success'): ?>
-                        <p>Welcome! Please provide the database connection details to install the system.</p>
-                        <form method="post">
-                            <div class="mb-3">
-                                <label class="form-label">Database Host</label>
-                                <input type="text" name="host" class="form-control" value="localhost" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Database Name</label>
-                                <input type="text" name="dbname" class="form-control" value="mes" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Database User</label>
-                                <input type="text" name="user" class="form-control" value="root" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Database Password</label>
-                                <input type="password" name="password" class="form-control" value="mes">
-                            </div>
-                             <div class="mb-3">
-                                <label class="form-label">Site URL</label>
-                                <input type="text" name="site_url" class="form-control" value="http://<?= $_SERVER['HTTP_HOST'] ?>/mes/" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Install & Seed Database</button>
-                        </form>
+                        <?php if ($needsInstall && $status !== 'success'): ?>
+                            <p>Welcome! Please provide the database connection details to install the system.</p>
+                            <form method="post">
+                                <div class="mb-3">
+                                    <label class="form-label">Database Host</label>
+                                    <input type="text" name="host" class="form-control" value="localhost" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Database Name</label>
+                                    <input type="text" name="dbname" class="form-control" value="mes" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Database User</label>
+                                    <input type="text" name="user" class="form-control" value="root" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Database Password</label>
+                                    <input type="password" name="password" class="form-control" value="mes">
+                                </div>
+                                 <div class="mb-3">
+                                    <label class="form-label">Site URL</label>
+                                    <input type="text" name="site_url" class="form-control" value="http://<?= $_SERVER['HTTP_HOST'] ?>/mes/" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Install & Seed Database</button>
+                            </form>
+                        <?php elseif ($isHealing && $status !== 'success'): ?>
+                            <a href="index.php" class="btn btn-secondary w-100 mt-3">Întoarce-te la Index</a>
                         <?php endif; ?>
                     </div>
                 </div>
