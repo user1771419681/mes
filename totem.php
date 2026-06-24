@@ -56,7 +56,7 @@ else {
     <?php if ($viewMode === 'selection'): ?>
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <?php else: ?>
-        <link rel="stylesheet" href="totem/css/style.css">
+        <link rel="stylesheet" href="totem/css/style.css?v=<?= filemtime(__DIR__ . '/totem/css/style.css') ?>">
     <?php endif; ?>
 
     <style>

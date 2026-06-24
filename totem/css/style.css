@@ -69,7 +69,11 @@ body {
     border: 1px dashed #4b5563;
     color: #4b5563;
 }
-
+#footer > div {
+    flex: 1;
+    min-width: 0; 
+    height: 100%;
+}
 .op-name {
     font-weight: bold;
     font-size: 1rem;
@@ -105,7 +109,7 @@ body {
 
 #main {
     display: flex;
-    height: 70vh; 
+    height: 58vh; 
     width: 100%;
 }
 
@@ -204,7 +208,7 @@ button.large-btn { padding: 18px 25px; font-size: 1.2rem; }
 }
 
 #footer {
-    height: 15vh;
+    height: 30vh;
     background: #374151;
     display: flex;
     padding: 10px;

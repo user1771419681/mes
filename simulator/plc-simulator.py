@@ -3,8 +3,7 @@ import time
 import random
 import sys
 
-# config:
-BASE_URL = "http://localhost/mes/api" 
+BASE_URL = "http://localhost:8082/mes/api" 
 EXPORT_ENDPOINT = f"{BASE_URL}/machines-export.php"
 RECEIVE_ENDPOINT = f"{BASE_URL}/wago-receive.php"
 
@@ -38,7 +37,7 @@ def simulate_plc_cycle(machine_ids):
         while True:
             machine_id = random.choice(machine_ids)
             
-            count = random.randint(1, 5)
+            count = random.randint(1, 65)
             
             payload = {
                 'machine_id': machine_id,
@@ -57,7 +56,7 @@ def simulate_plc_cycle(machine_ids):
             except requests.exceptions.RequestException as e:
                 print(f"CONNECTION ERROR: {e}")
 
-            time.sleep(random.uniform(0.5, 3.0))
+            time.sleep(random.uniform(0.01, 0.2))
             
     except KeyboardInterrupt:
         print("\nSimulation stopped by user.")

@@ -11,15 +11,12 @@ $recipeManager = new RecipeManager($pdo);
 $articleManager = new ArticleManager($pdo);
 $machineManager = new MachineManager($pdo);
 
-// --- FILTERS ---
 $filterArticle = isset($_GET['filter_article']) && $_GET['filter_article'] !== '' ? (int)$_GET['filter_article'] : null;
 $filterMachine = isset($_GET['filter_machine']) && $_GET['filter_machine'] !== '' ? (int)$_GET['filter_machine'] : null;
 $search = $_GET['search'] ?? null;
 
-// --- FETCH DATA ---
 $recipes = $recipeManager->listRecipes($filterArticle, $filterMachine, $search);
 $articles = $articleManager->listArticles();
-// Note: You might want to update listMachines to not require filters if passed null, assuming listMachines() exists
 $machines = $machineManager->listMachines(); 
 
 $message = '';
@@ -238,6 +235,9 @@ if (isset($_GET['msg'])) {
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal<?= $row['RecipeID'] ?>">
                                         <i class="fa-solid fa-pen"></i>
                                     </button>
+                                    <a href="recipe_bom.php?recipe_id=<?= $row['RecipeID'] ?>" class="btn btn-sm btn-info text-white" title="Manage BOM">
+                                        <i class="fa-solid fa-boxes-stacked"></i>
+                                    </a>
                                     
                                     <div class="modal fade" id="editModal<?= $row['RecipeID'] ?>" tabindex="-1">
                                         <div class="modal-dialog modal-lg">

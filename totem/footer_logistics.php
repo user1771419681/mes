@@ -10,11 +10,13 @@ if (isset($activeOrder) && $activeOrder) {
             ro.Unit, 
             ro.IsPrimary, 
             a.Name as ArticleName,
-            COALESCE(pop.UnprintedQuantity, 0) as UnprintedQuantity
+            COALESCE(pop.CurrentQuantity, 0) as CurrentQuantity
         FROM recipe_outputs ro
         JOIN article a ON ro.ArticleID = a.ArticleID
         LEFT JOIN production_order_progress pop 
-            ON ro.ArticleID = pop.ArticleID AND pop.OrderID = ?
+            ON ro.ArticleID = pop.ArticleID 
+            AND pop.OrderID = ?
+            AND pop.ProgressType = 'Output'
         WHERE ro.RecipeID = ?
         ORDER BY ro.IsPrimary DESC, a.Name ASC
     ");
@@ -44,7 +46,7 @@ $containerTarget = 1000;
             </div>
         <?php else: ?>
             <?php foreach ($logisticsOutputs as $out): 
-                $currentQty = $out['UnprintedQuantity'];
+                $currentQty = $out['CurrentQuantity'];
                 $percentage = min(100, ($currentQty / $containerTarget) * 100);
                 $isFull = $currentQty >= $containerTarget;
             ?>

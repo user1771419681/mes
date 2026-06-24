@@ -1,4 +1,19 @@
 <?php
+const L_PAGE_TITLE          = "Instalator Automat de Schemă MES";
+const L_CARD_TITLE          = "Instrument de Deployment - Schema MES";
+const L_FORM_FILE_LABEL     = "Selectați fișierul SQL structural backup";
+const L_FORM_FILE_HELP      = "Sunt suportate exporturi brute care conțin structuri de tabele, constrângeri și rânduri de date.";
+const L_BUTTON_SUBMIT       = "Execută și Importă Fișierul SQL";
+const L_SUCCESS_MAPPED      = "Mediul de lucru a fost mapat cu succes pe serverul țintă: ";
+const L_BUTTON_WORKSPACE    = "Accesează Spațiul de Lucru (Index)";
+const L_INFO_NO_SQL_FILE    = "Fișierul implicit <code>install.sql</code> nu a fost detectat în directorul curent al scriptului. Vă rugăm să încărcați manual structura bazei de date.";
+
+const MSG_WARN_CONFIG_MISSING  = "Atenție: Fișierul de configurare nu a fost găsit la adresa %s. Se folosesc setările implicite.";
+const MSG_SUCCESS_EXECUTION    = "Baza de date a fost configurată și populată cu succes de la zero!";
+const MSG_ERROR_EXECUTION      = "Execuția bazei de date a eșuat: %s";
+const MSG_ERROR_UPLOAD         = "Eroare la încărcarea fișierului pe server. Vă rugăm să încercați din nou.";
+const MSG_INFO_AUTO_TRIGGER    = "Configurare automată declanșată prin 'install.sql'. ";
+
 $message = '';
 $status = '';
 $showUploadForm = false;
@@ -21,7 +36,6 @@ if (file_exists($configFilePath)) {
             $key = strtoupper(trim($key));
             $value = trim(trim($value), "\"'");
             
-            // Intelligently map properties regardless of specific casing or prefix styles
             if (strpos($key, 'HOST') !== false) {
                 $db_host = $value;
             } elseif (strpos($key, 'NAME') !== false || $key === 'DB' || $key === 'DATABASE') {
@@ -34,7 +48,7 @@ if (file_exists($configFilePath)) {
         }
     }
 } else {
-    $message = "Warning: Configuration property file not found at $configFilePath. Falling back to internal defaults.";
+    $message = sprintf(MSG_WARN_CONFIG_MISSING, $configFilePath);
     $status = 'warning';
 }
 
@@ -46,18 +60,18 @@ function executeSqlFile($host, $user, $pass, $dbname, $sqlContent) {
         ]);
 
         if (!empty($dbname)) {
-            $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+            $pdo->exec("DROP DATABASE IF EXISTS `$dbname`");
+            $pdo->exec("CREATE DATABASE `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
             $pdo->exec("USE `$dbname`");
         }
 
         $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
-        
         $pdo->exec($sqlContent);
-        
         $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
-        return ['status' => 'success', 'message' => 'Database environment constructed and populated successfully!'];
+        
+        return ['status' => 'success', 'message' => MSG_SUCCESS_EXECUTION];
     } catch (PDOException $e) {
-        return ['status' => 'error', 'message' => 'Database execution failed: ' . $e->getMessage()];
+        return ['status' => 'error', 'message' => sprintf(MSG_ERROR_EXECUTION, $e->getMessage())];
     }
 }
 
@@ -71,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['sql_file'])) {
         $message = $res['message'];
     } else {
         $status = 'error';
-        $message = 'Error handling file upload. Please attempt operation again.';
+        $message = MSG_ERROR_UPLOAD;
         $showUploadForm = true;
     }
 } else {
@@ -79,18 +93,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['sql_file'])) {
         $sqlContent = file_get_contents($defaultSqlPath);
         $res = executeSqlFile($db_host, $db_user, $db_pass, $db_name, $sqlContent);
         $status = $res['status'];
-        $message = "Automated setup triggered via 'install.sql'. " . $res['message'];
+        $message = MSG_INFO_AUTO_TRIGGER . $res['message'];
     } else {
         $showUploadForm = true;
     }
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MES Automated Schema Installer</title>
+    <title><?= L_PAGE_TITLE ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -99,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['sql_file'])) {
             <div class="col-md-6">
                 <div class="card shadow border-0">
                     <div class="card-header bg-dark text-white py-3">
-                        <h5 class="mb-0">MES Target Schema Deployment Tool</h5>
+                        <h5 class="mb-0"><?= L_CARD_TITLE ?></h5>
                     </div>
                     <div class="card-body p-4">
                         <?php if ($message): ?>
@@ -110,21 +124,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['sql_file'])) {
 
                         <?php if ($showUploadForm): ?>
                             <div class="alert alert-info py-2 small">
-                                Default <code>install.sql</code> asset structural dump was not discovered inside runtime directory. Please supply an external source file.
+                                <?= L_INFO_NO_SQL_FILE ?>
                             </div>
                             <form method="post" enctype="multipart/form-data" class="mt-3">
                                 <div class="mb-4">
-                                    <label class="form-label fw-bold text-secondary">Select SQL Structural Backup File</label>
+                                    <label class="form-label fw-bold text-secondary"><?= L_FORM_FILE_LABEL ?></label>
                                     <input type="file" name="sql_file" class="form-control" accept=".sql" required>
-                                    <div class="form-text text-muted">Supports raw relational exports including constraints, structures, and dataset rows.</div>
+                                    <div class="form-text text-muted"><?= L_FORM_FILE_HELP ?></div>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100 py-2">Execute Target SQL File</button>
+                                <button type="submit" class="btn btn-primary w-100 py-2"><?= L_BUTTON_SUBMIT ?></button>
                             </form>
                         <?php else: ?>
                             <?php if ($status === 'success'): ?>
                                 <div class="text-center py-2">
-                                    <p class="text-muted small">Environment successfully mapped to host target <strong><?= htmlspecialchars($db_host) ?></strong></p>
-                                    <a href="index.php" class="btn btn-outline-success px-4">Enter Application Workspace</a>
+                                    <p class="text-muted small"><?= L_SUCCESS_MAPPED ?><strong><?= htmlspecialchars($db_host) ?></strong></p>
+                                    <a href="index.php" class="btn btn-outline-success px-4"><?= L_BUTTON_WORKSPACE ?></a>
                                 </div>
                             <?php endif; ?>
                         <?php endif; ?>

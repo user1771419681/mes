@@ -200,16 +200,18 @@ class RecipeInputManager
     public function listInputs(?int $recipeId = null): array
     {
         try {
-            $sql = "SELECT InputID, RecipeID, ArticleID, Quantity, Unit, InputType, CreatedAt, UpdatedAt
-                    FROM $this->tableName";
+            $sql = "SELECT i.InputID, i.RecipeID, i.ArticleID, i.Quantity, i.Unit, i.InputType, i.CreatedAt, i.UpdatedAt,
+                           a.Name AS ArticleName
+                    FROM $this->tableName i
+                    JOIN article a ON i.ArticleID = a.ArticleID";
 
             $params = [];
             if ($recipeId) {
-                $sql .= " WHERE RecipeID = ?";
+                $sql .= " WHERE i.RecipeID = ?";
                 $params[] = $recipeId;
             }
 
-            $sql .= " ORDER BY RecipeID ASC";
+            $sql .= " ORDER BY i.InputType ASC, a.Name ASC";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($params);
@@ -314,16 +316,18 @@ class RecipeOutputManager
     public function listOutputs(?int $recipeId = null): array
     {
         try {
-            $sql = "SELECT OutputID, RecipeID, ArticleID, Quantity, Unit, IsPrimary, CreatedAt, UpdatedAt
-                    FROM $this->tableName";
+            $sql = "SELECT o.OutputID, o.RecipeID, o.ArticleID, o.Quantity, o.Unit, o.IsPrimary, o.CreatedAt, o.UpdatedAt,
+                           a.Name AS ArticleName
+                    FROM $this->tableName o
+                    JOIN article a ON o.ArticleID = a.ArticleID";
 
             $params = [];
             if ($recipeId) {
-                $sql .= " WHERE RecipeID = ?";
+                $sql .= " WHERE o.RecipeID = ?";
                 $params[] = $recipeId;
             }
 
-            $sql .= " ORDER BY RecipeID ASC";
+            $sql .= " ORDER BY o.IsPrimary DESC, a.Name ASC";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($params);
