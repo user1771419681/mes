@@ -1,431 +1,87 @@
 <?php
 $message = '';
-$status = ''; // 'success' or 'error'
-$needsInstall = true;
-$isHealing = false;
+$status = '';
+$showUploadForm = false;
 
-if (file_exists(__DIR__ . '/includes/Database.php')) {
-    $needsInstall = false;
-    require_once __DIR__ . '/includes/Database.php';
-    
-    // --- DATABASE AUTO-HEAL START ---
-    $sqlFile = __DIR__ . '/sql/schema_mariadb.sql'; 
-    
-    if (file_exists($sqlFile) && isset($pdo)) {
-        try {
-            $stmt = $pdo->query("SHOW TABLES");
-            $existingTables = $stmt->fetchAll(PDO::FETCH_COLUMN);
-            
-            $sqlContent = file_get_contents($sqlFile);
-            // REGEX CORECTAT și aici
-            preg_match_all('/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?\`?([a-zA-Z0-9_]+)\`?/i', $sqlContent, $matches);
-            $requiredTables = $matches[1] ?? [];
-            
-            $missingTables = array_diff($requiredTables, $existingTables);
-            
-            if (!empty($missingTables)) {
-                $isHealing = true;
-                error_log("[MES-Heal] Începe Auto-Heal. Lipsesc tabelele: " . implode(', ', $missingTables));
-                
-                $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
-                
-                $lines = file($sqlFile);
-                $query = '';
-                $healedCount = 0;
-                
-                foreach ($lines as $line) {
-                    $trimLine = trim($line);
-                    
-                    if (empty($trimLine) || strpos($trimLine, '--') === 0 || strpos($trimLine, '/*') === 0) {
-                        continue;
-                    }
-                    
-                    $query .= $line . "\n";
-                    
-                    if (substr(rtrim($trimLine), -1) === ';') {
-                        $execute = false;
-                        $tableNameToHeal = '';
-                        
-                        // Extragem tabelul din interogarea curentă
-                        if (preg_match('/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?\`?([a-zA-Z0-9_]+)\`?/i', $query, $match)) {
-                            $tableNameToHeal = $match[1];
-                            if (in_array($tableNameToHeal, $missingTables)) $execute = true;
-                        } 
-                        elseif (preg_match('/ALTER\s+TABLE\s+\`?([a-zA-Z0-9_]+)\`?/i', $query, $match)) {
-                            $tableNameToHeal = $match[1];
-                            if (in_array($tableNameToHeal, $missingTables)) $execute = true;
-                        }
-                        
-                        if ($execute) {
-                            try {
-                                $pdo->exec($query);
-                                $healedCount++;
-                                error_log("[MES-Heal] Reparat cu succes tabelul: " . $tableNameToHeal);
-                            } catch (PDOException $ex) {
-                                error_log("[MES-Heal] Eroare reparare tabel $tableNameToHeal: " . $ex->getMessage());
-                            }
-                        }
-                        
-                        $query = ''; 
-                    }
-                }
-                $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
-                
-                if ($healedCount > 0) {
-                    $message = "Baza de date a fost reparată automat ($healedCount operațiuni)! Redirecționare...";
-                    $status = 'success';
-                    error_log("[MES-Heal] Auto-heal complet. Fac redirect către index.");
-                    header("refresh:3;url=index.php");
-                } else {
-                    $message = "Atenție: Tabele lipsesc, dar query-urile nu au putut fi generate. Verifică log-urile.";
-                    $status = 'error';
-                    error_log("[MES-Heal] Eroare Logică: Tabele lipsesc, dar au fost executate 0 query-uri!");
-                }
-            } else {
-                if (!isset($_GET['action']) || $_GET['action'] !== 'heal') {
-                    header('Location: index.php');
-                    exit;
-                }
-            }
-        } catch (PDOException $e) {
-            $message = "Eroare la repararea automată (Auto-heal): " . $e->getMessage();
-            $status = 'error';
-            $isHealing = true;
-            error_log("[MES-Heal] Eroare critică DB: " . $e->getMessage());
+$configFilePath = $_SERVER['DOCUMENT_ROOT'] . '/mes/db.properties';
+$db_host = 'localhost';
+$db_name = 'mes';
+$db_user = 'root';
+$db_pass = '';
+
+if (file_exists($configFilePath)) {
+    $lines = file($configFilePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if (empty($line) || strpos($line, '#') === 0 || strpos($line, ';') === 0) {
+            continue;
         }
-    } else {
-        error_log("[MES-Heal] Fișierul .sql nu a fost găsit sau baza de date e inaccesibilă.");
-        header('Location: index.php');
-        exit;
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $key = strtoupper(trim($key));
+            $value = trim(trim($value), "\"'");
+            
+            // Intelligently map properties regardless of specific casing or prefix styles
+            if (strpos($key, 'HOST') !== false) {
+                $db_host = $value;
+            } elseif (strpos($key, 'NAME') !== false || $key === 'DB' || $key === 'DATABASE') {
+                $db_name = $value;
+            } elseif (strpos($key, 'USER') !== false) {
+                $db_user = $value;
+            } elseif (strpos($key, 'PASS') !== false) {
+                $db_pass = $value;
+            }
+        }
     }
-    // --- DATABASE AUTO-HEAL END ---
+} else {
+    $message = "Warning: Configuration property file not found at $configFilePath. Falling back to internal defaults.";
+    $status = 'warning';
 }
 
-// Instalarea inițială (Doar dacă nu avem config-ul și s-a trimis POST)
-if ($needsInstall && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $host = $_POST['host'] ?? 'localhost';
-    $dbname = $_POST['dbname'] ?? 'mes';
-    $user = $_POST['user'] ?? 'root';
-    $password = $_POST['password'] ?? '';
-    $siteUrl = $_POST['site_url'] ?? 'http://localhost/mes/';
-
+function executeSqlFile($host, $user, $pass, $dbname, $sqlContent) {
     try {
-        // Validate dbname to prevent SQL injection and ensure valid name
-        if (!preg_match('/^[a-zA-Z0-9_]+$/', $dbname)) {
-            throw new Exception("Database name must contain only alphanumeric characters and underscores.");
-        }
-
-        // 1. Connect to MySQL Server (no DB selected yet)
-        $pdo = new PDO("mysql:host=$host", $user, $password, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        $pdo = new PDO("mysql:host=$host", $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
         ]);
 
-        // 2. Create Database
-        $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-        $pdo->exec("USE `$dbname`");
-
-        // 3. Create Tables
-        $queries = [
-            "CREATE TABLE IF NOT EXISTS user (
-                OperatorID INT AUTO_INCREMENT PRIMARY KEY,
-                OperatorUsername VARCHAR(255) NOT NULL UNIQUE,
-                OperatorPassword VARCHAR(255) NOT NULL,
-                OperatorRoles VARCHAR(255) NOT NULL
-            )",
-            "CREATE TABLE IF NOT EXISTS api_keys (
-                KeyID INT AUTO_INCREMENT PRIMARY KEY,
-                KeyString VARCHAR(64) NOT NULL UNIQUE,
-                Name VARCHAR(255) NOT NULL,
-                UserID INT NOT NULL,
-                Permissions TEXT,
-                ScopePlants TEXT,
-                LastUsedAt DATETIME,
-                IsActive BOOLEAN DEFAULT 1,
-                CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (UserID) REFERENCES user(OperatorID) ON DELETE CASCADE
-            )",
-            "CREATE TABLE IF NOT EXISTS api_audit_log (
-                LogID INT AUTO_INCREMENT PRIMARY KEY,
-                KeyID INT,
-                UserID INT,
-                Action VARCHAR(50),
-                Endpoint VARCHAR(255),
-                IPAddress VARCHAR(45),
-                Details TEXT,
-                Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-            )",
-            "CREATE TABLE IF NOT EXISTS country (
-                CountryID INT AUTO_INCREMENT PRIMARY KEY,
-                Name VARCHAR(255) NOT NULL,
-                ISOCode VARCHAR(10) NOT NULL
-            )",
-            "CREATE TABLE IF NOT EXISTS city (
-                CityID INT AUTO_INCREMENT PRIMARY KEY,
-                Name VARCHAR(255) NOT NULL,
-                CountryID INT NOT NULL,
-                PostalCode VARCHAR(20),
-                FOREIGN KEY (CountryID) REFERENCES country(CountryID) ON DELETE CASCADE
-            )",
-            "CREATE TABLE IF NOT EXISTS plant (
-                PlantID INT AUTO_INCREMENT PRIMARY KEY,
-                Name VARCHAR(255) NOT NULL,
-                Description TEXT,
-                CityID INT,
-                Address TEXT,
-                ContactEmail VARCHAR(255),
-                ContactPhone VARCHAR(50),
-                ManagerName VARCHAR(255),
-                Status VARCHAR(50) DEFAULT 'Active',
-                FOREIGN KEY (CityID) REFERENCES city(CityID) ON DELETE SET NULL
-            )",
-            "CREATE TABLE IF NOT EXISTS section (
-                SectionID INT AUTO_INCREMENT PRIMARY KEY,
-                Name VARCHAR(255) NOT NULL,
-                PlantID INT NOT NULL,
-                Description TEXT,
-                FloorAreaSqM FLOAT,
-                MaxCapacity INT,
-                FOREIGN KEY (PlantID) REFERENCES plant(PlantID) ON DELETE CASCADE
-            )",
-            "CREATE TABLE IF NOT EXISTS machine (
-                MachineID INT AUTO_INCREMENT PRIMARY KEY,
-                Name VARCHAR(255) NOT NULL,
-                Status VARCHAR(50) DEFAULT 'Active',
-                Capacity FLOAT DEFAULT 0,
-                LastMaintenanceDate DATE,
-                Location VARCHAR(255),
-                Model VARCHAR(255),
-                PlantID INT,
-                SectionID INT,
-                FOREIGN KEY (PlantID) REFERENCES plant(PlantID) ON DELETE SET NULL,
-                FOREIGN KEY (SectionID) REFERENCES section(SectionID) ON DELETE SET NULL
-            )",
-            "CREATE TABLE IF NOT EXISTS article (
-                ArticleID INT AUTO_INCREMENT PRIMARY KEY,
-                Name VARCHAR(255) NOT NULL,
-                Description TEXT,
-                ImagePath VARCHAR(255),
-                QualityControl VARCHAR(50) DEFAULT 'Pending',
-                CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-                UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-            )",
-            "CREATE TABLE IF NOT EXISTS production_recipes (
-                RecipeID INT AUTO_INCREMENT PRIMARY KEY,
-                ArticleID INT NOT NULL,
-                MachineID INT NOT NULL,
-                Version VARCHAR(50) NOT NULL,
-                EstimatedTime FLOAT NOT NULL,
-                OperationDescription TEXT,
-                IsActive TINYINT(1) DEFAULT 1,
-                Notes TEXT,
-                FOREIGN KEY (ArticleID) REFERENCES article(ArticleID) ON DELETE CASCADE,
-                FOREIGN KEY (MachineID) REFERENCES machine(MachineID) ON DELETE CASCADE
-            )",
-             "CREATE TABLE IF NOT EXISTS recipe_inputs (
-                InputID INT AUTO_INCREMENT PRIMARY KEY,
-                RecipeID INT NOT NULL,
-                ArticleID INT NOT NULL,
-                Quantity FLOAT NOT NULL,
-                Unit VARCHAR(50) DEFAULT 'unit',
-                InputType VARCHAR(50) DEFAULT 'part',
-                CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-                UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (RecipeID) REFERENCES production_recipes(RecipeID) ON DELETE CASCADE,
-                FOREIGN KEY (ArticleID) REFERENCES article(ArticleID) ON DELETE CASCADE
-            )",
-            "CREATE TABLE IF NOT EXISTS recipe_outputs (
-                OutputID INT AUTO_INCREMENT PRIMARY KEY,
-                RecipeID INT NOT NULL,
-                ArticleID INT NOT NULL,
-                Quantity FLOAT NOT NULL,
-                Unit VARCHAR(50) DEFAULT 'unit',
-                IsPrimary TINYINT(1) DEFAULT 1,
-                CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-                UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (RecipeID) REFERENCES production_recipes(RecipeID) ON DELETE CASCADE,
-                FOREIGN KEY (ArticleID) REFERENCES article(ArticleID) ON DELETE CASCADE
-            )",
-            "CREATE TABLE IF NOT EXISTS production_order (
-                OrderID INT AUTO_INCREMENT PRIMARY KEY,
-                ArticleID INT NOT NULL,
-                RecipeID INT,
-                TargetQuantity FLOAT NOT NULL,
-                PlannedStartDate DATETIME,
-                PlannedEndDate DATETIME,
-                Status VARCHAR(50) DEFAULT 'Planned',
-                IsDeleted TINYINT(1) DEFAULT 0,
-                CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-                DeletedAt DATETIME,
-                DeletedBy INT,
-                ActualStartDate DATETIME,
-                FOREIGN KEY (ArticleID) REFERENCES article(ArticleID) ON DELETE CASCADE,
-                FOREIGN KEY (RecipeID) REFERENCES production_recipes(RecipeID) ON DELETE SET NULL
-            )",
-             "CREATE TABLE IF NOT EXISTS reject_category (
-                CategoryID INT AUTO_INCREMENT PRIMARY KEY,
-                CategoryName VARCHAR(255) NOT NULL,
-                PlantID INT,
-                SectionID INT,
-                FOREIGN KEY (PlantID) REFERENCES plant(PlantID) ON DELETE CASCADE,
-                FOREIGN KEY (SectionID) REFERENCES section(SectionID) ON DELETE CASCADE
-            )",
-            "CREATE TABLE IF NOT EXISTS reject_reason (
-                ReasonID INT AUTO_INCREMENT PRIMARY KEY,
-                ReasonName VARCHAR(255) NOT NULL,
-                CategoryID INT NOT NULL,
-                PlantID INT,
-                SectionID INT,
-                FOREIGN KEY (CategoryID) REFERENCES reject_category(CategoryID) ON DELETE CASCADE,
-                FOREIGN KEY (PlantID) REFERENCES plant(PlantID) ON DELETE CASCADE,
-                FOREIGN KEY (SectionID) REFERENCES section(SectionID) ON DELETE CASCADE
-            )"
-        ];
-
-        foreach ($queries as $sql) {
-            $pdo->exec($sql);
+        if (!empty($dbname)) {
+            $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+            $pdo->exec("USE `$dbname`");
         }
 
-        // 4. Seed Data
-        $users = [
-            ['admin', 'admin123', 'admin'],
-            ['operator1', 'op123', 'operator'],
-            ['operator2', 'op123', 'operator'],
-            ['operator3', 'op123', 'operator'],
-            ['operator4', 'op123', 'operator'],
-        ];
-        $stmt = $pdo->prepare("INSERT INTO user (OperatorUsername, OperatorPassword, OperatorRoles) VALUES (?, ?, ?)");
-        foreach ($users as $u) {
-            $check = $pdo->prepare("SELECT COUNT(*) FROM user WHERE OperatorUsername = ?");
-            $check->execute([$u[0]]);
-            if ($check->fetchColumn() == 0) {
-                 $stmt->execute($u);
-            }
-        }
+        $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
+        
+        $pdo->exec($sqlContent);
+        
+        $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
+        return ['status' => 'success', 'message' => 'Database environment constructed and populated successfully!'];
+    } catch (PDOException $e) {
+        return ['status' => 'error', 'message' => 'Database execution failed: ' . $e->getMessage()];
+    }
+}
 
-        // Helper for random data
-        function getRandom($pdo, $table, $col) {
-            $stmt = $pdo->query("SELECT $col FROM $table ORDER BY RAND() LIMIT 1");
-            return $stmt->fetchColumn();
-        }
+$defaultSqlPath = __DIR__ . '/install.sql';
 
-        // Countries
-        $stmt = $pdo->prepare("INSERT INTO country (Name, ISOCode) VALUES (?, ?)");
-        for ($i = 1; $i <= 50; $i++) {
-            $stmt->execute(["Country $i", "C$i"]);
-        }
-
-        // Cities
-        $stmt = $pdo->prepare("INSERT INTO city (Name, CountryID, PostalCode) VALUES (?, ?, ?)");
-        for ($i = 1; $i <= 50; $i++) {
-            $cid = getRandom($pdo, 'country', 'CountryID');
-            $stmt->execute(["City $i", $cid, "100$i"]);
-        }
-
-        // Plants
-        $stmt = $pdo->prepare("INSERT INTO plant (Name, Description, CityID, Address, ContactEmail, ContactPhone, ManagerName, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        for ($i = 1; $i <= 50; $i++) {
-            $cid = getRandom($pdo, 'city', 'CityID');
-            $stmt->execute(["Plant $i", "Description for Plant $i", $cid, "Address $i", "plant$i@example.com", "555-010$i", "Manager $i", "Active"]);
-        }
-
-        // Sections
-        $stmt = $pdo->prepare("INSERT INTO section (Name, PlantID, Description, FloorAreaSqM, MaxCapacity) VALUES (?, ?, ?, ?, ?)");
-        for ($i = 1; $i <= 50; $i++) {
-            $pid = getRandom($pdo, 'plant', 'PlantID');
-            $stmt->execute(["Section $i", $pid, "Section Desc $i", rand(100, 1000), rand(10, 100)]);
-        }
-
-        // Machines
-        $stmt = $pdo->prepare("INSERT INTO machine (Name, Status, Capacity, LastMaintenanceDate, Location, Model, PlantID, SectionID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        for ($i = 1; $i <= 50; $i++) {
-            $pid = getRandom($pdo, 'plant', 'PlantID');
-            $sid = $pdo->query("SELECT SectionID FROM section WHERE PlantID = $pid ORDER BY RAND() LIMIT 1")->fetchColumn();
-            if (!$sid) $sid = null;
-            $stmt->execute(["Machine $i", 'Active', rand(100, 500), date('Y-m-d'), "Loc $i", "Model $i", $pid, $sid]);
-        }
-
-        // Articles (Parts)
-        $forms = ['Raw Steel Coil', 'Stamped Part', 'Washed Part', 'Packaged Part'];
-        $stmt = $pdo->prepare("INSERT INTO article (Name, Description, QualityControl) VALUES (?, ?, ?)");
-        for ($i = 1; $i <= 50; $i++) {
-            $form = $forms[$i % 4];
-            $stmt->execute(["$form $i", "Description for $form $i", "Pending"]);
-        }
-
-        // Recipes
-        $stmt = $pdo->prepare("INSERT INTO production_recipes (ArticleID, MachineID, Version, EstimatedTime, OperationDescription, IsActive, Notes) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        for ($i = 1; $i <= 50; $i++) {
-             $aid = getRandom($pdo, 'article', 'ArticleID');
-             $mid = getRandom($pdo, 'machine', 'MachineID');
-             $stmt->execute([$aid, $mid, "v1.$i", rand(10, 300), "Operation $i", 1, "Notes $i"]);
-        }
-
-        // Production Orders
-        $stmt = $pdo->prepare("INSERT INTO production_order (ArticleID, RecipeID, TargetQuantity, PlannedStartDate, PlannedEndDate, Status) VALUES (?, ?, ?, ?, ?, ?)");
-        for ($i = 1; $i <= 50; $i++) {
-            $rid = getRandom($pdo, 'production_recipes', 'RecipeID');
-            $r = $pdo->query("SELECT ArticleID, EstimatedTime FROM production_recipes WHERE RecipeID = $rid")->fetch(PDO::FETCH_ASSOC);
-            $aid = $r['ArticleID'];
-            $qty = rand(100, 1000);
-            $duration = $r['EstimatedTime'] * $qty;
-
-            $start = date('Y-m-d H:i:s', strtotime("+$i days"));
-            $end = date('Y-m-d H:i:s', strtotime($start) + $duration);
-
-            $stmt->execute([$aid, $rid, $qty, $start, $end, 'Planned']);
-        }
-
-        // Reject Categories
-        $stmt = $pdo->prepare("INSERT INTO reject_category (CategoryName, PlantID, SectionID) VALUES (?, ?, ?)");
-        for ($i = 1; $i <= 50; $i++) {
-             $pid = getRandom($pdo, 'plant', 'PlantID');
-             $stmt->execute(["Reject Cat $i", $pid, null]);
-        }
-
-         // Reject Reasons
-        $stmt = $pdo->prepare("INSERT INTO reject_reason (ReasonName, CategoryID, PlantID) VALUES (?, ?, ?)");
-        for ($i = 1; $i <= 50; $i++) {
-             $cid = getRandom($pdo, 'reject_category', 'CategoryID');
-             $cat = $pdo->query("SELECT PlantID FROM reject_category WHERE CategoryID = $cid")->fetch(PDO::FETCH_ASSOC);
-             $pid = $cat['PlantID'];
-             $stmt->execute(["Reason $i", $cid, $pid]);
-        }
-
-        // 5. Create Config.php
-        if (!is_dir('includes')) {
-            mkdir('includes', 0755, true);
-        }
-
-        $configContent = "<?php\n";
-        $configContent .= "\$siteBaseUrl = " . var_export($siteUrl, true) . ";\n";
-        $configContent .= "define('INCLUDE_PATH', __DIR__ . '/includes/');\n";
-        $configContent .= "?>";
-        file_put_contents('includes/Config.php', $configContent);
-
-        // 6. Create Database.php
-        $dbContent = "<?php\n";
-        $dbContent .= "\$host = " . var_export($host, true) . ";\n";
-        $dbContent .= "\$dbname = " . var_export($dbname, true) . ";\n";
-        $dbContent .= "\$username = " . var_export($user, true) . ";\n";
-        $dbContent .= "\$password = " . var_export($password, true) . ";\n\n";
-        $dbContent .= "try {\n";
-        $dbContent .= "    \$pdo = new PDO(\"mysql:host=\$host;dbname=\$dbname\", \$username, \$password, [\n";
-        $dbContent .= "        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION\n";
-        $dbContent .= "    ]);\n";
-        $dbContent .= "} catch (PDOException \$e) {\n";
-        $dbContent .= "    die('Connection failed: ' . \$e->getMessage());\n";
-        $dbContent .= "}\n";
-        $dbContent .= "?>";
-        file_put_contents('includes/Database.php', $dbContent);
-
-        $message = "Installation successful! Redirecting...";
-        $status = 'success';
-
-        header("refresh:3;url=index.php");
-
-    } catch (Exception $e) {
-        $message = "Installation failed: " . $e->getMessage();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['sql_file'])) {
+    if ($_FILES['sql_file']['error'] === UPLOAD_ERR_OK) {
+        $sqlContent = file_get_contents($_FILES['sql_file']['tmp_name']);
+        $res = executeSqlFile($db_host, $db_user, $db_pass, $db_name, $sqlContent);
+        $status = $res['status'];
+        $message = $res['message'];
+    } else {
         $status = 'error';
+        $message = 'Error handling file upload. Please attempt operation again.';
+        $showUploadForm = true;
+    }
+} else {
+    if (file_exists($defaultSqlPath)) {
+        $sqlContent = file_get_contents($defaultSqlPath);
+        $res = executeSqlFile($db_host, $db_user, $db_pass, $db_name, $sqlContent);
+        $status = $res['status'];
+        $message = "Automated setup triggered via 'install.sql'. " . $res['message'];
+    } else {
+        $showUploadForm = true;
     }
 }
 ?>
@@ -434,51 +90,43 @@ if ($needsInstall && $_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $isHealing ? 'MES Auto-Heal' : 'MES Installation' ?></title>
+    <title>MES Automated Schema Installer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><?= $isHealing ? 'MES System Auto-Heal' : 'MES System Installation' ?></h4>
+                <div class="card shadow border-0">
+                    <div class="card-header bg-dark text-white py-3">
+                        <h5 class="mb-0">MES Target Schema Deployment Tool</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <?php if ($message): ?>
-                            <div class="alert alert-<?= $status === 'success' ? 'success' : 'danger' ?>">
+                            <div class="alert alert-<?= $status === 'success' ? 'success' : ($status === 'warning' ? 'warning' : 'danger') ?> mb-4">
                                 <?= htmlspecialchars($message) ?>
                             </div>
                         <?php endif; ?>
 
-                        <?php if ($needsInstall && $status !== 'success'): ?>
-                            <p>Welcome! Please provide the database connection details to install the system.</p>
-                            <form method="post">
-                                <div class="mb-3">
-                                    <label class="form-label">Database Host</label>
-                                    <input type="text" name="host" class="form-control" value="localhost" required>
+                        <?php if ($showUploadForm): ?>
+                            <div class="alert alert-info py-2 small">
+                                Default <code>install.sql</code> asset structural dump was not discovered inside runtime directory. Please supply an external source file.
+                            </div>
+                            <form method="post" enctype="multipart/form-data" class="mt-3">
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-secondary">Select SQL Structural Backup File</label>
+                                    <input type="file" name="sql_file" class="form-control" accept=".sql" required>
+                                    <div class="form-text text-muted">Supports raw relational exports including constraints, structures, and dataset rows.</div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Database Name</label>
-                                    <input type="text" name="dbname" class="form-control" value="mes" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Database User</label>
-                                    <input type="text" name="user" class="form-control" value="root" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Database Password</label>
-                                    <input type="password" name="password" class="form-control" value="mes">
-                                </div>
-                                 <div class="mb-3">
-                                    <label class="form-label">Site URL</label>
-                                    <input type="text" name="site_url" class="form-control" value="http://<?= $_SERVER['HTTP_HOST'] ?>/mes/" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">Install & Seed Database</button>
+                                <button type="submit" class="btn btn-primary w-100 py-2">Execute Target SQL File</button>
                             </form>
-                        <?php elseif ($isHealing && $status !== 'success'): ?>
-                            <a href="index.php" class="btn btn-secondary w-100 mt-3">Întoarce-te la Index</a>
+                        <?php else: ?>
+                            <?php if ($status === 'success'): ?>
+                                <div class="text-center py-2">
+                                    <p class="text-muted small">Environment successfully mapped to host target <strong><?= htmlspecialchars($db_host) ?></strong></p>
+                                    <a href="index.php" class="btn btn-outline-success px-4">Enter Application Workspace</a>
+                                </div>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                 </div>

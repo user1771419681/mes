@@ -3,64 +3,117 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/mes/includes/sidebar/SidebarElement.p
 require_once $_SERVER['DOCUMENT_ROOT'] . '/mes/includes/sidebar/SidebarHeader.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/mes/includes/sidebar/SidebarLink.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/mes/includes/sidebar/SidebarCategory.php';
+
 $GLOBALS['current_page'] = basename($_SERVER['SCRIPT_NAME'], '.php');
 
+$menuConfig = [
+    [
+        'type' => 'link',
+        'href' => 'dashboard.php',
+        'text' => 'Dashboard',
+        'icon' => 'fa-gauge-high'
+    ],
+    
+    [
+        'type' => 'category',
+        'id' => 'planningMenu',
+        'text' => 'Planning & Orders',
+        'icon' => 'fa-calendar-days',
+        'links' => [
+            ['pages/planning/production-orders.php', 'Production Orders', 'fa-file-invoice'],
+            ['planning.php', 'Shift Scheduler', 'fa-clock']
+        ]
+    ],
+    [
+        'type' => 'category',
+        'id' => 'shopFloorMenu',
+        'text' => 'Shop Floor & Logs',
+        'icon' => 'fa-person-digging',
+        'links' => [
+            ['pages/production/operator-logs.php', 'Operator Logs', 'fa-clipboard-user'],
+            ['pages/production/production-logs.php', 'Job Runs', 'fa-play'],
+            ['pages/production/batches.php', 'Batches / Labels', 'fa-barcode'],
+            ['pages/production/machine-stops.php', 'Machine Stops', 'fa-stopwatch'],
+            ['pages/production/rejects.php', 'Scrap / Rejects', 'fa-ban'],
+            ['pages/production/adjustments.php', 'Qty Adjustments', 'fa-sliders']
+        ]
+    ],
+
+    [
+        'type' => 'link',
+        'href' => 'pages/production/raw-materials.php',
+        'text' => 'Raw Materials Inventory',
+        'icon' => 'fa-boxes-stacked'
+    ],
+    [
+        'type' => 'link',
+        'href' => 'data-analysis.php',
+        'text' => 'Data Analysis',
+        'icon' => 'fa-chart-line'
+    ],
+
+    [
+        'type' => 'category',
+        'id' => 'assetMenu',
+        'text' => 'Factory Infrastructure',
+        'icon' => 'fa-city',
+        'links' => [
+            ['pages/database/plants.php', 'Plants', 'fa-industry'],
+            ['pages/database/sections.php', 'Sections', 'fa-layer-group'],
+            ['pages/database/machines.php', 'Machines', 'fa-robot'],
+            ['pages/database/countries.php', 'Countries', 'fa-globe'],
+            ['pages/database/cities.php', 'Cities', 'fa-location-dot']
+        ]
+    ],
+    [
+        'type' => 'category',
+        'id' => 'masterMenu',
+        'text' => 'App Master Data',
+        'icon' => 'fa-database',
+        'links' => [
+            ['pages/database/articles.php', 'Articles / Products', 'fa-cube'],
+            ['pages/database/users.php', 'Users / Operators', 'fa-users'],
+            ['pages/database/cycles.php', 'Cycles', 'fa-rotate']
+        ]
+    ],
+
+    [
+        'type' => 'category',
+        'id' => 'systemMenu',
+        'text' => 'Platform Control',
+        'icon' => 'fa-shield-halved',
+        'links' => [
+            ['pages/database/reject-categories.php', 'Reject Categories', 'fa-list'],
+            ['pages/database/reject-reasons.php', 'Reject Reasons', 'fa-list-check'],
+            ['pages/security/api-management.php', 'API Keys', 'fa-key'],
+            ['pages/security/api-usage-audits.php', 'Audit Logs', 'fa-file-shield'],
+            ['pages/system/wago-logs.php', 'WAGO Simulator', 'fa-server']
+        ]
+    ]
+];
+
 $menu = [];
-
-$menu[] = new SidebarLink('dashboard.php', 'Dashboard', 'fa-gauge-high');
-
-//$menu[] = new SidebarHeader('Planning');
-$catPlanning = new SidebarCategory('planningMenu', 'ERP & Planning', 'fa-calendar-days');
-$catPlanning->addLink('pages/planning/production-orders.php', 'Production Orders', 'fa-file-invoice');
-$catPlanning->addLink('planning.php', 'Shift Scheduler', 'fa-clock');
-$menu[] = $catPlanning;
-
-//$menu[] = new SidebarHeader('Execution');
-
-$catShop = new SidebarCategory('shopFloorMenu', 'Shop Floor', 'fa-person-digging');
-$catShop->addLink('pages/production/operator-logs.php', 'Operator Logs', 'fa-clipboard-user');
-$catShop->addLink('pages/production/production-logs.php', 'Job Runs', 'fa-play');
-$catShop->addLink('pages/production/batches.php', 'Batches / Labels', 'fa-barcode');
-$menu[] = $catShop;
-
-$catQuality = new SidebarCategory('qualityMenu', 'Quality & Downtime', 'fa-triangle-exclamation');
-$catQuality->addLink('pages/production/machine-stops.php', 'Machine Stops', 'fa-stopwatch');
-$catQuality->addLink('pages/production/rejects.php', 'Scrap / Rejects', 'fa-ban');
-$catQuality->addLink('pages/production/adjustments.php', 'Qty Adjustments', 'fa-sliders');
-$menu[] = $catQuality;
-
-$catInv = new SidebarCategory('invMenu', 'Inventory', 'fa-boxes-stacked');
-$catInv->addLink('pages/production/raw-materials.php', 'Raw Materials', 'fa-dolly');
-$menu[] = $catInv;
-
-$menu[] = new SidebarLink('data-analysis.php', 'Data Analysis', 'fa-chart-line');
-
-//$menu[] = new SidebarHeader('Administration');
-
-$catAssets = new SidebarCategory('assetMenu', 'Factory Assets', 'fa-city');
-$catAssets->addLink('pages/database/plants.php', 'Plants', 'fa-industry');
-$catAssets->addLink('pages/database/sections.php', 'Sections', 'fa-layer-group');
-$catAssets->addLink('pages/database/machines.php', 'Machines', 'fa-robot');
-$catAssets->addLink('pages/database/countries.php', 'Countries', 'fa-globe');
-$catAssets->addLink('pages/database/cities.php', 'Cities', 'fa-location-dot');
-$menu[] = $catAssets;
-
-$catMaster = new SidebarCategory('masterMenu', 'Master Data', 'fa-database');
-$catMaster->addLink('pages/database/articles.php', 'Articles / Products', 'fa-cube');
-$catMaster->addLink('pages/database/users.php', 'Users / Operators', 'fa-users');
-$catMaster->addLink('pages/database/cycles.php', 'Cycles', 'fa-rotate');
-$menu[] = $catMaster;
-
-$catSys = new SidebarCategory('systemMenu', 'System & Security', 'fa-shield-halved');
-$catSys->addLink('pages/database/reject-categories.php', 'Reject Categories', 'fa-list');
-$catSys->addLink('pages/database/reject-reasons.php', 'Reject Reasons', 'fa-list-check');
-$catSys->addLink('pages/security/api-management.php', 'API Keys', 'fa-key');
-$catSys->addLink('pages/security/api-usage-audits.php', 'Audit Logs', 'fa-file-shield');
-$catSys->addLink('pages/system/wago-logs.php', 'WAGO Simulator', 'fa-server');
-$menu[] = $catSys;
+foreach ($menuConfig as $node) {
+    switch ($node['type']) {
+        case 'link':
+            $menu[] = new SidebarLink($node['href'], $node['text'], $node['icon']);
+            break;
+            
+        case 'header':
+            $menu[] = new SidebarHeader($node['text']);
+            break;
+            
+        case 'category':
+            $cat = new SidebarCategory($node['id'], $node['text'], $node['icon']);
+            foreach ($node['links'] as $link) {
+                $cat->addLink($link[0], $link[1], $link[2]);
+            }
+            $menu[] = $cat;
+            break;
+    }
+}
 
 $logoutLink = new SidebarLink('logout.php', 'Log Out', 'fa-right-from-bracket');
-
 ?>
 
 <div class="sidebar">
@@ -79,13 +132,13 @@ $logoutLink = new SidebarLink('logout.php', 'Log Out', 'fa-right-from-bracket');
 
         <?php echo $logoutLink->render(); ?>
 
-      <script>
-         <?php if (isset($_SESSION['fresh_api_key'])): ?>
+        <script>
+            <?php if (isset($_SESSION['fresh_api_key'])): ?>
                 const sessionKey = "<?= $_SESSION['fresh_api_key'] ?>";
-                    if (!localStorage.getItem('mes_api_key')) {
-                        localStorage.setItem('mes_api_key', sessionKey);
-                    }
-                    <?php unset($_SESSION['fresh_api_key']); ?>
+                if (!localStorage.getItem('mes_api_key')) {
+                    localStorage.setItem('mes_api_key', sessionKey);
+                }
+                <?php unset($_SESSION['fresh_api_key']); ?>
             <?php endif; ?>
 
             if (typeof $ !== 'undefined') {
