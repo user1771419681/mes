@@ -59,7 +59,7 @@ if (isset($activeOrder) && $activeOrder) {
                 $isNegative = $qty < 0;
                 $boxClass = $isNegative ? 'material-negative' : 'border-secondary bg-white text-dark';
             ?>
-                <div class="output-block border rounded p-3 mb-3 <?= $boxClass ?>">
+                <div id="box-input-<?= $inp['ArticleID'] ?>" class="output-block border rounded p-3 mb-3 <?= $boxClass ?>">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="mb-0 fw-bold">
                             <?= htmlspecialchars($inp['ArticleName']) ?>
@@ -73,7 +73,7 @@ if (isset($activeOrder) && $activeOrder) {
                             <span class="badge <?= $badgeClass ?> ms-1"><?= ucfirst($inp['InputType']) ?></span>
                         </h6>
                         <span class="fw-bold fs-5">
-                            <?= number_format($qty, 2) ?> 
+                            <span id="qty-input-<?= $inp['ArticleID'] ?>"><?= number_format($qty, 2) ?></span> 
                             <span class="fs-6 text-muted fw-normal"><?= htmlspecialchars($inp['Unit']) ?></span>
                         </span>
                     </div>
@@ -222,14 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.innerHTML = 'Register Material';
             });
             
-            /* 
-            // Temporary fallback until API is built
-            setTimeout(() => {
-                console.log(`Scanned ${qty} units of Batch: ${batchCode}`);
-                scanModalInstance.hide();
-                btn.disabled = false;
-                btn.innerHTML = 'Register Material';
-            }, 500); */
         });
     }
 

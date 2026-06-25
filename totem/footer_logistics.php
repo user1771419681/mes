@@ -46,8 +46,8 @@ $containerTarget = 1000;
             </div>
         <?php else: ?>
             <?php foreach ($logisticsOutputs as $out): 
-                $currentQty = $out['CurrentQuantity'];
-                $percentage = min(100, ($currentQty / $containerTarget) * 100);
+                $currentQty = (float)$out['CurrentQuantity'];
+                $percentage = min(100, max(0, ($currentQty / $containerTarget) * 100)); // Ensure it stays 0-100
                 $isFull = $currentQty >= $containerTarget;
             ?>
                 <div class="output-block border rounded p-3 mb-3 bg-white">
@@ -61,13 +61,14 @@ $containerTarget = 1000;
                             <?php endif; ?>
                         </h6>
                         <span class="fw-bold fs-5 <?= $isFull ? 'text-success' : 'text-dark' ?>">
-                            <?= $currentQty ?> / <?= $containerTarget ?> 
+                            <span id="qty-output-<?= $out['ArticleID'] ?>" data-target="<?= $containerTarget ?>"><?= number_format($currentQty, 0) ?></span> / <?= $containerTarget ?> 
                             <span class="fs-6 text-muted fw-normal"><?= htmlspecialchars($out['Unit']) ?></span>
                         </span>
                     </div>
                     
                     <div class="progress mb-3" style="height: 20px;">
-                        <div class="progress-bar <?= $isFull ? 'bg-success' : 'bg-primary progress-bar-striped progress-bar-animated' ?>" 
+                        <div id="progress-bar-<?= $out['ArticleID'] ?>"
+                             class="progress-bar <?= $isFull ? 'bg-success' : 'bg-primary progress-bar-striped progress-bar-animated' ?>" 
                              role="progressbar" 
                              style="width: <?= $percentage ?>%;" 
                              aria-valuenow="<?= $percentage ?>" 
@@ -78,11 +79,12 @@ $containerTarget = 1000;
                     </div>
 
                     <div class="d-flex gap-2">
-                        <button class="btn btn-primary flex-fill btn-print-label" 
+                        <button id="btn-print-<?= $out['ArticleID'] ?>"
+                                class="btn btn-primary flex-fill btn-print-label" 
                                 data-order="<?= $activeOrder['OrderID'] ?>" 
                                 data-article="<?= $out['ArticleID'] ?>" 
                                 data-qty="<?= $currentQty ?>"
-                                <?= $currentQty == 0 ? 'disabled' : '' ?>>
+                                <?= $currentQty <= 0 ? 'disabled' : '' ?>>
                             <i class="fa-solid fa-print me-1"></i> Print Label
                         </button>
                         
@@ -141,42 +143,109 @@ $containerTarget = 1000;
 </div>
 
 <script>
-    // Example listener implementation to place into totem/js/app.js
-    document.addEventListener('DOMContentLoaded', () => {
-        // Modal Trigger Handler
-        document.querySelectorAll('.btn-view-labels').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const orderId = this.dataset.order;
-                const articleId = this.dataset.article;
-                const articleName = this.dataset.articlename;
-                
-                document.getElementById('modalArticleName').innerText = articleName;
-                const modal = new bootstrap.Modal(document.getElementById('labelsModal'));
-                modal.show();
+    if (!window.labelsModalInitialized) {
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. View Labels Modal
+            document.querySelectorAll('.btn-view-labels').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const orderId = this.dataset.order;
+                    const articleId = this.dataset.article;
+                    document.getElementById('modalArticleName').innerText = this.dataset.articlename;
+                    
+                    const modal = new bootstrap.Modal(document.getElementById('labelsModal'));
+                    modal.show();
 
-                // AJAX call to fetch from `batch_log` joined with `user`
-                // Example structure for your backend endpoint:
-                /*
-                fetch(`api/get_labels.php?order=${orderId}&article=${articleId}`)
+                    fetch(`api/get_labels.php?order=${orderId}&article=${articleId}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            let rows = '';
+                            if(data.length === 0) {
+                                rows = '<tr><td colspan="4" class="text-center text-muted">No labels printed yet.</td></tr>';
+                            } else {
+                                data.forEach(lbl => {
+                                    rows += `<tr>
+                                        <td><span class="badge bg-secondary">${lbl.BatchCode}</span></td>
+                                        <td class="fw-bold">${lbl.Quantity}</td>
+                                        <td><i class="fa-solid fa-user-circle me-1"></i>${lbl.OperatorUsername}</td>
+                                        <td>${lbl.PrintTime}</td>
+                                    </tr>`;
+                                });
+                            }
+                            document.getElementById('labelsTableBody').innerHTML = rows;
+                        });
+                });
+            });
+
+            // 2. Print Label & Reset Buffer
+            document.querySelectorAll('.btn-print-label').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const orderId = this.dataset.order;
+                    const articleId = this.dataset.article;
+                    
+                    // Fetch the live quantity dynamically in case the AJAX polling updated it
+                    const liveQtyText = document.getElementById(`qty-output-${articleId}`).innerText;
+                    const qty = parseFloat(liveQtyText.replace(/,/g, ''));
+
+                    if(qty <= 0) { alert("Buffer is empty!"); return; }
+
+                    this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Printing...';
+                    this.disabled = true;
+
+                    fetch('api/print_label.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ order_id: orderId, article_id: articleId, qty: qty })
+                    })
                     .then(res => res.json())
                     .then(data => {
-                        let rows = '';
-                        if(data.length === 0) {
-                            rows = '<tr><td colspan="4" class="text-center text-muted">No labels printed yet.</td></tr>';
+                        if(data.success) {
+                            alert("Printed Label: " + data.batch_code);
+                            location.reload(); 
                         } else {
-                            data.forEach(lbl => {
-                                rows += `<tr>
-                                    <td><span class="badge bg-secondary">${lbl.BatchCode}</span></td>
-                                    <td class="fw-bold">${lbl.Quantity}</td>
-                                    <td><i class="fa-solid fa-user-circle me-1"></i>${lbl.OperatorUsername}</td>
-                                    <td>${lbl.PrintTime}</td>
-                                </tr>`;
-                            });
+                            alert('Error: ' + data.message);
+                            this.innerHTML = '<i class="fa-solid fa-print me-1"></i> Print Label';
+                            this.disabled = false;
                         }
-                        document.getElementById('labelsTableBody').innerHTML = rows;
                     });
-                */
+                });
             });
+
+            // 3. Print Final Label & Close Order
+            document.querySelectorAll('.btn-print-close').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const orderId = this.dataset.order;
+                    const articleId = this.dataset.article;
+                    
+                    // Fetch the live quantity dynamically
+                    const liveQtyText = document.getElementById(`qty-output-${articleId}`).innerText;
+                    const qty = parseFloat(liveQtyText.replace(/,/g, ''));
+
+                    if(!confirm("Are you sure you want to print the final label and CLOSE this order?")) return;
+
+                    this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Closing...';
+                    this.disabled = true;
+
+                    fetch('api/print_and_close.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ order_id: orderId, article_id: articleId, qty: qty })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.success) {
+                            alert("Order Closed. Final Label: " + data.batch_code);
+                            location.reload(); 
+                        } else {
+                            alert('Error: ' + data.message);
+                            this.innerHTML = '<i class="fa-solid fa-flag-checkered me-1"></i> Print & Close';
+                            this.disabled = false;
+                        }
+                    });
+                });
+            });
+
+            window.labelsModalInitialized = true;
         });
-    });
+    }
 </script>

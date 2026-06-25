@@ -1,67 +1,43 @@
 <?php
-// =========================================================================
-// 1. CONSTANTE DE CONFIGURARE API ȘI TRADUCERI (UI)
-// =========================================================================
-
-// Configurații Endpoint-uri API (Modifică aici rutele țintă)
+// QC configuration
 const QC_API_ENDPOINT = "http://localhost:8082/api/qc/check-part.php";
 const QC_API_TOKEN    = "secure_bearer_token_token_here";
-
-// Texte Secțiune Principală Calitate (QC)
-const L_QC_TITLE            = "Calitate";
-const L_QC_NO_REJECTS       = "Nu există rebuturi recente";
-const L_TITLE_DISCARD       = "Aruncă / Rebut piese";
-const L_TITLE_RECOVERY      = "Recuperare / Reprelucrare";
-const L_TITLE_CAMERA        = "Verificare vizuală (Cameră)";
-
-// Texte Modal Rebutare Piese (Discard)
-const L_MODAL_DISCARD_TITLE = "Rebutare Piese";
-const L_LABEL_QTY           = "Cantitate";
-const L_LABEL_CATEGORIES    = "CATEGORII";
-const L_LABEL_REASONS       = "MOTIVE";
-const L_SELECT_CATEGORY     = "Selectează o categorie";
-const L_PLACEHOLDER_NOTES   = "Informații suplimentare (opțional)...";
-const L_BTN_CANCEL          = "Anulează";
-const L_BTN_CONFIRM_DISCARD = "Confirmă Rebutul";
-
-// Texte Modal Cameră și Verificare Vizuală
-const L_MODAL_CAMERA_TITLE  = "Scanare și Verificare Piesă";
-const L_BTN_CHECK_PART      = "Verifică piesa";
-const L_CAMERA_LOADING      = "Se inițializează fluxul video...";
-const L_JS_CAMERA_ERR       = "Nu s-a putut accesa camera video: ";
-const L_JS_API_SUCCESS      = "Verificare completă! Piesa a fost procesată.";
-const L_JS_API_ERR          = "Eroare la comunicarea cu serverul API.";
 ?>
 
-<div id="qc" class="footer-section d-flex flex-column h-100">
-    <div class="d-flex justify-content-between align-items-center mb-2 w-100">
-        <h3 class="mb-0"><?= L_QC_TITLE ?></h3>
-        <div class="d-flex gap-1">
-            <button class="btn btn-primary btn-sm shadow-sm" id="btn-camera" data-bs-toggle="modal" data-bs-target="#modal-camera" title="<?= L_TITLE_CAMERA ?>" style="width: 40px; height: 32px;">
-                <i class="fa-solid fa-camera"></i>
+<div class="card border-0 shadow-sm h-100">
+    <div class="card-header bg-danger text-white d-flex align-items-center">
+        <i class="fa-solid fa-clipboard-check me-2"></i>
+        <h5 class="card-title mb-0">Quality Control</h5>
+    </div>
+    <div class="card-body d-flex flex-column overflow-hidden" style="max-height: 400px; padding: 15px;">
+        
+        <h6 class="text-muted small fw-bold mb-2">Recent Discards</h6>
+        <div class="flex-grow-1 overflow-auto mb-3 border rounded p-2 bg-light" id="live-rejects-list">
+            <?php if (!empty($data['recentRejects'])): ?>
+                <?php foreach ($data['recentRejects'] as $reject): ?>
+                    <div class="d-flex justify-content-between border-bottom pb-1 mb-1 px-1">
+                        <span class="text-truncate" style="max-width: 75%;" title="<?= htmlspecialchars($reject['CategoryName'] . ' - ' . $reject['ReasonName']) ?>">
+                            <?= htmlspecialchars($reject['ReasonName']) ?>
+                        </span>
+                        <span class="fw-bold text-danger">-<?= $reject['Quantity'] ?></span>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="text-muted text-center pt-2 fst-italic">No recent rejects</div>
+            <?php endif; ?>
+        </div>
+
+        <div class="d-flex gap-2 mt-auto">
+            <button class="btn btn-outline-danger flex-fill" data-bs-toggle="modal" data-bs-target="#modal-discard">
+                <i class="fa-solid fa-trash mb-1 d-block fs-5"></i> Discard
             </button>
-            <button class="btn btn-danger btn-sm shadow-sm" id="btn-discard" data-bs-toggle="modal" data-bs-target="#modal-discard" title="<?= L_TITLE_DISCARD ?>" style="width: 40px; height: 32px;">
-                <i class="fa-solid fa-trash"></i>
+            <button class="btn btn-primary flex-fill" data-bs-toggle="modal" data-bs-target="#modal-camera">
+                <i class="fa-solid fa-camera mb-1 d-block fs-5"></i> Camera Scan
             </button>
-            <button class="btn btn-success btn-sm shadow-sm" id="btn-recovery" title="<?= L_TITLE_RECOVERY ?>" style="width: 40px; height: 32px;">
-                <i class="fa-solid fa-recycle"></i>
+            <button class="btn btn-success flex-fill">
+                <i class="fa-solid fa-recycle mb-1 d-block fs-5"></i> Recover
             </button>
         </div>
-    </div>
-
-    <div class="qc-recent-list flex-grow-1 overflow-auto border rounded bg-white p-1" style="font-size: 0.8rem;">
-        <?php if (!empty($data['recentRejects'])): ?>
-            <?php foreach ($data['recentRejects'] as $reject): ?>
-                <div class="d-flex justify-content-between border-bottom pb-1 mb-1 px-1">
-                    <span class="text-truncate" style="max-width: 75%;" title="<?= htmlspecialchars($reject['CategoryName'] . ' - ' . $reject['ReasonName']) ?>">
-                        <?= htmlspecialchars($reject['ReasonName']) ?>
-                    </span>
-                    <span class="fw-bold text-danger">-<?= $reject['Quantity'] ?></span>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <div class="text-muted text-center pt-2 fst-italic"><?= L_QC_NO_REJECTS ?></div>
-        <?php endif; ?>
     </div>
 </div>
 
@@ -69,43 +45,12 @@ const L_JS_API_ERR          = "Eroare la comunicarea cu serverul API.";
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content shadow-lg border-0">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title"><i class="fa-solid fa-trash me-2"></i> <?= L_MODAL_DISCARD_TITLE ?></h5>
+                <h5 class="modal-title"><i class="fa-solid fa-trash me-2"></i> Report Rejects</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body p-0">
-                <div class="d-flex" style="height: 450px;">
-                    <div class="col-4 bg-light border-end p-3 d-flex flex-column">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold"><?= L_LABEL_QTY ?></label>
-                            <input type="number" id="reject-qty" class="form-control form-control-lg text-center fw-bold" value="1" min="1">
-                        </div>
-                        <div class="flex-grow-1 overflow-auto">
-                            <label class="form-label fw-bold text-muted small"><?= L_LABEL_CATEGORIES ?></label>
-                            <div class="list-group" id="reject-categories">
-                                <div class="text-center p-3"><i class="fa-solid fa-spinner fa-spin"></i></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-8 p-3 d-flex flex-column">
-                        <div class="flex-grow-1 overflow-auto mb-3 border rounded p-2 bg-white" id="reject-reasons-container">
-                            <label class="form-label fw-bold text-muted small sticky-top bg-white w-100"><?= L_LABEL_REASONS ?></label>
-                            <div class="list-group list-group-flush" id="reject-reasons">
-                                <div class="text-center p-3 text-muted"><?= L_SELECT_CATEGORY ?></div>
-                            </div>
-                        </div>
-
-                        <div class="mb-0">
-                            <textarea id="reject-notes" class="form-control" rows="2" placeholder="<?= L_PLACEHOLDER_NOTES ?>"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer bg-light">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= L_BTN_CANCEL ?></button>
-                <button type="button" id="btn-submit-reject" class="btn btn-danger px-4" disabled>
-                    <i class="fa-solid fa-check"></i> <?= L_BTN_CONFIRM_DISCARD ?>
-                </button>
+            <div class="modal-body p-4 text-center">
+                <h3 class="text-muted">Reject Form Placeholder</h3>
+                <p>Implement reason selection and quantity insertion here.</p>
             </div>
         </div>
     </div>
@@ -115,22 +60,11 @@ const L_JS_API_ERR          = "Eroare la comunicarea cu serverul API.";
     <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content shadow-lg border-0">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="fa-solid fa-camera me-2"></i> <?= L_MODAL_CAMERA_TITLE ?></h5>
+                <h5 class="modal-title"><i class="fa-solid fa-camera me-2"></i> Scan Part</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-3 bg-dark text-center position-relative">
                 <video id="webcam-stream" autoplay playsinline class="w-100 rounded border border-secondary" style="height: 340px; object-fit: cover; background-color: #000;"></video>
-                <canvas id="webcam-canvas" class="d-none"></canvas>
-                
-                <div id="camera-loading-status" class="text-white small mt-2">
-                    <i class="fa-solid fa-circle-notch fa-spin me-1 text-primary"></i> <?= L_CAMERA_LOADING ?>
-                </div>
-            </div>
-            <div class="modal-footer bg-light">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= L_BTN_CANCEL ?></button>
-                <button type="button" id="btn-capture-and-check" class="btn btn-primary px-4">
-                    <i class="fa-solid fa-magnifying-glass me-1"></i> <?= L_BTN_CHECK_PART ?>
-                </button>
             </div>
         </div>
     </div>
@@ -138,93 +72,89 @@ const L_JS_API_ERR          = "Eroare la comunicarea cu serverul API.";
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // Preluarea variabilelor globale din configurarea PHP
-    const apiEndpoint = "<?= QC_API_ENDPOINT ?>";
-    const apiToken    = "<?= QC_API_TOKEN ?>";
-
-    const modalCamera = document.getElementById('modal-camera');
-    const video       = document.getElementById('webcam-stream');
-    const canvas      = document.getElementById('webcam-canvas');
-    const btnCapture  = document.getElementById('btn-capture-and-check');
-    const statusText  = document.getElementById('camera-loading-status');
+    const activeOrderId = <?= isset($activeOrder) && $activeOrder ? $activeOrder['OrderID'] : 'null' ?>;
     
-    let localStream = null;
+    if (activeOrderId) {
+        setInterval(() => {
+            fetch(`api/live_update.php?order_id=${activeOrderId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(!data.success) return;
 
-    // A. Activare flux video când modalul devine vizibil pe ecran
-    modalCamera.addEventListener('shown.bs.modal', async function () {
-        statusText.classList.remove('d-none');
-        try {
-            localStream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: "environment" }, // Preferă camera principală din spate pe dispozitive mobile
-                audio: false 
-            });
-            video.srcObject = localStream;
-            statusText.classList.add('d-none');
-        } catch (err) {
-            console.error("Webcam Error: ", err);
-            statusText.innerHTML = `<span class="text-danger"><i class="fa-solid fa-circle-exclamation"></i> <?= L_JS_CAMERA_ERR ?> ${err.message}</span>`;
-        }
-    });
+                    // 1. Update Material & Logistics Quantities
+                    data.progress.forEach(p => {
+                        if (p.ProgressType === 'Input') {
+                            const textEl = document.getElementById(`qty-input-${p.ArticleID}`);
+                            const boxEl = document.getElementById(`box-input-${p.ArticleID}`);
+                            if (textEl && boxEl) {
+                                const qty = parseFloat(p.CurrentQuantity);
+                                textEl.innerText = qty.toFixed(2);
+                                
+                                const scanBtn = boxEl.querySelector('.btn-scan-material');
+                                const histBtn = boxEl.querySelector('.btn-material-history');
+                                
+                                if (qty < 0) {
+                                    boxEl.classList.add('material-negative');
+                                    boxEl.classList.remove('border-secondary', 'bg-white', 'text-dark');
+                                    if(scanBtn) { scanBtn.classList.replace('btn-primary', 'btn-danger'); }
+                                    if(histBtn) { histBtn.classList.replace('btn-outline-secondary', 'btn-outline-danger'); }
+                                } else {
+                                    boxEl.classList.remove('material-negative');
+                                    boxEl.classList.add('border-secondary', 'bg-white', 'text-dark');
+                                    if(scanBtn) { scanBtn.classList.replace('btn-danger', 'btn-primary'); }
+                                    if(histBtn) { histBtn.classList.replace('btn-outline-danger', 'btn-outline-secondary'); }
+                                }
+                            }
+                        } else if (p.ProgressType === 'Output') {
+                            const textEl = document.getElementById(`qty-output-${p.ArticleID}`);
+                            const barEl = document.getElementById(`progress-bar-${p.ArticleID}`);
+                            const btnPrint = document.getElementById(`btn-print-${p.ArticleID}`);
+                            
+                            if (textEl && barEl) {
+                                const qty = parseFloat(p.CurrentQuantity);
+                                const target = parseFloat(textEl.dataset.target) || 1000;
+                                textEl.innerText = qty.toFixed(0);
+                                
+                                let pct = Math.min(100, Math.max(0, (qty / target) * 100));
+                                barEl.style.width = pct + '%';
+                                barEl.innerText = Math.round(pct) + '%';
+                                
+                                if (qty >= target) {
+                                    barEl.classList.add('bg-success');
+                                    barEl.classList.remove('bg-primary', 'progress-bar-striped', 'progress-bar-animated');
+                                    textEl.classList.replace('text-dark', 'text-success');
+                                } else {
+                                    barEl.classList.remove('bg-success');
+                                    barEl.classList.add('bg-primary', 'progress-bar-striped', 'progress-bar-animated');
+                                    textEl.classList.replace('text-success', 'text-dark');
+                                }
 
-    // B. Oprire flux video în momentul în care modalul este închis (eliberare hardware)
-    modalCamera.addEventListener('hidden.bs.modal', function () {
-        if (localStream) {
-            localStream.getTracks().forEach(track => track.stop());
-            localStream = null;
-        }
-        video.srcObject = null;
-    });
+                                if (btnPrint) btnPrint.disabled = (qty <= 0);
+                            }
+                        }
+                    });
 
-    // C. Captură cadru video și trimitere payload către API (Decizia de procesare)
-    btnCapture.addEventListener('click', function () {
-        if (!localStream) return;
-
-        // Potrivire rezoluție canvas cu fluxul video activ
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        
-        // Desenare cadru curent pe canvas
-        const context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-        // Convertire imagine în format Base64 (DataURL)
-        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
-
-        // Schimbare stare interfață pe mod procesare
-        btnCapture.disabled = true;
-        statusText.classList.remove('d-none');
-        statusText.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-warning me-1"></i> Se analizează piesa...';
-
-        // Aici se trimite imaginea către endpoint-ul tău API
-        fetch(apiEndpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + apiToken
-            },
-            body: JSON.stringify({
-                image: imageDataUrl,
-                timestamp: new Date().toISOString()
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Aici decizi ce faci cu răspunsul de la API
-            alert("<?= L_JS_API_SUCCESS ?>\nResponse: " + JSON.stringify(data));
-            
-            // Închide modalul după succes
-            const bootstrapModal = bootstrap.Modal.getInstance(modalCamera);
-            bootstrapModal.hide();
-        })
-        .catch(error => {
-            console.error("API Error: ", error);
-            alert("<?= L_JS_API_ERR ?>");
-        })
-        .finally(() => {
-            // Resetare butoane interfață
-            btnCapture.disabled = false;
-            statusText.classList.add('d-none');
-        });
-    });
+                    // 2. Update QC Rejects List
+                    const rejectList = document.getElementById('live-rejects-list');
+                    if (rejectList) {
+                        if (data.rejects.length === 0) {
+                            rejectList.innerHTML = '<div class="text-muted text-center pt-2 fst-italic">No recent rejects</div>';
+                        } else {
+                            let html = '';
+                            data.rejects.forEach(r => {
+                                html += `<div class="d-flex justify-content-between border-bottom pb-1 mb-1 px-1">
+                                    <span class="text-truncate" style="max-width: 75%;">
+                                        ${r.ReasonName}
+                                    </span>
+                                    <span class="fw-bold text-danger">-${r.Quantity}</span>
+                                </div>`;
+                            });
+                            rejectList.innerHTML = html;
+                        }
+                    }
+                })
+                .catch(err => console.error("Polling error:", err));
+        }, 5000); // 5000ms = 5 Seconds
+    }
 });
 </script>

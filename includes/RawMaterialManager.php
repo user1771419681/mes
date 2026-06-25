@@ -12,16 +12,31 @@ class RawMaterialManager
     public function createLog(int $productionOrderId, int $operatorId, string $batchCode, ?int $articleId = null, ?int $machineId = null, float $quantity = 1.0, ?string $scanTime = null, ?string $notes = null): bool
     {
         try {
+            $this->pdo->beginTransaction();
+
             $stmt = $this->pdo->prepare("
                 INSERT INTO $this->tableName (ProductionOrderID, OperatorID, BatchCode, ArticleID, MachineID, Quantity, ScanTime, Notes)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
             
-            // Default to NOW() if scanTime is empty
             $scanTime = empty($scanTime) ? date('Y-m-d H:i:s') : $scanTime;
+            $stmt->execute([$productionOrderId, $operatorId, $batchCode, $articleId, $machineId, $quantity, $scanTime, $notes]);
 
-            return $stmt->execute([$productionOrderId, $operatorId, $batchCode, $articleId, $machineId, $quantity, $scanTime, $notes]);
+            if ($articleId) {
+                $stmtProgress = $this->pdo->prepare("
+                    INSERT INTO production_order_progress (OrderID, ArticleID, ProgressType, CurrentQuantity)
+                    VALUES (?, ?, 'Input', ?)
+                    ON DUPLICATE KEY UPDATE CurrentQuantity = CurrentQuantity + VALUES(CurrentQuantity)
+                ");
+                $stmtProgress->execute([$productionOrderId, $articleId, $quantity]);
+            }
+
+            $this->pdo->commit();
+            return true;
         } catch (PDOException $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
             return false;
         }
     }

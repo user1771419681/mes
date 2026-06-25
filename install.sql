@@ -1,134 +1,133 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
+/*M!999999\- enable the sandbox mode */ 
+-- MariaDB dump 10.19  Distrib 10.11.16-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 24, 2026 at 01:58 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: xooiduyr_mes
+-- ------------------------------------------------------
+-- Server version	10.11.16-MariaDB-ubu2204
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `xooiduyr_mes`
---
-CREATE DATABASE IF NOT EXISTS `xooiduyr_mes` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `xooiduyr_mes`;
-
--- --------------------------------------------------------
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
 -- Table structure for table `adjustment`
 --
 
 DROP TABLE IF EXISTS `adjustment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `adjustment` (
-  `AdjustmentID` int(11) NOT NULL,
+  `AdjustmentID` int(11) NOT NULL AUTO_INCREMENT,
   `ProductionOrderID` int(11) NOT NULL,
   `ArticleID` int(11) NOT NULL,
-  `Quantity` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `Quantity` int(11) NOT NULL,
+  PRIMARY KEY (`AdjustmentID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `adjustment`
---
-
-TRUNCATE TABLE `adjustment`;
 --
 -- Dumping data for table `adjustment`
 --
 
-INSERT INTO `adjustment` (`AdjustmentID`, `ProductionOrderID`, `ArticleID`, `Quantity`) VALUES
-(0, 1, 1, 2),
-(2, 1, 2, 3);
-
--- --------------------------------------------------------
+LOCK TABLES `adjustment` WRITE;
+/*!40000 ALTER TABLE `adjustment` DISABLE KEYS */;
+INSERT INTO `adjustment` VALUES
+(0,1,1,2),
+(2,1,2,3);
+/*!40000 ALTER TABLE `adjustment` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `api_audit_log`
 --
 
 DROP TABLE IF EXISTS `api_audit_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `api_audit_log` (
-  `AuditID` int(11) NOT NULL,
+  `AuditID` int(11) NOT NULL AUTO_INCREMENT,
   `KeyID` int(11) DEFAULT NULL,
   `UserID` int(11) DEFAULT NULL,
   `Action` enum('Created','Updated','Deleted','Used','PermissionChange','ScopeChange') NOT NULL,
   `Endpoint` varchar(255) DEFAULT NULL,
   `IPAddress` varchar(45) DEFAULT NULL,
   `Details` text DEFAULT NULL,
-  `Timestamp` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `Timestamp` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`AuditID`),
+  KEY `KeyID` (`KeyID`),
+  KEY `idx_audit_action` (`Action`),
+  KEY `idx_audit_time` (`Timestamp`),
+  CONSTRAINT `fk_audit_key` FOREIGN KEY (`KeyID`) REFERENCES `api_keys` (`KeyID`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `api_audit_log`
---
-
-TRUNCATE TABLE `api_audit_log`;
 --
 -- Dumping data for table `api_audit_log`
 --
 
-INSERT INTO `api_audit_log` (`AuditID`, `KeyID`, `UserID`, `Action`, `Endpoint`, `IPAddress`, `Details`, `Timestamp`) VALUES
-(1, 1, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2025-12-26 22:40:09'),
-(2, 2, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2025-12-26 22:40:41'),
-(3, 3, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2025-12-27 12:31:49'),
-(4, 4, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2025-12-27 18:18:08'),
-(5, 5, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2025-12-29 12:40:25'),
-(6, 6, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2025-12-30 09:48:49'),
-(7, 7, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-01-05 14:51:25'),
-(8, 8, 1, 'Created', NULL, '141.85.192.61', 'Generated via Login/Admin', '2026-01-12 17:20:54'),
-(9, 9, 1, 'Created', NULL, '141.85.144.221', 'Generated via Login/Admin', '2026-01-14 13:08:45'),
-(10, 10, 1, 'Created', NULL, '86.105.218.196', 'Generated via Login/Admin', '2026-01-14 13:10:31'),
-(11, 11, 1, 'Created', NULL, '141.85.192.24', 'Generated via Login/Admin', '2026-01-14 18:20:37'),
-(12, 12, 1, 'Created', NULL, '188.26.174.158', 'Generated via Login/Admin', '2026-01-15 09:23:33'),
-(13, 13, 1, 'Created', NULL, '141.85.192.24', 'Generated via Login/Admin', '2026-01-15 16:06:43'),
-(14, 14, 1, 'Created', NULL, '188.26.174.158', 'Generated via Login/Admin', '2026-01-15 20:06:21'),
-(15, 15, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-01-20 13:16:24'),
-(16, 16, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-01-22 11:12:39'),
-(17, 17, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-01-22 17:16:35'),
-(18, 18, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-01-22 22:01:19'),
-(19, 19, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-01-23 12:21:39'),
-(20, 20, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-01-24 08:34:29'),
-(21, 21, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-01-24 09:25:34'),
-(22, 22, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-01-25 09:36:32'),
-(23, 23, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-02-04 18:05:03'),
-(24, 24, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-02-23 10:47:59'),
-(25, 25, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-02-25 10:53:46'),
-(26, 26, 1, 'Created', NULL, '127.0.0.1', 'Generated via Login/Admin', '2026-03-22 20:13:57'),
-(27, 27, 1, 'Created', NULL, '127.0.0.1', 'Generated via Login/Admin', '2026-03-23 11:56:42'),
-(28, 28, 1, 'Created', NULL, '127.0.0.1', 'Generated via Login/Admin', '2026-04-21 17:15:46'),
-(29, 29, 1, 'Created', NULL, '127.0.0.1', 'Generated via Login/Admin', '2026-05-06 08:58:10'),
-(30, 30, 1, 'Created', NULL, '127.0.0.1', 'Generated via Login/Admin', '2026-05-08 09:16:15'),
-(31, 31, 1, 'Created', NULL, '127.0.0.1', 'Generated via Login/Admin', '2026-05-12 14:04:41'),
-(32, 32, 1, 'Created', NULL, '127.0.0.1', 'Generated via Login/Admin', '2026-05-14 20:57:15'),
-(33, 33, 1, 'Created', NULL, '127.0.0.1', 'Generated via Login/Admin', '2026-05-15 08:23:22'),
-(34, 34, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-05-22 20:42:36'),
-(35, 34, NULL, 'Used', 'get-filter-options.php', '::1', NULL, '2026-05-22 20:45:34'),
-(36, 34, NULL, 'Used', 'get-filter-options.php', '::1', NULL, '2026-05-22 20:45:37'),
-(37, 35, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-06-13 17:06:43'),
-(38, 36, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-06-14 15:18:58'),
-(39, 34, NULL, 'Used', 'get-filter-options.php', '::1', NULL, '2026-06-14 19:22:49'),
-(40, 34, NULL, 'Used', 'get-filter-options.php', '::1', NULL, '2026-06-14 19:22:57'),
-(41, 37, 1, 'Created', NULL, '::1', 'Generated via Login/Admin', '2026-06-24 14:20:44');
-
--- --------------------------------------------------------
+LOCK TABLES `api_audit_log` WRITE;
+/*!40000 ALTER TABLE `api_audit_log` DISABLE KEYS */;
+INSERT INTO `api_audit_log` VALUES
+(1,1,1,'Created',NULL,'::1','Generated via Login/Admin','2025-12-26 22:40:09'),
+(2,2,1,'Created',NULL,'::1','Generated via Login/Admin','2025-12-26 22:40:41'),
+(3,3,1,'Created',NULL,'::1','Generated via Login/Admin','2025-12-27 12:31:49'),
+(4,4,1,'Created',NULL,'::1','Generated via Login/Admin','2025-12-27 18:18:08'),
+(5,5,1,'Created',NULL,'::1','Generated via Login/Admin','2025-12-29 12:40:25'),
+(6,6,1,'Created',NULL,'::1','Generated via Login/Admin','2025-12-30 09:48:49'),
+(7,7,1,'Created',NULL,'::1','Generated via Login/Admin','2026-01-05 14:51:25'),
+(8,8,1,'Created',NULL,'141.85.192.61','Generated via Login/Admin','2026-01-12 17:20:54'),
+(9,9,1,'Created',NULL,'141.85.144.221','Generated via Login/Admin','2026-01-14 13:08:45'),
+(10,10,1,'Created',NULL,'86.105.218.196','Generated via Login/Admin','2026-01-14 13:10:31'),
+(11,11,1,'Created',NULL,'141.85.192.24','Generated via Login/Admin','2026-01-14 18:20:37'),
+(12,12,1,'Created',NULL,'188.26.174.158','Generated via Login/Admin','2026-01-15 09:23:33'),
+(13,13,1,'Created',NULL,'141.85.192.24','Generated via Login/Admin','2026-01-15 16:06:43'),
+(14,14,1,'Created',NULL,'188.26.174.158','Generated via Login/Admin','2026-01-15 20:06:21'),
+(15,15,1,'Created',NULL,'::1','Generated via Login/Admin','2026-01-20 13:16:24'),
+(16,16,1,'Created',NULL,'::1','Generated via Login/Admin','2026-01-22 11:12:39'),
+(17,17,1,'Created',NULL,'::1','Generated via Login/Admin','2026-01-22 17:16:35'),
+(18,18,1,'Created',NULL,'::1','Generated via Login/Admin','2026-01-22 22:01:19'),
+(19,19,1,'Created',NULL,'::1','Generated via Login/Admin','2026-01-23 12:21:39'),
+(20,20,1,'Created',NULL,'::1','Generated via Login/Admin','2026-01-24 08:34:29'),
+(21,21,1,'Created',NULL,'::1','Generated via Login/Admin','2026-01-24 09:25:34'),
+(22,22,1,'Created',NULL,'::1','Generated via Login/Admin','2026-01-25 09:36:32'),
+(23,23,1,'Created',NULL,'::1','Generated via Login/Admin','2026-02-04 18:05:03'),
+(24,24,1,'Created',NULL,'::1','Generated via Login/Admin','2026-02-23 10:47:59'),
+(25,25,1,'Created',NULL,'::1','Generated via Login/Admin','2026-02-25 10:53:46'),
+(26,26,1,'Created',NULL,'127.0.0.1','Generated via Login/Admin','2026-03-22 20:13:57'),
+(27,27,1,'Created',NULL,'127.0.0.1','Generated via Login/Admin','2026-03-23 11:56:42'),
+(28,28,1,'Created',NULL,'127.0.0.1','Generated via Login/Admin','2026-04-21 17:15:46'),
+(29,29,1,'Created',NULL,'127.0.0.1','Generated via Login/Admin','2026-05-06 08:58:10'),
+(30,30,1,'Created',NULL,'127.0.0.1','Generated via Login/Admin','2026-05-08 09:16:15'),
+(31,31,1,'Created',NULL,'127.0.0.1','Generated via Login/Admin','2026-05-12 14:04:41'),
+(32,32,1,'Created',NULL,'127.0.0.1','Generated via Login/Admin','2026-05-14 20:57:15'),
+(33,33,1,'Created',NULL,'127.0.0.1','Generated via Login/Admin','2026-05-15 08:23:22'),
+(34,34,1,'Created',NULL,'::1','Generated via Login/Admin','2026-05-22 20:42:36'),
+(35,34,NULL,'Used','get-filter-options.php','::1',NULL,'2026-05-22 20:45:34'),
+(36,34,NULL,'Used','get-filter-options.php','::1',NULL,'2026-05-22 20:45:37'),
+(37,35,1,'Created',NULL,'::1','Generated via Login/Admin','2026-06-13 17:06:43'),
+(38,36,1,'Created',NULL,'::1','Generated via Login/Admin','2026-06-14 15:18:58'),
+(39,34,NULL,'Used','get-filter-options.php','::1',NULL,'2026-06-14 19:22:49'),
+(40,34,NULL,'Used','get-filter-options.php','::1',NULL,'2026-06-14 19:22:57'),
+(41,37,1,'Created',NULL,'::1','Generated via Login/Admin','2026-06-24 14:20:44');
+/*!40000 ALTER TABLE `api_audit_log` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `api_keys`
 --
 
 DROP TABLE IF EXISTS `api_keys`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `api_keys` (
-  `KeyID` int(11) NOT NULL,
+  `KeyID` int(11) NOT NULL AUTO_INCREMENT,
   `KeyString` varchar(64) NOT NULL,
   `Name` varchar(100) NOT NULL,
   `UserID` int(11) NOT NULL,
@@ -136,98 +135,105 @@ CREATE TABLE `api_keys` (
   `ScopePlants` text DEFAULT NULL,
   `IsActive` tinyint(1) DEFAULT 1,
   `CreatedAt` datetime DEFAULT current_timestamp(),
-  `LastUsedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `LastUsedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`KeyID`),
+  UNIQUE KEY `KeyString` (`KeyString`),
+  KEY `UserID` (`UserID`),
+  CONSTRAINT `fk_apikey_user` FOREIGN KEY (`UserID`) REFERENCES `user` (`OperatorID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `api_keys`
---
-
-TRUNCATE TABLE `api_keys`;
 --
 -- Dumping data for table `api_keys`
 --
 
-INSERT INTO `api_keys` (`KeyID`, `KeyString`, `Name`, `UserID`, `Permissions`, `ScopePlants`, `IsActive`, `CreatedAt`, `LastUsedAt`) VALUES
-(1, 'c6c9186151e9287af39142108ebab65d', 'Session Key 2025-12-26 21:40', 1, 'ALL', 'ALL', 1, '2025-12-26 22:40:09', NULL),
-(2, '6906495193834cc7316e1c46a8226623', 'Session Key 2025-12-26 21:40', 1, 'ALL', 'ALL', 1, '2025-12-26 22:40:41', NULL),
-(3, 'a9b1940e31719abab5e20ad58b9880e4', 'Session Key 2025-12-27 11:31', 1, 'ALL', 'ALL', 1, '2025-12-27 12:31:49', NULL),
-(4, '32e75f342e5375a0869d0026cc8e4073', 'Session Key 2025-12-27 17:18', 1, 'ALL', 'ALL', 1, '2025-12-27 18:18:08', NULL),
-(5, 'a5e517e065bdd1b8d0a7a2019d586616', 'Session Key 2025-12-29 11:40', 1, 'ALL', 'ALL', 1, '2025-12-29 12:40:25', NULL),
-(6, 'a5a4f0f6d26557ca75f91244be9c1b62', 'Session Key 2025-12-30 08:48', 1, 'ALL', 'ALL', 1, '2025-12-30 09:48:49', NULL),
-(7, '3d511bf440c41c22165af692c52ba07b', 'Session Key 2026-01-05 13:51', 1, 'ALL', 'ALL', 1, '2026-01-05 14:51:25', NULL),
-(8, '54662576c8ac8b287f418b1d6c31b806', 'Session Key 2026-01-12 17:20', 1, 'ALL', 'ALL', 1, '2026-01-12 17:20:54', NULL),
-(9, '1333f50c4c0a952bf1665733779a2fb1', 'Session Key 2026-01-14 13:08', 1, 'ALL', 'ALL', 1, '2026-01-14 13:08:45', NULL),
-(10, 'c0d2ea22d5d38d65eeb55c03efdb63a6', 'Session Key 2026-01-14 13:10', 1, 'ALL', 'ALL', 1, '2026-01-14 13:10:31', NULL),
-(11, '9eab16768f9ca1a05f2af183515929cc', 'Session Key 2026-01-14 18:20', 1, 'ALL', 'ALL', 1, '2026-01-14 18:20:37', NULL),
-(12, '0a54b1be9e3dc634a074731a3b2b3e33', 'Session Key 2026-01-15 09:23', 1, 'ALL', 'ALL', 1, '2026-01-15 09:23:33', NULL),
-(13, '31689ad7d9c2d578f3da1e7afb278cf1', 'Session Key 2026-01-15 16:06', 1, 'ALL', 'ALL', 1, '2026-01-15 16:06:43', NULL),
-(14, 'd73047933473ea70854f1ef210ab5b20', 'Session Key 2026-01-15 20:06', 1, 'ALL', 'ALL', 1, '2026-01-15 20:06:21', NULL),
-(15, '920a453f165318bb025cead1f6d97c82', 'Session Key 2026-01-20 12:16', 1, 'ALL', 'ALL', 1, '2026-01-20 13:16:24', NULL),
-(16, '6ec4ef7ef7a888f139d8720db2b3356f', 'Session Key 2026-01-22 10:12', 1, 'ALL', 'ALL', 1, '2026-01-22 11:12:39', NULL),
-(17, 'b126687ac77173ea66c3a55016357303', 'Session Key 2026-01-22 16:16', 1, 'ALL', 'ALL', 1, '2026-01-22 17:16:35', NULL),
-(18, '5e8741a831f3bc883e10d264bd6fc95e', 'Session Key 2026-01-22 21:01', 1, 'ALL', 'ALL', 1, '2026-01-22 22:01:19', NULL),
-(19, '49cd6d7c07685a217e9c4e1a784e9195', 'Session Key 2026-01-23 11:21', 1, 'ALL', 'ALL', 1, '2026-01-23 12:21:39', NULL),
-(20, '21d2a1b085b7d85e267a9c0d8626722d', 'Session Key 2026-01-24 07:34', 1, 'ALL', 'ALL', 1, '2026-01-24 08:34:29', NULL),
-(21, '7c889ab9139950cc5de6a9d36739b7ef', 'Session Key 2026-01-24 08:25', 1, 'ALL', 'ALL', 1, '2026-01-24 09:25:34', NULL),
-(22, '203719d105e9c1a87666c4cb5c5255b3', 'Session Key 2026-01-25 08:36', 1, 'ALL', 'ALL', 1, '2026-01-25 09:36:32', NULL),
-(23, 'abdcd9137fbff7fd12b5e15875ebf9ed', 'Session Key 2026-02-04 17:05', 1, 'ALL', 'ALL', 1, '2026-02-04 18:05:03', NULL),
-(24, '0f66ea847af9748b59a6c4b883ee7f61', 'Session Key 2026-02-23 09:47', 1, 'ALL', 'ALL', 1, '2026-02-23 10:47:59', NULL),
-(25, '7c5ac287eba69fa0ec8358b6365331a0', 'Session Key 2026-02-25 09:53', 1, 'ALL', 'ALL', 1, '2026-02-25 10:53:46', NULL),
-(26, 'e6a9b5418afd6c0f0399365a03a0c2e3', 'Session Key 2026-03-22 19:13', 1, 'ALL', 'ALL', 1, '2026-03-22 20:13:57', NULL),
-(27, '4afb9808024f7e03034bd1ed13514088', 'Session Key 2026-03-23 10:56', 1, 'ALL', 'ALL', 1, '2026-03-23 11:56:42', NULL),
-(28, '18999acf2273ae5bf7033688a495a68a', 'Session Key 2026-04-21 16:15', 1, 'ALL', 'ALL', 1, '2026-04-21 17:15:46', NULL),
-(29, 'e6ae1f90c8333a2f852de981869ec49b', 'Session Key 2026-05-06 07:58', 1, 'ALL', 'ALL', 1, '2026-05-06 08:58:10', NULL),
-(30, '1f88a3b25197413799b22c0977ee485a', 'Session Key 2026-05-08 08:16', 1, 'ALL', 'ALL', 1, '2026-05-08 09:16:15', NULL),
-(31, 'e0df7101d0586c910c5c05ac53828994', 'Session Key 2026-05-12 13:04', 1, 'ALL', 'ALL', 1, '2026-05-12 14:04:41', NULL),
-(32, '0083c3a57a192d99fa9790f8df622152', 'Session Key 2026-05-14 19:57', 1, 'ALL', 'ALL', 1, '2026-05-14 20:57:15', NULL),
-(33, '523438beca2fbaf58d3aa62e8d0dea08', 'Session Key 2026-05-15 07:23', 1, 'ALL', 'ALL', 1, '2026-05-15 08:23:22', NULL),
-(34, '3f144c303a7730187ffce7d1250baf48', 'Session Key 2026-05-22 19:42', 1, 'ALL', 'ALL', 1, '2026-05-22 20:42:36', '2026-06-14 19:22:57'),
-(35, '5b0d9a55e7f608b01ab46f6033ebfe65', 'Session Key 2026-06-13 16:06', 1, 'ALL', 'ALL', 1, '2026-06-13 17:06:43', NULL),
-(36, '822ec314242c0af0975d08436127d4e7', 'Session Key 2026-06-14 14:18', 1, 'ALL', 'ALL', 1, '2026-06-14 15:18:58', NULL),
-(37, 'eb4d530ada679491273678e9296b04cf', 'Session Key 2026-06-24 13:20', 1, 'ALL', 'ALL', 1, '2026-06-24 14:20:44', NULL);
-
--- --------------------------------------------------------
+LOCK TABLES `api_keys` WRITE;
+/*!40000 ALTER TABLE `api_keys` DISABLE KEYS */;
+INSERT INTO `api_keys` VALUES
+(1,'c6c9186151e9287af39142108ebab65d','Session Key 2025-12-26 21:40',1,'ALL','ALL',1,'2025-12-26 22:40:09',NULL),
+(2,'6906495193834cc7316e1c46a8226623','Session Key 2025-12-26 21:40',1,'ALL','ALL',1,'2025-12-26 22:40:41',NULL),
+(3,'a9b1940e31719abab5e20ad58b9880e4','Session Key 2025-12-27 11:31',1,'ALL','ALL',1,'2025-12-27 12:31:49',NULL),
+(4,'32e75f342e5375a0869d0026cc8e4073','Session Key 2025-12-27 17:18',1,'ALL','ALL',1,'2025-12-27 18:18:08',NULL),
+(5,'a5e517e065bdd1b8d0a7a2019d586616','Session Key 2025-12-29 11:40',1,'ALL','ALL',1,'2025-12-29 12:40:25',NULL),
+(6,'a5a4f0f6d26557ca75f91244be9c1b62','Session Key 2025-12-30 08:48',1,'ALL','ALL',1,'2025-12-30 09:48:49',NULL),
+(7,'3d511bf440c41c22165af692c52ba07b','Session Key 2026-01-05 13:51',1,'ALL','ALL',1,'2026-01-05 14:51:25',NULL),
+(8,'54662576c8ac8b287f418b1d6c31b806','Session Key 2026-01-12 17:20',1,'ALL','ALL',1,'2026-01-12 17:20:54',NULL),
+(9,'1333f50c4c0a952bf1665733779a2fb1','Session Key 2026-01-14 13:08',1,'ALL','ALL',1,'2026-01-14 13:08:45',NULL),
+(10,'c0d2ea22d5d38d65eeb55c03efdb63a6','Session Key 2026-01-14 13:10',1,'ALL','ALL',1,'2026-01-14 13:10:31',NULL),
+(11,'9eab16768f9ca1a05f2af183515929cc','Session Key 2026-01-14 18:20',1,'ALL','ALL',1,'2026-01-14 18:20:37',NULL),
+(12,'0a54b1be9e3dc634a074731a3b2b3e33','Session Key 2026-01-15 09:23',1,'ALL','ALL',1,'2026-01-15 09:23:33',NULL),
+(13,'31689ad7d9c2d578f3da1e7afb278cf1','Session Key 2026-01-15 16:06',1,'ALL','ALL',1,'2026-01-15 16:06:43',NULL),
+(14,'d73047933473ea70854f1ef210ab5b20','Session Key 2026-01-15 20:06',1,'ALL','ALL',1,'2026-01-15 20:06:21',NULL),
+(15,'920a453f165318bb025cead1f6d97c82','Session Key 2026-01-20 12:16',1,'ALL','ALL',1,'2026-01-20 13:16:24',NULL),
+(16,'6ec4ef7ef7a888f139d8720db2b3356f','Session Key 2026-01-22 10:12',1,'ALL','ALL',1,'2026-01-22 11:12:39',NULL),
+(17,'b126687ac77173ea66c3a55016357303','Session Key 2026-01-22 16:16',1,'ALL','ALL',1,'2026-01-22 17:16:35',NULL),
+(18,'5e8741a831f3bc883e10d264bd6fc95e','Session Key 2026-01-22 21:01',1,'ALL','ALL',1,'2026-01-22 22:01:19',NULL),
+(19,'49cd6d7c07685a217e9c4e1a784e9195','Session Key 2026-01-23 11:21',1,'ALL','ALL',1,'2026-01-23 12:21:39',NULL),
+(20,'21d2a1b085b7d85e267a9c0d8626722d','Session Key 2026-01-24 07:34',1,'ALL','ALL',1,'2026-01-24 08:34:29',NULL),
+(21,'7c889ab9139950cc5de6a9d36739b7ef','Session Key 2026-01-24 08:25',1,'ALL','ALL',1,'2026-01-24 09:25:34',NULL),
+(22,'203719d105e9c1a87666c4cb5c5255b3','Session Key 2026-01-25 08:36',1,'ALL','ALL',1,'2026-01-25 09:36:32',NULL),
+(23,'abdcd9137fbff7fd12b5e15875ebf9ed','Session Key 2026-02-04 17:05',1,'ALL','ALL',1,'2026-02-04 18:05:03',NULL),
+(24,'0f66ea847af9748b59a6c4b883ee7f61','Session Key 2026-02-23 09:47',1,'ALL','ALL',1,'2026-02-23 10:47:59',NULL),
+(25,'7c5ac287eba69fa0ec8358b6365331a0','Session Key 2026-02-25 09:53',1,'ALL','ALL',1,'2026-02-25 10:53:46',NULL),
+(26,'e6a9b5418afd6c0f0399365a03a0c2e3','Session Key 2026-03-22 19:13',1,'ALL','ALL',1,'2026-03-22 20:13:57',NULL),
+(27,'4afb9808024f7e03034bd1ed13514088','Session Key 2026-03-23 10:56',1,'ALL','ALL',1,'2026-03-23 11:56:42',NULL),
+(28,'18999acf2273ae5bf7033688a495a68a','Session Key 2026-04-21 16:15',1,'ALL','ALL',1,'2026-04-21 17:15:46',NULL),
+(29,'e6ae1f90c8333a2f852de981869ec49b','Session Key 2026-05-06 07:58',1,'ALL','ALL',1,'2026-05-06 08:58:10',NULL),
+(30,'1f88a3b25197413799b22c0977ee485a','Session Key 2026-05-08 08:16',1,'ALL','ALL',1,'2026-05-08 09:16:15',NULL),
+(31,'e0df7101d0586c910c5c05ac53828994','Session Key 2026-05-12 13:04',1,'ALL','ALL',1,'2026-05-12 14:04:41',NULL),
+(32,'0083c3a57a192d99fa9790f8df622152','Session Key 2026-05-14 19:57',1,'ALL','ALL',1,'2026-05-14 20:57:15',NULL),
+(33,'523438beca2fbaf58d3aa62e8d0dea08','Session Key 2026-05-15 07:23',1,'ALL','ALL',1,'2026-05-15 08:23:22',NULL),
+(34,'3f144c303a7730187ffce7d1250baf48','Session Key 2026-05-22 19:42',1,'ALL','ALL',1,'2026-05-22 20:42:36','2026-06-14 19:22:57'),
+(35,'5b0d9a55e7f608b01ab46f6033ebfe65','Session Key 2026-06-13 16:06',1,'ALL','ALL',1,'2026-06-13 17:06:43',NULL),
+(36,'822ec314242c0af0975d08436127d4e7','Session Key 2026-06-14 14:18',1,'ALL','ALL',1,'2026-06-14 15:18:58',NULL),
+(37,'eb4d530ada679491273678e9296b04cf','Session Key 2026-06-24 13:20',1,'ALL','ALL',1,'2026-06-24 14:20:44',NULL);
+/*!40000 ALTER TABLE `api_keys` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `article`
 --
 
 DROP TABLE IF EXISTS `article`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `article` (
-  `ArticleID` int(11) NOT NULL,
+  `ArticleID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(150) NOT NULL,
   `Description` text DEFAULT NULL,
   `ImagePath` varchar(255) DEFAULT NULL,
   `QualityControl` enum('Pending','Approved','Rejected') NOT NULL DEFAULT 'Pending',
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ArticleID`),
+  KEY `idx_name` (`Name`),
+  KEY `idx_quality` (`QualityControl`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `article`
---
-
-TRUNCATE TABLE `article`;
 --
 -- Dumping data for table `article`
 --
 
-INSERT INTO `article` (`ArticleID`, `Name`, `Description`, `ImagePath`, `QualityControl`, `CreatedAt`, `UpdatedAt`) VALUES
-(2, '10001543-SM', '10001543-SemiManufactured', NULL, 'Approved', '2025-12-23 13:15:41', '2025-12-23 13:15:41'),
-(3, '10001543-W', '10001543-Washed', NULL, 'Approved', '2025-12-23 13:16:04', '2025-12-23 13:16:04'),
-(4, '10001543-P', '10001543-Packaged', NULL, 'Approved', '2025-12-23 13:16:33', '2025-12-23 13:16:33'),
-(5, 'IN1543', 'Inox Coils for 10001543-SM', NULL, 'Approved', '2025-12-23 13:17:18', '2025-12-23 13:17:18');
-
--- --------------------------------------------------------
+LOCK TABLES `article` WRITE;
+/*!40000 ALTER TABLE `article` DISABLE KEYS */;
+INSERT INTO `article` VALUES
+(2,'10001543-SM','10001543-SemiManufactured',NULL,'Approved','2025-12-23 13:15:41','2025-12-23 13:15:41'),
+(3,'10001543-W','10001543-Washed',NULL,'Approved','2025-12-23 13:16:04','2025-12-23 13:16:04'),
+(4,'10001543-P','10001543-Packaged',NULL,'Approved','2025-12-23 13:16:33','2025-12-23 13:16:33'),
+(5,'IN1543','Inox Coils for 10001543-SM',NULL,'Approved','2025-12-23 13:17:18','2025-12-23 13:17:18');
+/*!40000 ALTER TABLE `article` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `batch_log`
 --
 
 DROP TABLE IF EXISTS `batch_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `batch_log` (
-  `BatchID` int(11) NOT NULL,
+  `BatchID` int(11) NOT NULL AUTO_INCREMENT,
   `BatchCode` varchar(50) NOT NULL,
   `BatchType` enum('Finished Product','Partial Product','Raw Material Remnant') NOT NULL DEFAULT 'Finished Product',
   `ProductionOrderID` int(11) NOT NULL,
@@ -238,191 +244,222 @@ CREATE TABLE `batch_log` (
   `PrintTime` datetime DEFAULT current_timestamp(),
   `Notes` text DEFAULT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`BatchID`),
+  UNIQUE KEY `BatchCode` (`BatchCode`),
+  KEY `ArticleID` (`ArticleID`),
+  KEY `OperatorID` (`OperatorID`),
+  KEY `MachineID` (`MachineID`),
+  KEY `idx_batch_code` (`BatchCode`),
+  KEY `idx_batch_order` (`ProductionOrderID`),
+  KEY `idx_batch_date` (`PrintTime`),
+  CONSTRAINT `batch_log_ibfk_1` FOREIGN KEY (`ProductionOrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE,
+  CONSTRAINT `batch_log_ibfk_2` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`),
+  CONSTRAINT `batch_log_ibfk_3` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`),
+  CONSTRAINT `batch_log_ibfk_4` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `batch_log`
---
-
-TRUNCATE TABLE `batch_log`;
 --
 -- Dumping data for table `batch_log`
 --
 
-INSERT INTO `batch_log` (`BatchID`, `BatchCode`, `BatchType`, `ProductionOrderID`, `ArticleID`, `OperatorID`, `MachineID`, `Quantity`, `PrintTime`, `Notes`, `CreatedAt`, `UpdatedAt`) VALUES
-(3, 'DEV0000123', 'Finished Product', 6, 2, 1, 4, 500.00, '2026-01-23 14:55:00', '', '2026-01-23 13:56:28', '2026-01-23 13:56:28'),
-(4, 'DEV0000124', 'Raw Material Remnant', 6, 5, 1, 4, 532.00, '2026-01-23 14:56:00', '', '2026-01-23 13:56:52', '2026-01-23 13:56:52'),
-(5, 'DEV0000125', 'Raw Material Remnant', 7, 5, 1, 4, 123.00, '2026-01-23 14:56:00', '', '2026-01-23 13:57:07', '2026-01-23 13:57:19');
-
--- --------------------------------------------------------
+LOCK TABLES `batch_log` WRITE;
+/*!40000 ALTER TABLE `batch_log` DISABLE KEYS */;
+INSERT INTO `batch_log` VALUES
+(3,'DEV0000123','Finished Product',6,2,1,4,500.00,'2026-01-23 14:55:00','','2026-01-23 13:56:28','2026-01-23 13:56:28'),
+(4,'DEV0000124','Raw Material Remnant',6,5,1,4,532.00,'2026-01-23 14:56:00','','2026-01-23 13:56:52','2026-01-23 13:56:52'),
+(5,'DEV0000125','Raw Material Remnant',7,5,1,4,123.00,'2026-01-23 14:56:00','','2026-01-23 13:57:07','2026-01-23 13:57:19'),
+(6,'B-20260624-O10-2476','Finished Product',10,2,3,3,5344.00,'2026-06-24 15:59:40',NULL,'2026-06-24 15:59:40','2026-06-24 15:59:40'),
+(7,'B-20260624-O10-2803','Finished Product',10,2,3,3,1163.00,'2026-06-24 16:13:22',NULL,'2026-06-24 16:13:22','2026-06-24 16:13:22'),
+(8,'B-20260624-O10-4670','Finished Product',10,2,3,3,154.00,'2026-06-24 16:13:25',NULL,'2026-06-24 16:13:25','2026-06-24 16:13:25'),
+(9,'B-20260624-O10-4244','Finished Product',10,2,3,3,100.00,'2026-06-24 16:13:28',NULL,'2026-06-24 16:13:28','2026-06-24 16:13:28'),
+(10,'B-20260624-O10-1618','Finished Product',10,2,3,3,172.00,'2026-06-24 16:13:30',NULL,'2026-06-24 16:13:30','2026-06-24 16:13:30'),
+(11,'B-20260624-O10-1092','Finished Product',10,2,3,3,172.00,'2026-06-24 16:13:36',NULL,'2026-06-24 16:13:36','2026-06-24 16:13:36'),
+(12,'B-20260624-O10-7584','Finished Product',10,2,3,3,40.00,'2026-06-24 16:13:38',NULL,'2026-06-24 16:13:38','2026-06-24 16:13:38'),
+(13,'B-20260624-O10-2297','Finished Product',10,2,3,3,424.00,'2026-06-24 16:13:49',NULL,'2026-06-24 16:13:49','2026-06-24 16:13:49'),
+(14,'B-20260624-O10-2677','Finished Product',10,2,3,3,346.00,'2026-06-24 16:13:51',NULL,'2026-06-24 16:13:51','2026-06-24 16:13:51'),
+(15,'B-20260624-O10-8480','Finished Product',10,2,3,3,81.00,'2026-06-24 16:13:53',NULL,'2026-06-24 16:13:53','2026-06-24 16:13:53'),
+(16,'B-20260624-O10-4772','Finished Product',10,2,3,3,1207.00,'2026-06-24 16:14:23',NULL,'2026-06-24 16:14:23','2026-06-24 16:14:23'),
+(17,'B-20260624-O10-1033','Finished Product',10,2,3,3,1846.00,'2026-06-24 16:15:12',NULL,'2026-06-24 16:15:12','2026-06-24 16:15:12'),
+(18,'B-20260624-O10-6354','Finished Product',10,2,3,3,1121.00,'2026-06-24 16:15:31',NULL,'2026-06-24 16:15:31','2026-06-24 16:15:31'),
+(19,'B-20260624-O10-9786','Finished Product',10,2,3,3,839.00,'2026-06-24 16:16:10',NULL,'2026-06-24 16:16:10','2026-06-24 16:16:10');
+/*!40000 ALTER TABLE `batch_log` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `city`
 --
 
 DROP TABLE IF EXISTS `city`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `city` (
-  `CityID` int(11) NOT NULL,
+  `CityID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(100) NOT NULL,
   `CountryID` int(11) NOT NULL,
   `PostalCode` varchar(20) DEFAULT NULL,
-  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`CityID`),
+  KEY `CountryID` (`CountryID`),
+  CONSTRAINT `fk_city_country` FOREIGN KEY (`CountryID`) REFERENCES `country` (`CountryID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `city`
---
-
-TRUNCATE TABLE `city`;
 --
 -- Dumping data for table `city`
 --
 
-INSERT INTO `city` (`CityID`, `Name`, `CountryID`, `PostalCode`, `CreatedAt`) VALUES
-(1, 'Vienna', 1, NULL, '2025-12-26 19:24:46'),
-(2, 'Graz', 1, NULL, '2025-12-26 19:24:46'),
-(3, 'Linz', 1, NULL, '2025-12-26 19:24:46'),
-(4, 'Brussels', 2, NULL, '2025-12-26 19:24:46'),
-(5, 'Antwerp', 2, NULL, '2025-12-26 19:24:46'),
-(6, 'Ghent', 2, NULL, '2025-12-26 19:24:46'),
-(7, 'Sofia', 3, NULL, '2025-12-26 19:24:46'),
-(8, 'Plovdiv', 3, NULL, '2025-12-26 19:24:46'),
-(9, 'Varna', 3, NULL, '2025-12-26 19:24:46'),
-(10, 'Zagreb', 4, NULL, '2025-12-26 19:24:46'),
-(11, 'Split', 4, NULL, '2025-12-26 19:24:46'),
-(12, 'Rijeka', 4, NULL, '2025-12-26 19:24:46'),
-(13, 'Nicosia', 5, NULL, '2025-12-26 19:24:46'),
-(14, 'Limassol', 5, NULL, '2025-12-26 19:24:46'),
-(15, 'Larnaca', 5, NULL, '2025-12-26 19:24:46'),
-(16, 'Prague', 6, NULL, '2025-12-26 19:24:46'),
-(17, 'Brno', 6, NULL, '2025-12-26 19:24:46'),
-(18, 'Ostrava', 6, NULL, '2025-12-26 19:24:46'),
-(19, 'Copenhagen', 7, NULL, '2025-12-26 19:24:46'),
-(20, 'Aarhus', 7, NULL, '2025-12-26 19:24:46'),
-(21, 'Odense', 7, NULL, '2025-12-26 19:24:46'),
-(22, 'Tallinn', 8, NULL, '2025-12-26 19:24:46'),
-(23, 'Tartu', 8, NULL, '2025-12-26 19:24:46'),
-(24, 'Narva', 8, NULL, '2025-12-26 19:24:46'),
-(25, 'Helsinki', 9, NULL, '2025-12-26 19:24:46'),
-(26, 'Espoo', 9, NULL, '2025-12-26 19:24:46'),
-(27, 'Tampere', 9, NULL, '2025-12-26 19:24:46'),
-(28, 'Paris', 10, NULL, '2025-12-26 19:24:46'),
-(29, 'Marseille', 10, NULL, '2025-12-26 19:24:46'),
-(30, 'Lyon', 10, NULL, '2025-12-26 19:24:46'),
-(31, 'Berlin', 11, NULL, '2025-12-26 19:24:46'),
-(32, 'Hamburg', 11, NULL, '2025-12-26 19:24:46'),
-(33, 'Munich', 11, NULL, '2025-12-26 19:24:46'),
-(34, 'Athens', 12, NULL, '2025-12-26 19:24:46'),
-(35, 'Thessaloniki', 12, NULL, '2025-12-26 19:24:46'),
-(36, 'Patras', 12, NULL, '2025-12-26 19:24:46'),
-(37, 'Budapest', 13, NULL, '2025-12-26 19:24:46'),
-(38, 'Debrecen', 13, NULL, '2025-12-26 19:24:46'),
-(39, 'Szeged', 13, NULL, '2025-12-26 19:24:46'),
-(40, 'Dublin', 14, NULL, '2025-12-26 19:24:46'),
-(41, 'Cork', 14, NULL, '2025-12-26 19:24:46'),
-(42, 'Limerick', 14, NULL, '2025-12-26 19:24:46'),
-(43, 'Rome', 15, NULL, '2025-12-26 19:24:46'),
-(44, 'Milan', 15, NULL, '2025-12-26 19:24:46'),
-(45, 'Naples', 15, NULL, '2025-12-26 19:24:46'),
-(46, 'Riga', 16, NULL, '2025-12-26 19:24:46'),
-(47, 'Daugavpils', 16, NULL, '2025-12-26 19:24:46'),
-(48, 'Liepāja', 16, NULL, '2025-12-26 19:24:46'),
-(49, 'Vilnius', 17, NULL, '2025-12-26 19:24:46'),
-(50, 'Kaunas', 17, NULL, '2025-12-26 19:24:46'),
-(51, 'Klaipėda', 17, NULL, '2025-12-26 19:24:46'),
-(52, 'Luxembourg City', 18, NULL, '2025-12-26 19:24:46'),
-(53, 'Esch-sur-Alzette', 18, NULL, '2025-12-26 19:24:46'),
-(54, 'Differdange', 18, NULL, '2025-12-26 19:24:46'),
-(55, 'Birkirkara', 19, NULL, '2025-12-26 19:24:46'),
-(56, 'Qormi', 19, NULL, '2025-12-26 19:24:46'),
-(57, 'Mosta', 19, NULL, '2025-12-26 19:24:46'),
-(58, 'Amsterdam', 20, NULL, '2025-12-26 19:24:46'),
-(59, 'Rotterdam', 20, NULL, '2025-12-26 19:24:46'),
-(60, 'The Hague', 20, NULL, '2025-12-26 19:24:46'),
-(61, 'Warsaw', 21, NULL, '2025-12-26 19:24:46'),
-(62, 'Kraków', 21, NULL, '2025-12-26 19:24:46'),
-(63, 'Łódź', 21, NULL, '2025-12-26 19:24:46'),
-(64, 'Lisbon', 22, NULL, '2025-12-26 19:24:46'),
-(65, 'Porto', 22, NULL, '2025-12-26 19:24:46'),
-(66, 'Vila Nova de Gaia', 22, NULL, '2025-12-26 19:24:46'),
-(67, 'Bucharest', 23, NULL, '2025-12-26 19:24:46'),
-(68, 'Cluj-Napoca', 23, NULL, '2025-12-26 19:24:46'),
-(69, 'Timișoara', 23, NULL, '2025-12-26 19:24:46'),
-(70, 'Bratislava', 24, NULL, '2025-12-26 19:24:46'),
-(71, 'Košice', 24, NULL, '2025-12-26 19:24:46'),
-(72, 'Prešov', 24, NULL, '2025-12-26 19:24:46'),
-(73, 'Ljubljana', 25, NULL, '2025-12-26 19:24:46'),
-(74, 'Maribor', 25, NULL, '2025-12-26 19:24:46'),
-(75, 'Kranj', 25, NULL, '2025-12-26 19:24:46'),
-(76, 'Madrid', 26, NULL, '2025-12-26 19:24:46'),
-(77, 'Barcelona', 26, NULL, '2025-12-26 19:24:46'),
-(78, 'Valencia', 26, NULL, '2025-12-26 19:24:46'),
-(79, 'Stockholm', 27, NULL, '2025-12-26 19:24:46'),
-(80, 'Gothenburg', 27, NULL, '2025-12-26 19:24:46'),
-(81, 'Malmö', 27, NULL, '2025-12-26 19:24:46');
-
--- --------------------------------------------------------
+LOCK TABLES `city` WRITE;
+/*!40000 ALTER TABLE `city` DISABLE KEYS */;
+INSERT INTO `city` VALUES
+(1,'Vienna',1,NULL,'2025-12-26 19:24:46'),
+(2,'Graz',1,NULL,'2025-12-26 19:24:46'),
+(3,'Linz',1,NULL,'2025-12-26 19:24:46'),
+(4,'Brussels',2,NULL,'2025-12-26 19:24:46'),
+(5,'Antwerp',2,NULL,'2025-12-26 19:24:46'),
+(6,'Ghent',2,NULL,'2025-12-26 19:24:46'),
+(7,'Sofia',3,NULL,'2025-12-26 19:24:46'),
+(8,'Plovdiv',3,NULL,'2025-12-26 19:24:46'),
+(9,'Varna',3,NULL,'2025-12-26 19:24:46'),
+(10,'Zagreb',4,NULL,'2025-12-26 19:24:46'),
+(11,'Split',4,NULL,'2025-12-26 19:24:46'),
+(12,'Rijeka',4,NULL,'2025-12-26 19:24:46'),
+(13,'Nicosia',5,NULL,'2025-12-26 19:24:46'),
+(14,'Limassol',5,NULL,'2025-12-26 19:24:46'),
+(15,'Larnaca',5,NULL,'2025-12-26 19:24:46'),
+(16,'Prague',6,NULL,'2025-12-26 19:24:46'),
+(17,'Brno',6,NULL,'2025-12-26 19:24:46'),
+(18,'Ostrava',6,NULL,'2025-12-26 19:24:46'),
+(19,'Copenhagen',7,NULL,'2025-12-26 19:24:46'),
+(20,'Aarhus',7,NULL,'2025-12-26 19:24:46'),
+(21,'Odense',7,NULL,'2025-12-26 19:24:46'),
+(22,'Tallinn',8,NULL,'2025-12-26 19:24:46'),
+(23,'Tartu',8,NULL,'2025-12-26 19:24:46'),
+(24,'Narva',8,NULL,'2025-12-26 19:24:46'),
+(25,'Helsinki',9,NULL,'2025-12-26 19:24:46'),
+(26,'Espoo',9,NULL,'2025-12-26 19:24:46'),
+(27,'Tampere',9,NULL,'2025-12-26 19:24:46'),
+(28,'Paris',10,NULL,'2025-12-26 19:24:46'),
+(29,'Marseille',10,NULL,'2025-12-26 19:24:46'),
+(30,'Lyon',10,NULL,'2025-12-26 19:24:46'),
+(31,'Berlin',11,NULL,'2025-12-26 19:24:46'),
+(32,'Hamburg',11,NULL,'2025-12-26 19:24:46'),
+(33,'Munich',11,NULL,'2025-12-26 19:24:46'),
+(34,'Athens',12,NULL,'2025-12-26 19:24:46'),
+(35,'Thessaloniki',12,NULL,'2025-12-26 19:24:46'),
+(36,'Patras',12,NULL,'2025-12-26 19:24:46'),
+(37,'Budapest',13,NULL,'2025-12-26 19:24:46'),
+(38,'Debrecen',13,NULL,'2025-12-26 19:24:46'),
+(39,'Szeged',13,NULL,'2025-12-26 19:24:46'),
+(40,'Dublin',14,NULL,'2025-12-26 19:24:46'),
+(41,'Cork',14,NULL,'2025-12-26 19:24:46'),
+(42,'Limerick',14,NULL,'2025-12-26 19:24:46'),
+(43,'Rome',15,NULL,'2025-12-26 19:24:46'),
+(44,'Milan',15,NULL,'2025-12-26 19:24:46'),
+(45,'Naples',15,NULL,'2025-12-26 19:24:46'),
+(46,'Riga',16,NULL,'2025-12-26 19:24:46'),
+(47,'Daugavpils',16,NULL,'2025-12-26 19:24:46'),
+(48,'Liepāja',16,NULL,'2025-12-26 19:24:46'),
+(49,'Vilnius',17,NULL,'2025-12-26 19:24:46'),
+(50,'Kaunas',17,NULL,'2025-12-26 19:24:46'),
+(51,'Klaipėda',17,NULL,'2025-12-26 19:24:46'),
+(52,'Luxembourg City',18,NULL,'2025-12-26 19:24:46'),
+(53,'Esch-sur-Alzette',18,NULL,'2025-12-26 19:24:46'),
+(54,'Differdange',18,NULL,'2025-12-26 19:24:46'),
+(55,'Birkirkara',19,NULL,'2025-12-26 19:24:46'),
+(56,'Qormi',19,NULL,'2025-12-26 19:24:46'),
+(57,'Mosta',19,NULL,'2025-12-26 19:24:46'),
+(58,'Amsterdam',20,NULL,'2025-12-26 19:24:46'),
+(59,'Rotterdam',20,NULL,'2025-12-26 19:24:46'),
+(60,'The Hague',20,NULL,'2025-12-26 19:24:46'),
+(61,'Warsaw',21,NULL,'2025-12-26 19:24:46'),
+(62,'Kraków',21,NULL,'2025-12-26 19:24:46'),
+(63,'Łódź',21,NULL,'2025-12-26 19:24:46'),
+(64,'Lisbon',22,NULL,'2025-12-26 19:24:46'),
+(65,'Porto',22,NULL,'2025-12-26 19:24:46'),
+(66,'Vila Nova de Gaia',22,NULL,'2025-12-26 19:24:46'),
+(67,'Bucharest',23,NULL,'2025-12-26 19:24:46'),
+(68,'Cluj-Napoca',23,NULL,'2025-12-26 19:24:46'),
+(69,'Timișoara',23,NULL,'2025-12-26 19:24:46'),
+(70,'Bratislava',24,NULL,'2025-12-26 19:24:46'),
+(71,'Košice',24,NULL,'2025-12-26 19:24:46'),
+(72,'Prešov',24,NULL,'2025-12-26 19:24:46'),
+(73,'Ljubljana',25,NULL,'2025-12-26 19:24:46'),
+(74,'Maribor',25,NULL,'2025-12-26 19:24:46'),
+(75,'Kranj',25,NULL,'2025-12-26 19:24:46'),
+(76,'Madrid',26,NULL,'2025-12-26 19:24:46'),
+(77,'Barcelona',26,NULL,'2025-12-26 19:24:46'),
+(78,'Valencia',26,NULL,'2025-12-26 19:24:46'),
+(79,'Stockholm',27,NULL,'2025-12-26 19:24:46'),
+(80,'Gothenburg',27,NULL,'2025-12-26 19:24:46'),
+(81,'Malmö',27,NULL,'2025-12-26 19:24:46');
+/*!40000 ALTER TABLE `city` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `country`
 --
 
 DROP TABLE IF EXISTS `country`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `country` (
-  `CountryID` int(11) NOT NULL,
+  `CountryID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(100) NOT NULL,
   `ISOCode` varchar(3) NOT NULL,
-  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`CountryID`),
+  UNIQUE KEY `ISOCode` (`ISOCode`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `country`
---
-
-TRUNCATE TABLE `country`;
 --
 -- Dumping data for table `country`
 --
 
-INSERT INTO `country` (`CountryID`, `Name`, `ISOCode`, `CreatedAt`) VALUES
-(1, 'Austria', 'AUT', '2025-12-26 19:24:46'),
-(2, 'Belgium', 'BEL', '2025-12-26 19:24:46'),
-(3, 'Bulgaria', 'BGR', '2025-12-26 19:24:46'),
-(4, 'Croatia', 'HRV', '2025-12-26 19:24:46'),
-(5, 'Cyprus', 'CYP', '2025-12-26 19:24:46'),
-(6, 'Czech Republic', 'CZE', '2025-12-26 19:24:46'),
-(7, 'Denmark', 'DNK', '2025-12-26 19:24:46'),
-(8, 'Estonia', 'EST', '2025-12-26 19:24:46'),
-(9, 'Finland', 'FIN', '2025-12-26 19:24:46'),
-(10, 'France', 'FRA', '2025-12-26 19:24:46'),
-(11, 'Germany', 'DEU', '2025-12-26 19:24:46'),
-(12, 'Greece', 'GRC', '2025-12-26 19:24:46'),
-(13, 'Hungary', 'HUN', '2025-12-26 19:24:46'),
-(14, 'Ireland', 'IRL', '2025-12-26 19:24:46'),
-(15, 'Italy', 'ITA', '2025-12-26 19:24:46'),
-(16, 'Latvia', 'LVA', '2025-12-26 19:24:46'),
-(17, 'Lithuania', 'LTU', '2025-12-26 19:24:46'),
-(18, 'Luxembourg', 'LUX', '2025-12-26 19:24:46'),
-(19, 'Malta', 'MLT', '2025-12-26 19:24:46'),
-(20, 'Netherlands', 'NLD', '2025-12-26 19:24:46'),
-(21, 'Poland', 'POL', '2025-12-26 19:24:46'),
-(22, 'Portugal', 'PRT', '2025-12-26 19:24:46'),
-(23, 'Romania', 'ROU', '2025-12-26 19:24:46'),
-(24, 'Slovakia', 'SVK', '2025-12-26 19:24:46'),
-(25, 'Slovenia', 'SVN', '2025-12-26 19:24:46'),
-(26, 'Spain', 'ESP', '2025-12-26 19:24:46'),
-(27, 'Sweden', 'SWE', '2025-12-26 19:24:46');
-
--- --------------------------------------------------------
+LOCK TABLES `country` WRITE;
+/*!40000 ALTER TABLE `country` DISABLE KEYS */;
+INSERT INTO `country` VALUES
+(1,'Austria','AUT','2025-12-26 19:24:46'),
+(2,'Belgium','BEL','2025-12-26 19:24:46'),
+(3,'Bulgaria','BGR','2025-12-26 19:24:46'),
+(4,'Croatia','HRV','2025-12-26 19:24:46'),
+(5,'Cyprus','CYP','2025-12-26 19:24:46'),
+(6,'Czech Republic','CZE','2025-12-26 19:24:46'),
+(7,'Denmark','DNK','2025-12-26 19:24:46'),
+(8,'Estonia','EST','2025-12-26 19:24:46'),
+(9,'Finland','FIN','2025-12-26 19:24:46'),
+(10,'France','FRA','2025-12-26 19:24:46'),
+(11,'Germany','DEU','2025-12-26 19:24:46'),
+(12,'Greece','GRC','2025-12-26 19:24:46'),
+(13,'Hungary','HUN','2025-12-26 19:24:46'),
+(14,'Ireland','IRL','2025-12-26 19:24:46'),
+(15,'Italy','ITA','2025-12-26 19:24:46'),
+(16,'Latvia','LVA','2025-12-26 19:24:46'),
+(17,'Lithuania','LTU','2025-12-26 19:24:46'),
+(18,'Luxembourg','LUX','2025-12-26 19:24:46'),
+(19,'Malta','MLT','2025-12-26 19:24:46'),
+(20,'Netherlands','NLD','2025-12-26 19:24:46'),
+(21,'Poland','POL','2025-12-26 19:24:46'),
+(22,'Portugal','PRT','2025-12-26 19:24:46'),
+(23,'Romania','ROU','2025-12-26 19:24:46'),
+(24,'Slovakia','SVK','2025-12-26 19:24:46'),
+(25,'Slovenia','SVN','2025-12-26 19:24:46'),
+(26,'Spain','ESP','2025-12-26 19:24:46'),
+(27,'Sweden','SWE','2025-12-26 19:24:46');
+/*!40000 ALTER TABLE `country` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `machine`
 --
 
 DROP TABLE IF EXISTS `machine`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `machine` (
-  `MachineID` int(11) NOT NULL,
+  `MachineID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(255) NOT NULL,
   `Status` enum('Active','Inactive','Maintenance') DEFAULT 'Active',
   `Capacity` decimal(10,2) NOT NULL DEFAULT 0.00,
@@ -433,35 +470,40 @@ CREATE TABLE `machine` (
   `PlantID` int(11) DEFAULT NULL,
   `SectionID` int(11) DEFAULT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`MachineID`),
+  KEY `fk_machine_plant` (`PlantID`),
+  KEY `fk_machine_section` (`SectionID`),
+  CONSTRAINT `fk_machine_plant` FOREIGN KEY (`PlantID`) REFERENCES `plant` (`PlantID`) ON DELETE SET NULL,
+  CONSTRAINT `fk_machine_section` FOREIGN KEY (`SectionID`) REFERENCES `section` (`SectionID`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `machine`
---
-
-TRUNCATE TABLE `machine`;
 --
 -- Dumping data for table `machine`
 --
 
-INSERT INTO `machine` (`MachineID`, `Name`, `Status`, `Capacity`, `SPM`, `LastMaintenanceDate`, `Location`, `Model`, `PlantID`, `SectionID`, `CreatedAt`, `UpdatedAt`) VALUES
-(1, 'PR-03', 'Active', 450.00, NULL, '2025-10-13', 'PR-03', 'Stamping Press', 161, 479, '2025-10-13 16:06:48', '2026-01-23 18:25:19'),
-(3, 'PR-02', 'Active', 1500.00, NULL, '2025-10-29', 'PR-02', 'Stamping Press', 159, 476, '2025-10-13 16:42:04', '2026-01-23 18:25:28'),
-(4, 'PR-01', 'Active', 2000.00, NULL, '2025-10-16', 'PR-01', 'Stamping Press 01', 158, 476, '2025-10-13 16:42:55', '2026-01-23 18:25:33'),
-(5, 'PR-04', 'Active', 0.00, NULL, '3222-12-31', 'PR-04', 'Stamping Press', 159, 476, '2025-11-08 13:54:53', '2026-01-23 18:25:48'),
-(6, 'PR-05', 'Active', 3000.00, NULL, '2025-12-25', 'Line 2', 'TMX-S4-30000', 161, 476, '2025-12-25 13:27:10', '2026-01-23 18:25:58'),
-(7, 'PR-06', 'Active', 3000.00, NULL, '2025-12-25', 'Line 2', 'TMX-S4-30000', 159, 482, '2025-12-25 13:27:16', '2026-01-23 18:26:08');
-
--- --------------------------------------------------------
+LOCK TABLES `machine` WRITE;
+/*!40000 ALTER TABLE `machine` DISABLE KEYS */;
+INSERT INTO `machine` VALUES
+(1,'PR-03','Active',450.00,NULL,'2025-10-13','PR-03','Stamping Press',161,479,'2025-10-13 16:06:48','2026-01-23 18:25:19'),
+(3,'PR-02','Active',1500.00,NULL,'2025-10-29','PR-02','Stamping Press',159,476,'2025-10-13 16:42:04','2026-01-23 18:25:28'),
+(4,'PR-01','Active',2000.00,NULL,'2025-10-16','PR-01','Stamping Press 01',158,476,'2025-10-13 16:42:55','2026-01-23 18:25:33'),
+(5,'PR-04','Active',0.00,NULL,'3222-12-31','PR-04','Stamping Press',159,476,'2025-11-08 13:54:53','2026-01-23 18:25:48'),
+(6,'PR-05','Active',3000.00,NULL,'2025-12-25','Line 2','TMX-S4-30000',161,476,'2025-12-25 13:27:10','2026-01-23 18:25:58'),
+(7,'PR-06','Active',3000.00,NULL,'2025-12-25','Line 2','TMX-S4-30000',159,482,'2025-12-25 13:27:16','2026-01-23 18:26:08');
+/*!40000 ALTER TABLE `machine` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `machine_planning`
 --
 
 DROP TABLE IF EXISTS `machine_planning`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `machine_planning` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `machine_code` varchar(3) NOT NULL,
   `machine_name` varchar(50) NOT NULL,
   `plan_date` date NOT NULL,
@@ -479,389 +521,393 @@ CREATE TABLE `machine_planning` (
   `shift3_start` time DEFAULT NULL,
   `shift3_break_start` time DEFAULT NULL,
   `shift3_break_end` time DEFAULT NULL,
-  `shift3_end` time DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `shift3_end` time DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_machine_date` (`machine_code`,`plan_date`)
+) ENGINE=InnoDB AUTO_INCREMENT=4651 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `machine_planning`
---
-
-TRUNCATE TABLE `machine_planning`;
 --
 -- Dumping data for table `machine_planning`
 --
 
-INSERT INTO `machine_planning` (`id`, `machine_code`, `machine_name`, `plan_date`, `shift1_enabled`, `shift1_start`, `shift1_break_start`, `shift1_break_end`, `shift1_end`, `shift2_enabled`, `shift2_start`, `shift2_break_start`, `shift2_break_end`, `shift2_end`, `shift3_enabled`, `shift3_start`, `shift3_break_start`, `shift3_break_end`, `shift3_end`) VALUES
-(1, 'M00', 'sadadasdasd', '2025-11-08', 0, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 0, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(11, 'M00', 'sadadasdasd', '2025-10-27', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(12, 'M00', 'sadadasdasd', '2025-10-28', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(13, 'M00', 'sadadasdasd', '2025-10-29', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(14, 'M00', 'sadadasdasd', '2025-10-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(15, 'M00', 'sadadasdasd', '2025-10-31', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(16, 'M00', 'sadadasdasd', '2025-11-01', 0, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 0, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(17, 'M00', 'sadadasdasd', '2025-11-02', 0, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 0, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(18, 'M00', 'sadadasdasd', '2025-11-03', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(19, 'M00', 'sadadasdasd', '2025-11-04', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(20, 'M00', 'sadadasdasd', '2025-11-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(21, 'M00', 'sadadasdasd', '2025-11-06', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(22, 'M00', 'sadadasdasd', '2025-11-07', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(115, 'M00', 'sadadasdasd', '2025-12-09', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(119, 'M00', 'sadadasdasd', '2025-12-10', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(135, 'M00', 'sadadasdasd', '2025-12-20', 0, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 0, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(139, 'M00', 'sadadasdasd', '2025-12-22', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(143, 'M00', 'sadadasdasd', '2025-12-25', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(169, 'M00', 'PR-03', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(177, 'M01', 'Cut-to-Length Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(187, 'M02', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(197, 'M03', 'Vibratory Deburrer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(207, 'M04', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(217, 'M05', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(227, 'M06', 'Anodizing Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(237, 'M07', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(247, 'M08', 'Vibratory Deburrer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(257, 'M09', 'Slitting Line - Steel', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(267, 'M10', 'Cut-to-Length Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(277, 'M11', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(287, 'M12', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(297, 'M13', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(307, 'M14', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(317, 'M15', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(327, 'M16', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(337, 'M17', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(347, 'M18', 'Slitting Line - Aluminum', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(357, 'M19', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(367, 'M20', 'Industrial Washer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(377, 'M21', 'Slitting Line - Copper', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(387, 'M22', 'Cut-to-Length Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(397, 'M23', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(407, 'M24', 'Slitting Line - Steel', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(417, 'M25', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(427, 'M26', 'Slitting Line - Copper', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(437, 'M27', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(447, 'M28', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(457, 'M29', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(467, 'M30', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(477, 'M31', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(487, 'M32', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(497, 'M33', 'Slitting Line - Steel', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(507, 'M34', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(517, 'M35', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(527, 'M36', 'Vibratory Deburrer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(537, 'M37', 'Anodizing Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(547, 'M38', 'Cut-to-Length Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(557, 'M39', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(567, 'M40', 'Slitting Line - Aluminum', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(577, 'M41', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(587, 'M42', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(597, 'M43', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(607, 'M44', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(617, 'M45', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(627, 'M46', 'Slitting Line - Aluminum', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(637, 'M47', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(647, 'M48', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(657, 'M49', 'Powder Coating Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(667, 'M50', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(677, 'M51', 'Industrial Washer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(687, 'M52', 'Powder Coating Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(697, 'M53', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(707, 'M54', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(717, 'M55', 'Industrial Washer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(727, 'M56', 'Anodizing Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(737, 'M57', 'Cut-to-Length Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(747, 'M58', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(757, 'M59', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(767, 'M60', 'Cut-to-Length Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(777, 'M61', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(787, 'M62', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(797, 'M63', 'Slitting Line - Copper', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(807, 'M64', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(817, 'M65', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(827, 'M66', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(837, 'M67', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(847, 'M68', 'Slitting Line - Aluminum', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(857, 'M69', 'Cut-to-Length Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(867, 'M70', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(877, 'M71', 'Industrial Washer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(887, 'M72', 'Anodizing Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(897, 'M73', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(907, 'M74', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(917, 'M75', 'Slitting Line - Steel', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(927, 'M76', 'Cut-to-Length Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(937, 'M77', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(947, 'M78', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(957, 'M79', 'Galvanizing Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(967, 'M80', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(977, 'M81', 'Vibratory Deburrer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(987, 'M82', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(997, 'M83', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1007, 'M84', 'Slitting Line - Copper', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1017, 'M85', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1027, 'M86', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1037, 'M87', 'Vibratory Deburrer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1047, 'M88', 'Stamping Press 200T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1057, 'M89', 'Industrial Washer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1067, 'M90', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1077, 'M91', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1087, 'M92', 'Industrial Washer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1097, 'M93', 'Stamping Press 100T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1107, 'M94', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1117, 'M95', 'Stamping Press 400T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1127, 'M96', 'Cut-to-Length Line', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1137, 'M97', 'Stamping Press 300T', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1147, 'M98', 'Industrial Washer', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1157, 'M99', 'Slitting Line - Steel', '2025-12-26', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1525, 'M00', 'PR-03', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1533, 'M01', 'Cut-to-Length Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1543, 'M02', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1553, 'M03', 'Vibratory Deburrer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1563, 'M04', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1573, 'M05', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1583, 'M06', 'Anodizing Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1593, 'M07', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1603, 'M08', 'Vibratory Deburrer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1613, 'M09', 'Slitting Line - Steel', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1623, 'M10', 'Cut-to-Length Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1633, 'M11', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1643, 'M12', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1653, 'M13', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1663, 'M14', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1673, 'M15', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1683, 'M16', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1693, 'M17', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1703, 'M18', 'Slitting Line - Aluminum', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1713, 'M19', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1723, 'M20', 'Industrial Washer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1733, 'M21', 'Slitting Line - Copper', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1743, 'M22', 'Cut-to-Length Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1753, 'M23', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1763, 'M24', 'Slitting Line - Steel', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1773, 'M25', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1783, 'M26', 'Slitting Line - Copper', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1793, 'M27', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1803, 'M28', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1813, 'M29', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1823, 'M30', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1833, 'M31', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1843, 'M32', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1853, 'M33', 'Slitting Line - Steel', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1863, 'M34', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1873, 'M35', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1883, 'M36', 'Vibratory Deburrer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1893, 'M37', 'Anodizing Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1903, 'M38', 'Cut-to-Length Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1913, 'M39', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1923, 'M40', 'Slitting Line - Aluminum', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1933, 'M41', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1943, 'M42', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1953, 'M43', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1963, 'M44', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1973, 'M45', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1983, 'M46', 'Slitting Line - Aluminum', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(1993, 'M47', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2003, 'M48', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2013, 'M49', 'Powder Coating Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2023, 'M50', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2033, 'M51', 'Industrial Washer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2043, 'M52', 'Powder Coating Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2053, 'M53', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2063, 'M54', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2073, 'M55', 'Industrial Washer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2083, 'M56', 'Anodizing Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2093, 'M57', 'Cut-to-Length Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2103, 'M58', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2113, 'M59', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2123, 'M60', 'Cut-to-Length Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2133, 'M61', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2143, 'M62', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2153, 'M63', 'Slitting Line - Copper', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2163, 'M64', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2173, 'M65', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2183, 'M66', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2193, 'M67', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2203, 'M68', 'Slitting Line - Aluminum', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2213, 'M69', 'Cut-to-Length Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2223, 'M70', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2233, 'M71', 'Industrial Washer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2243, 'M72', 'Anodizing Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2253, 'M73', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2263, 'M74', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2273, 'M75', 'Slitting Line - Steel', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2283, 'M76', 'Cut-to-Length Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2293, 'M77', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2303, 'M78', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2313, 'M79', 'Galvanizing Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2323, 'M80', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2333, 'M81', 'Vibratory Deburrer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2343, 'M82', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2353, 'M83', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2363, 'M84', 'Slitting Line - Copper', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2373, 'M85', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2383, 'M86', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2393, 'M87', 'Vibratory Deburrer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2403, 'M88', 'Stamping Press 200T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2413, 'M89', 'Industrial Washer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2423, 'M90', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2433, 'M91', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2443, 'M92', 'Industrial Washer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2453, 'M93', 'Stamping Press 100T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2463, 'M94', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2473, 'M95', 'Stamping Press 400T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2483, 'M96', 'Cut-to-Length Line', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2493, 'M97', 'Stamping Press 300T', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2503, 'M98', 'Industrial Washer', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2513, 'M99', 'Slitting Line - Steel', '2025-12-30', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2881, 'M00', 'PR-03', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2889, 'M01', 'Cut-to-Length Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2899, 'M02', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2909, 'M03', 'Vibratory Deburrer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2919, 'M04', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2929, 'M05', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2939, 'M06', 'Anodizing Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2949, 'M07', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2959, 'M08', 'Vibratory Deburrer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2969, 'M09', 'Slitting Line - Steel', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2979, 'M10', 'Cut-to-Length Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2989, 'M11', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(2999, 'M12', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3009, 'M13', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3019, 'M14', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3029, 'M15', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3039, 'M16', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3049, 'M17', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3059, 'M18', 'Slitting Line - Aluminum', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3069, 'M19', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3079, 'M20', 'Industrial Washer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3089, 'M21', 'Slitting Line - Copper', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3099, 'M22', 'Cut-to-Length Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3109, 'M23', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3119, 'M24', 'Slitting Line - Steel', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3129, 'M25', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3139, 'M26', 'Slitting Line - Copper', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3149, 'M27', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3159, 'M28', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3169, 'M29', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3179, 'M30', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3189, 'M31', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3199, 'M32', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3209, 'M33', 'Slitting Line - Steel', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3219, 'M34', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3229, 'M35', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3239, 'M36', 'Vibratory Deburrer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3249, 'M37', 'Anodizing Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3259, 'M38', 'Cut-to-Length Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3269, 'M39', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3279, 'M40', 'Slitting Line - Aluminum', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3289, 'M41', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3299, 'M42', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3309, 'M43', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3319, 'M44', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3329, 'M45', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3339, 'M46', 'Slitting Line - Aluminum', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3349, 'M47', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3359, 'M48', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3369, 'M49', 'Powder Coating Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3379, 'M50', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3389, 'M51', 'Industrial Washer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3399, 'M52', 'Powder Coating Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3409, 'M53', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3419, 'M54', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3429, 'M55', 'Industrial Washer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3439, 'M56', 'Anodizing Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3449, 'M57', 'Cut-to-Length Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3459, 'M58', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3469, 'M59', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3479, 'M60', 'Cut-to-Length Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3489, 'M61', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3499, 'M62', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3509, 'M63', 'Slitting Line - Copper', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3519, 'M64', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3529, 'M65', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3539, 'M66', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3549, 'M67', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3559, 'M68', 'Slitting Line - Aluminum', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3569, 'M69', 'Cut-to-Length Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3579, 'M70', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3589, 'M71', 'Industrial Washer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3599, 'M72', 'Anodizing Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3609, 'M73', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3619, 'M74', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3629, 'M75', 'Slitting Line - Steel', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3639, 'M76', 'Cut-to-Length Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3649, 'M77', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3659, 'M78', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3669, 'M79', 'Galvanizing Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3679, 'M80', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3689, 'M81', 'Vibratory Deburrer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3699, 'M82', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3709, 'M83', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3719, 'M84', 'Slitting Line - Copper', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3729, 'M85', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3739, 'M86', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3749, 'M87', 'Vibratory Deburrer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3759, 'M88', 'Stamping Press 200T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3769, 'M89', 'Industrial Washer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3779, 'M90', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3789, 'M91', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3799, 'M92', 'Industrial Washer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3809, 'M93', 'Stamping Press 100T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3819, 'M94', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3829, 'M95', 'Stamping Press 400T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3839, 'M96', 'Cut-to-Length Line', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3849, 'M97', 'Stamping Press 300T', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3859, 'M98', 'Industrial Washer', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3869, 'M99', 'Slitting Line - Steel', '2026-01-05', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3870, 'M00', 'PR-03', '2026-01-12', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3876, 'M10', 'Vibratory Deburrer', '2026-01-12', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3974, 'M11', 'Slitting Line - Copper', '2026-01-12', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3976, 'M00', 'PR-03', '2026-01-14', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(3982, 'M10', 'Vibratory Deburrer', '2026-01-14', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(4080, 'M11', 'Slitting Line - Copper', '2026-01-14', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(4506, 'M00', 'PR-03', '2026-01-15', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(4512, 'M10', 'Vibratory Deburrer', '2026-01-15', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(4610, 'M11', 'Slitting Line - Copper', '2026-01-15', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(4611, 'M00', 'PR-03', '2026-01-24', 0, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 0, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(4635, 'M00', 'PR-03', '2026-01-25', 0, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 0, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(4641, 'M00', 'PR-03', '2026-02-25', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(4642, 'M00', 'PR-03', '2026-03-22', 0, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 0, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL),
-(4648, 'M00', 'PR-03', '2026-03-23', 1, '06:00:00', '10:00:00', '10:15:00', '14:00:00', 1, '14:00:00', '18:00:00', '18:15:00', '22:00:00', 0, NULL, NULL, NULL, NULL);
-
--- --------------------------------------------------------
+LOCK TABLES `machine_planning` WRITE;
+/*!40000 ALTER TABLE `machine_planning` DISABLE KEYS */;
+INSERT INTO `machine_planning` VALUES
+(1,'M00','sadadasdasd','2025-11-08',0,'06:00:00','10:00:00','10:15:00','14:00:00',0,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(11,'M00','sadadasdasd','2025-10-27',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(12,'M00','sadadasdasd','2025-10-28',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(13,'M00','sadadasdasd','2025-10-29',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(14,'M00','sadadasdasd','2025-10-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(15,'M00','sadadasdasd','2025-10-31',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(16,'M00','sadadasdasd','2025-11-01',0,'06:00:00','10:00:00','10:15:00','14:00:00',0,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(17,'M00','sadadasdasd','2025-11-02',0,'06:00:00','10:00:00','10:15:00','14:00:00',0,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(18,'M00','sadadasdasd','2025-11-03',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(19,'M00','sadadasdasd','2025-11-04',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(20,'M00','sadadasdasd','2025-11-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(21,'M00','sadadasdasd','2025-11-06',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(22,'M00','sadadasdasd','2025-11-07',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(115,'M00','sadadasdasd','2025-12-09',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(119,'M00','sadadasdasd','2025-12-10',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(135,'M00','sadadasdasd','2025-12-20',0,'06:00:00','10:00:00','10:15:00','14:00:00',0,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(139,'M00','sadadasdasd','2025-12-22',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(143,'M00','sadadasdasd','2025-12-25',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(169,'M00','PR-03','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(177,'M01','Cut-to-Length Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(187,'M02','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(197,'M03','Vibratory Deburrer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(207,'M04','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(217,'M05','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(227,'M06','Anodizing Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(237,'M07','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(247,'M08','Vibratory Deburrer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(257,'M09','Slitting Line - Steel','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(267,'M10','Cut-to-Length Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(277,'M11','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(287,'M12','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(297,'M13','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(307,'M14','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(317,'M15','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(327,'M16','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(337,'M17','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(347,'M18','Slitting Line - Aluminum','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(357,'M19','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(367,'M20','Industrial Washer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(377,'M21','Slitting Line - Copper','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(387,'M22','Cut-to-Length Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(397,'M23','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(407,'M24','Slitting Line - Steel','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(417,'M25','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(427,'M26','Slitting Line - Copper','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(437,'M27','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(447,'M28','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(457,'M29','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(467,'M30','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(477,'M31','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(487,'M32','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(497,'M33','Slitting Line - Steel','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(507,'M34','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(517,'M35','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(527,'M36','Vibratory Deburrer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(537,'M37','Anodizing Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(547,'M38','Cut-to-Length Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(557,'M39','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(567,'M40','Slitting Line - Aluminum','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(577,'M41','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(587,'M42','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(597,'M43','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(607,'M44','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(617,'M45','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(627,'M46','Slitting Line - Aluminum','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(637,'M47','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(647,'M48','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(657,'M49','Powder Coating Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(667,'M50','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(677,'M51','Industrial Washer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(687,'M52','Powder Coating Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(697,'M53','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(707,'M54','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(717,'M55','Industrial Washer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(727,'M56','Anodizing Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(737,'M57','Cut-to-Length Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(747,'M58','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(757,'M59','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(767,'M60','Cut-to-Length Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(777,'M61','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(787,'M62','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(797,'M63','Slitting Line - Copper','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(807,'M64','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(817,'M65','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(827,'M66','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(837,'M67','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(847,'M68','Slitting Line - Aluminum','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(857,'M69','Cut-to-Length Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(867,'M70','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(877,'M71','Industrial Washer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(887,'M72','Anodizing Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(897,'M73','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(907,'M74','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(917,'M75','Slitting Line - Steel','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(927,'M76','Cut-to-Length Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(937,'M77','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(947,'M78','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(957,'M79','Galvanizing Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(967,'M80','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(977,'M81','Vibratory Deburrer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(987,'M82','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(997,'M83','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1007,'M84','Slitting Line - Copper','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1017,'M85','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1027,'M86','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1037,'M87','Vibratory Deburrer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1047,'M88','Stamping Press 200T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1057,'M89','Industrial Washer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1067,'M90','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1077,'M91','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1087,'M92','Industrial Washer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1097,'M93','Stamping Press 100T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1107,'M94','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1117,'M95','Stamping Press 400T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1127,'M96','Cut-to-Length Line','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1137,'M97','Stamping Press 300T','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1147,'M98','Industrial Washer','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1157,'M99','Slitting Line - Steel','2025-12-26',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1525,'M00','PR-03','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1533,'M01','Cut-to-Length Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1543,'M02','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1553,'M03','Vibratory Deburrer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1563,'M04','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1573,'M05','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1583,'M06','Anodizing Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1593,'M07','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1603,'M08','Vibratory Deburrer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1613,'M09','Slitting Line - Steel','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1623,'M10','Cut-to-Length Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1633,'M11','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1643,'M12','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1653,'M13','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1663,'M14','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1673,'M15','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1683,'M16','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1693,'M17','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1703,'M18','Slitting Line - Aluminum','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1713,'M19','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1723,'M20','Industrial Washer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1733,'M21','Slitting Line - Copper','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1743,'M22','Cut-to-Length Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1753,'M23','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1763,'M24','Slitting Line - Steel','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1773,'M25','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1783,'M26','Slitting Line - Copper','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1793,'M27','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1803,'M28','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1813,'M29','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1823,'M30','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1833,'M31','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1843,'M32','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1853,'M33','Slitting Line - Steel','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1863,'M34','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1873,'M35','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1883,'M36','Vibratory Deburrer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1893,'M37','Anodizing Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1903,'M38','Cut-to-Length Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1913,'M39','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1923,'M40','Slitting Line - Aluminum','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1933,'M41','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1943,'M42','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1953,'M43','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1963,'M44','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1973,'M45','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1983,'M46','Slitting Line - Aluminum','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(1993,'M47','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2003,'M48','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2013,'M49','Powder Coating Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2023,'M50','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2033,'M51','Industrial Washer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2043,'M52','Powder Coating Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2053,'M53','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2063,'M54','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2073,'M55','Industrial Washer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2083,'M56','Anodizing Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2093,'M57','Cut-to-Length Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2103,'M58','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2113,'M59','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2123,'M60','Cut-to-Length Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2133,'M61','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2143,'M62','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2153,'M63','Slitting Line - Copper','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2163,'M64','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2173,'M65','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2183,'M66','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2193,'M67','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2203,'M68','Slitting Line - Aluminum','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2213,'M69','Cut-to-Length Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2223,'M70','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2233,'M71','Industrial Washer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2243,'M72','Anodizing Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2253,'M73','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2263,'M74','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2273,'M75','Slitting Line - Steel','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2283,'M76','Cut-to-Length Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2293,'M77','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2303,'M78','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2313,'M79','Galvanizing Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2323,'M80','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2333,'M81','Vibratory Deburrer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2343,'M82','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2353,'M83','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2363,'M84','Slitting Line - Copper','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2373,'M85','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2383,'M86','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2393,'M87','Vibratory Deburrer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2403,'M88','Stamping Press 200T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2413,'M89','Industrial Washer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2423,'M90','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2433,'M91','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2443,'M92','Industrial Washer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2453,'M93','Stamping Press 100T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2463,'M94','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2473,'M95','Stamping Press 400T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2483,'M96','Cut-to-Length Line','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2493,'M97','Stamping Press 300T','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2503,'M98','Industrial Washer','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2513,'M99','Slitting Line - Steel','2025-12-30',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2881,'M00','PR-03','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2889,'M01','Cut-to-Length Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2899,'M02','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2909,'M03','Vibratory Deburrer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2919,'M04','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2929,'M05','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2939,'M06','Anodizing Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2949,'M07','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2959,'M08','Vibratory Deburrer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2969,'M09','Slitting Line - Steel','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2979,'M10','Cut-to-Length Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2989,'M11','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(2999,'M12','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3009,'M13','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3019,'M14','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3029,'M15','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3039,'M16','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3049,'M17','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3059,'M18','Slitting Line - Aluminum','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3069,'M19','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3079,'M20','Industrial Washer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3089,'M21','Slitting Line - Copper','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3099,'M22','Cut-to-Length Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3109,'M23','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3119,'M24','Slitting Line - Steel','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3129,'M25','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3139,'M26','Slitting Line - Copper','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3149,'M27','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3159,'M28','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3169,'M29','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3179,'M30','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3189,'M31','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3199,'M32','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3209,'M33','Slitting Line - Steel','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3219,'M34','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3229,'M35','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3239,'M36','Vibratory Deburrer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3249,'M37','Anodizing Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3259,'M38','Cut-to-Length Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3269,'M39','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3279,'M40','Slitting Line - Aluminum','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3289,'M41','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3299,'M42','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3309,'M43','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3319,'M44','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3329,'M45','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3339,'M46','Slitting Line - Aluminum','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3349,'M47','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3359,'M48','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3369,'M49','Powder Coating Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3379,'M50','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3389,'M51','Industrial Washer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3399,'M52','Powder Coating Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3409,'M53','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3419,'M54','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3429,'M55','Industrial Washer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3439,'M56','Anodizing Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3449,'M57','Cut-to-Length Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3459,'M58','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3469,'M59','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3479,'M60','Cut-to-Length Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3489,'M61','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3499,'M62','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3509,'M63','Slitting Line - Copper','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3519,'M64','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3529,'M65','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3539,'M66','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3549,'M67','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3559,'M68','Slitting Line - Aluminum','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3569,'M69','Cut-to-Length Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3579,'M70','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3589,'M71','Industrial Washer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3599,'M72','Anodizing Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3609,'M73','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3619,'M74','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3629,'M75','Slitting Line - Steel','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3639,'M76','Cut-to-Length Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3649,'M77','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3659,'M78','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3669,'M79','Galvanizing Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3679,'M80','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3689,'M81','Vibratory Deburrer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3699,'M82','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3709,'M83','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3719,'M84','Slitting Line - Copper','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3729,'M85','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3739,'M86','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3749,'M87','Vibratory Deburrer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3759,'M88','Stamping Press 200T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3769,'M89','Industrial Washer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3779,'M90','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3789,'M91','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3799,'M92','Industrial Washer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3809,'M93','Stamping Press 100T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3819,'M94','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3829,'M95','Stamping Press 400T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3839,'M96','Cut-to-Length Line','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3849,'M97','Stamping Press 300T','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3859,'M98','Industrial Washer','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3869,'M99','Slitting Line - Steel','2026-01-05',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3870,'M00','PR-03','2026-01-12',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3876,'M10','Vibratory Deburrer','2026-01-12',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3974,'M11','Slitting Line - Copper','2026-01-12',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3976,'M00','PR-03','2026-01-14',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(3982,'M10','Vibratory Deburrer','2026-01-14',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(4080,'M11','Slitting Line - Copper','2026-01-14',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(4506,'M00','PR-03','2026-01-15',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(4512,'M10','Vibratory Deburrer','2026-01-15',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(4610,'M11','Slitting Line - Copper','2026-01-15',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(4611,'M00','PR-03','2026-01-24',0,'06:00:00','10:00:00','10:15:00','14:00:00',0,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(4635,'M00','PR-03','2026-01-25',0,'06:00:00','10:00:00','10:15:00','14:00:00',0,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(4641,'M00','PR-03','2026-02-25',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(4642,'M00','PR-03','2026-03-22',0,'06:00:00','10:00:00','10:15:00','14:00:00',0,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL),
+(4648,'M00','PR-03','2026-03-23',1,'06:00:00','10:00:00','10:15:00','14:00:00',1,'14:00:00','18:00:00','18:15:00','22:00:00',0,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `machine_planning` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `machine_stop_category`
 --
 
 DROP TABLE IF EXISTS `machine_stop_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `machine_stop_category` (
-  `CategoryID` int(11) NOT NULL,
-  `CategoryName` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `CategoryID` int(11) NOT NULL AUTO_INCREMENT,
+  `CategoryName` varchar(255) NOT NULL,
+  PRIMARY KEY (`CategoryID`),
+  UNIQUE KEY `CategoryName` (`CategoryName`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `machine_stop_category`
---
-
-TRUNCATE TABLE `machine_stop_category`;
 --
 -- Dumping data for table `machine_stop_category`
 --
 
-INSERT INTO `machine_stop_category` (`CategoryID`, `CategoryName`) VALUES
-(2, 'Electrical Failure'),
-(4, 'Logistics / Material'),
-(1, 'Mechanical Failure'),
-(5, 'Planned Downtime'),
-(3, 'Process / Setup');
-
--- --------------------------------------------------------
+LOCK TABLES `machine_stop_category` WRITE;
+/*!40000 ALTER TABLE `machine_stop_category` DISABLE KEYS */;
+INSERT INTO `machine_stop_category` VALUES
+(2,'Electrical Failure'),
+(4,'Logistics / Material'),
+(1,'Mechanical Failure'),
+(5,'Planned Downtime'),
+(3,'Process / Setup');
+/*!40000 ALTER TABLE `machine_stop_category` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `machine_stop_log`
 --
 
 DROP TABLE IF EXISTS `machine_stop_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `machine_stop_log` (
-  `StopID` int(11) NOT NULL,
+  `StopID` int(11) NOT NULL AUTO_INCREMENT,
   `MachineID` int(11) NOT NULL,
   `OperatorID` int(11) NOT NULL,
   `ProductionOrderID` int(11) DEFAULT NULL,
@@ -872,70 +918,86 @@ CREATE TABLE `machine_stop_log` (
   `ReasonID` int(11) DEFAULT NULL,
   `Notes` text DEFAULT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`StopID`),
+  KEY `OperatorID` (`OperatorID`),
+  KEY `ProductionOrderID` (`ProductionOrderID`),
+  KEY `CategoryID` (`CategoryID`),
+  KEY `ReasonID` (`ReasonID`),
+  KEY `idx_stop_start` (`StartTime`),
+  KEY `idx_stop_machine` (`MachineID`),
+  CONSTRAINT `machine_stop_log_ibfk_1` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`),
+  CONSTRAINT `machine_stop_log_ibfk_2` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`),
+  CONSTRAINT `machine_stop_log_ibfk_3` FOREIGN KEY (`ProductionOrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE SET NULL,
+  CONSTRAINT `machine_stop_log_ibfk_4` FOREIGN KEY (`CategoryID`) REFERENCES `machine_stop_category` (`CategoryID`) ON DELETE SET NULL,
+  CONSTRAINT `machine_stop_log_ibfk_5` FOREIGN KEY (`ReasonID`) REFERENCES `machine_stop_reason` (`ReasonID`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `machine_stop_log`
---
-
-TRUNCATE TABLE `machine_stop_log`;
 --
 -- Dumping data for table `machine_stop_log`
 --
 
-INSERT INTO `machine_stop_log` (`StopID`, `MachineID`, `OperatorID`, `ProductionOrderID`, `StartTime`, `EndTime`, `CategoryID`, `ReasonID`, `Notes`, `CreatedAt`, `UpdatedAt`) VALUES
-(1, 4, 1, NULL, '2025-12-25 18:15:00', '2025-12-25 18:15:00', 2, 8, '', '2025-12-25 17:15:22', '2025-12-25 17:15:32');
-
--- --------------------------------------------------------
+LOCK TABLES `machine_stop_log` WRITE;
+/*!40000 ALTER TABLE `machine_stop_log` DISABLE KEYS */;
+INSERT INTO `machine_stop_log` VALUES
+(1,4,1,NULL,'2025-12-25 18:15:00','2025-12-25 18:15:00',0,2,8,'','2025-12-25 17:15:22','2025-12-25 17:15:32');
+/*!40000 ALTER TABLE `machine_stop_log` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `machine_stop_reason`
 --
 
 DROP TABLE IF EXISTS `machine_stop_reason`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `machine_stop_reason` (
-  `ReasonID` int(11) NOT NULL,
+  `ReasonID` int(11) NOT NULL AUTO_INCREMENT,
   `ReasonName` varchar(255) NOT NULL,
-  `CategoryID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `CategoryID` int(11) NOT NULL,
+  PRIMARY KEY (`ReasonID`),
+  UNIQUE KEY `ReasonName` (`ReasonName`),
+  KEY `CategoryID` (`CategoryID`),
+  CONSTRAINT `machine_stop_reason_ibfk_1` FOREIGN KEY (`CategoryID`) REFERENCES `machine_stop_category` (`CategoryID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `machine_stop_reason`
---
-
-TRUNCATE TABLE `machine_stop_reason`;
 --
 -- Dumping data for table `machine_stop_reason`
 --
 
-INSERT INTO `machine_stop_reason` (`ReasonID`, `ReasonName`, `CategoryID`) VALUES
-(1, 'Motor Overheat', 1),
-(2, 'Belt/Chain Break', 1),
-(3, 'Hydraulic Leak', 1),
-(4, 'Tool Jam', 1),
-(5, 'Sensor Error', 2),
-(6, 'PLC Crash', 2),
-(7, 'Power Outage', 2),
-(8, 'Changeover / Setup', 3),
-(9, 'Cleaning', 3),
-(10, 'Quality Adjustment', 3),
-(11, 'Waiting for Material', 4),
-(12, 'Waiting for Operator', 4),
-(13, 'Forklift Delay', 4),
-(14, 'Scheduled Maintenance', 5),
-(15, 'Lunch Break', 5),
-(16, 'Shift Change', 5);
-
--- --------------------------------------------------------
+LOCK TABLES `machine_stop_reason` WRITE;
+/*!40000 ALTER TABLE `machine_stop_reason` DISABLE KEYS */;
+INSERT INTO `machine_stop_reason` VALUES
+(1,'Motor Overheat',1),
+(2,'Belt/Chain Break',1),
+(3,'Hydraulic Leak',1),
+(4,'Tool Jam',1),
+(5,'Sensor Error',2),
+(6,'PLC Crash',2),
+(7,'Power Outage',2),
+(8,'Changeover / Setup',3),
+(9,'Cleaning',3),
+(10,'Quality Adjustment',3),
+(11,'Waiting for Material',4),
+(12,'Waiting for Operator',4),
+(13,'Forklift Delay',4),
+(14,'Scheduled Maintenance',5),
+(15,'Lunch Break',5),
+(16,'Shift Change',5);
+/*!40000 ALTER TABLE `machine_stop_reason` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `operator_log`
 --
 
 DROP TABLE IF EXISTS `operator_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `operator_log` (
-  `LogID` int(11) NOT NULL,
+  `LogID` int(11) NOT NULL AUTO_INCREMENT,
   `OperatorID` int(11) NOT NULL,
   `MachineID` int(11) NOT NULL,
   `LoginTime` datetime DEFAULT current_timestamp(),
@@ -943,33 +1005,42 @@ CREATE TABLE `operator_log` (
   `DurationMinutes` float GENERATED ALWAYS AS (if(`LogoutTime` is not null,timestampdiff(MINUTE,`LoginTime`,`LogoutTime`),NULL)) VIRTUAL,
   `Notes` text DEFAULT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`LogID`),
+  KEY `OperatorID` (`OperatorID`),
+  KEY `MachineID` (`MachineID`),
+  CONSTRAINT `operator_log_ibfk_1` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`),
+  CONSTRAINT `operator_log_ibfk_2` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `operator_log`
---
-
-TRUNCATE TABLE `operator_log`;
 --
 -- Dumping data for table `operator_log`
 --
 
-INSERT INTO `operator_log` (`LogID`, `OperatorID`, `MachineID`, `LoginTime`, `LogoutTime`, `Notes`, `CreatedAt`, `UpdatedAt`) VALUES
-(1, 1, 4, '2025-12-01 17:10:00', '2025-12-07 21:10:00', '', '2025-12-25 15:10:57', '2025-12-25 15:10:57'),
-(2, 1, 3, '2025-12-02 17:11:00', '2025-12-31 17:16:00', '', '2025-12-25 15:11:36', '2025-12-25 15:11:36'),
-(3, 3, 4, '2026-01-24 09:48:00', NULL, NULL, '2026-01-24 07:48:00', '2026-01-24 07:48:00'),
-(4, 2, 4, '2026-01-24 10:00:29', NULL, NULL, '2026-01-24 08:00:29', '2026-01-24 08:00:29');
-
--- --------------------------------------------------------
+LOCK TABLES `operator_log` WRITE;
+/*!40000 ALTER TABLE `operator_log` DISABLE KEYS */;
+INSERT INTO `operator_log` VALUES
+(1,1,4,'2025-12-01 17:10:00','2025-12-07 21:10:00',8880,'','2025-12-25 15:10:57','2025-12-25 15:10:57'),
+(2,1,3,'2025-12-02 17:11:00','2025-12-31 17:16:00',41765,'','2025-12-25 15:11:36','2025-12-25 15:11:36'),
+(3,3,4,'2026-01-24 09:48:00','2026-06-24 15:03:22',217755,NULL,'2026-01-24 07:48:00','2026-06-24 15:03:22'),
+(4,2,4,'2026-01-24 10:00:29','2026-06-24 15:03:24',217742,NULL,'2026-01-24 08:00:29','2026-06-24 15:03:24'),
+(5,1,4,'2026-06-24 14:59:40','2026-06-24 14:59:44',0,NULL,'2026-06-24 14:59:40','2026-06-24 14:59:44'),
+(6,1,4,'2026-06-24 14:59:49',NULL,NULL,NULL,'2026-06-24 14:59:49','2026-06-24 14:59:49'),
+(7,3,4,'2026-06-24 15:04:30','2026-06-24 15:05:34',1,NULL,'2026-06-24 15:04:30','2026-06-24 15:05:34'),
+(8,3,3,'2026-06-24 15:05:34',NULL,NULL,NULL,'2026-06-24 15:05:34','2026-06-24 15:05:34');
+/*!40000 ALTER TABLE `operator_log` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `plant`
 --
 
 DROP TABLE IF EXISTS `plant`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `plant` (
-  `PlantID` int(11) NOT NULL,
+  `PlantID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(150) NOT NULL,
   `Description` text DEFAULT NULL,
   `CityID` int(11) NOT NULL,
@@ -979,55 +1050,563 @@ CREATE TABLE `plant` (
   `ManagerName` varchar(100) DEFAULT NULL,
   `Status` enum('Active','Inactive','Construction') DEFAULT 'Active',
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`PlantID`),
+  KEY `CityID` (`CityID`),
+  CONSTRAINT `fk_plant_city` FOREIGN KEY (`CityID`) REFERENCES `city` (`CityID`)
+) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `plant`
---
-
-TRUNCATE TABLE `plant`;
 --
 -- Dumping data for table `plant`
 --
 
-INSERT INTO `plant` (`PlantID`, `Name`, `Description`, `CityID`, `Address`, `ContactEmail`, `ContactPhone`, `ManagerName`, `Status`, `CreatedAt`, `UpdatedAt`) VALUES
-(158, 'Romania SteelWorks Bucharest 1', 'Specialized steel processing facility in Bucharest', 67, '923 Industrial Blvd, Sector 5', 'contact@romaniasteel.com', '+32 546114074', 'Manager 2bcc8', 'Active', '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(159, 'Romania SteelWorks Bucharest 2', 'Specialized steel processing facility in Bucharest', 67, '748 Industrial Blvd, Sector 10', 'contact@romaniasteel.com', '+32 578813382', 'Manager 73668', 'Active', '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(160, 'Romania SteelWorks Bucharest 3', 'Specialized steel processing facility in Bucharest', 67, '681 Industrial Blvd, Sector 6', 'contact@romaniasteel.com', '+32 669088149', 'Manager 0f8b1', 'Active', '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(161, 'Romania SteelWorks Bucharest 4', 'Specialized steel processing facility in Bucharest', 67, '924 Industrial Blvd, Sector 2', 'contact@romaniasteel.com', '+32 282975299', 'Manager 42316', 'Active', '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(162, 'Romania SteelWorks Cluj-Napoca 5', 'Specialized steel processing facility in Cluj-Napoca', 68, '845 Industrial Blvd, Sector 6', 'contact@romaniasteel.com', '+32 120674746', 'Manager cc434', 'Active', '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(163, 'Romania SteelWorks Cluj-Napoca 6', 'Specialized steel processing facility in Cluj-Napoca', 68, '133 Industrial Blvd, Sector 2', 'contact@romaniasteel.com', '+32 468320259', 'Manager 2a4af', 'Active', '2025-12-26 19:35:42', '2025-12-26 19:35:42');
-
--- --------------------------------------------------------
+LOCK TABLES `plant` WRITE;
+/*!40000 ALTER TABLE `plant` DISABLE KEYS */;
+INSERT INTO `plant` VALUES
+(158,'Romania SteelWorks Bucharest 1','Specialized steel processing facility in Bucharest',67,'923 Industrial Blvd, Sector 5','contact@romaniasteel.com','+32 546114074','Manager 2bcc8','Active','2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(159,'Romania SteelWorks Bucharest 2','Specialized steel processing facility in Bucharest',67,'748 Industrial Blvd, Sector 10','contact@romaniasteel.com','+32 578813382','Manager 73668','Active','2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(160,'Romania SteelWorks Bucharest 3','Specialized steel processing facility in Bucharest',67,'681 Industrial Blvd, Sector 6','contact@romaniasteel.com','+32 669088149','Manager 0f8b1','Active','2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(161,'Romania SteelWorks Bucharest 4','Specialized steel processing facility in Bucharest',67,'924 Industrial Blvd, Sector 2','contact@romaniasteel.com','+32 282975299','Manager 42316','Active','2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(162,'Romania SteelWorks Cluj-Napoca 5','Specialized steel processing facility in Cluj-Napoca',68,'845 Industrial Blvd, Sector 6','contact@romaniasteel.com','+32 120674746','Manager cc434','Active','2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(163,'Romania SteelWorks Cluj-Napoca 6','Specialized steel processing facility in Cluj-Napoca',68,'133 Industrial Blvd, Sector 2','contact@romaniasteel.com','+32 468320259','Manager 2a4af','Active','2025-12-26 19:35:42','2025-12-26 19:35:42');
+/*!40000 ALTER TABLE `plant` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `processed_production`
 --
 
 DROP TABLE IF EXISTS `processed_production`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `processed_production` (
-  `ProcessedID` int(11) NOT NULL,
+  `ProcessedID` int(11) NOT NULL AUTO_INCREMENT,
   `LogID` int(11) NOT NULL,
   `OrderID` int(11) NOT NULL,
   `AssignedQuantity` int(11) NOT NULL,
-  `AssignmentDate` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `AssignmentDate` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`ProcessedID`),
+  KEY `LogID` (`LogID`),
+  KEY `OrderID` (`OrderID`),
+  CONSTRAINT `processed_production_ibfk_1` FOREIGN KEY (`LogID`) REFERENCES `wago` (`LogID`) ON DELETE CASCADE,
+  CONSTRAINT `processed_production_ibfk_2` FOREIGN KEY (`OrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=495 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Truncate table before insert `processed_production`
+-- Dumping data for table `processed_production`
 --
 
-TRUNCATE TABLE `processed_production`;
--- --------------------------------------------------------
+LOCK TABLES `processed_production` WRITE;
+/*!40000 ALTER TABLE `processed_production` DISABLE KEYS */;
+INSERT INTO `processed_production` VALUES
+(1,5,10,2,'2026-06-24 15:49:03'),
+(2,14,10,3,'2026-06-24 15:49:03'),
+(3,20,10,1,'2026-06-24 15:49:03'),
+(4,25,10,2,'2026-06-24 15:49:03'),
+(5,29,10,5,'2026-06-24 15:49:03'),
+(6,36,10,4,'2026-06-24 15:49:04'),
+(7,40,10,5,'2026-06-24 15:49:04'),
+(8,50,10,5,'2026-06-24 15:49:04'),
+(9,53,10,4,'2026-06-24 15:49:04'),
+(10,59,10,5,'2026-06-24 15:49:04'),
+(11,61,10,5,'2026-06-24 15:49:04'),
+(12,75,10,2,'2026-06-24 15:49:04'),
+(13,85,10,5,'2026-06-24 15:49:04'),
+(14,86,10,4,'2026-06-24 15:49:04'),
+(15,87,10,4,'2026-06-24 15:49:04'),
+(16,92,10,5,'2026-06-24 15:49:04'),
+(17,95,10,1,'2026-06-24 15:49:04'),
+(18,97,10,5,'2026-06-24 15:49:04'),
+(19,107,10,2,'2026-06-24 15:49:04'),
+(20,115,10,4,'2026-06-24 15:49:04'),
+(21,117,10,5,'2026-06-24 15:49:04'),
+(22,123,10,3,'2026-06-24 15:49:04'),
+(23,136,10,5,'2026-06-24 15:49:04'),
+(24,140,10,4,'2026-06-24 15:49:04'),
+(25,141,10,4,'2026-06-24 15:49:04'),
+(26,151,10,1,'2026-06-24 15:49:04'),
+(27,158,10,3,'2026-06-24 15:49:04'),
+(28,169,10,4,'2026-06-24 15:49:04'),
+(29,172,10,5,'2026-06-24 15:49:04'),
+(30,224,10,5,'2026-06-24 15:49:04'),
+(31,244,10,3,'2026-06-24 15:49:04'),
+(32,242,10,4,'2026-06-24 15:49:04'),
+(33,240,10,3,'2026-06-24 15:49:04'),
+(34,232,10,4,'2026-06-24 15:49:04'),
+(35,191,10,3,'2026-06-24 15:49:04'),
+(36,188,10,5,'2026-06-24 15:49:04'),
+(37,183,10,2,'2026-06-24 15:49:04'),
+(38,197,10,2,'2026-06-24 15:49:04'),
+(39,201,10,1,'2026-06-24 15:49:04'),
+(40,202,10,2,'2026-06-24 15:49:04'),
+(41,290,10,4,'2026-06-24 15:49:04'),
+(42,287,10,2,'2026-06-24 15:49:04'),
+(43,283,10,4,'2026-06-24 15:49:04'),
+(44,302,10,4,'2026-06-24 15:49:04'),
+(45,318,10,3,'2026-06-24 15:49:04'),
+(46,259,10,1,'2026-06-24 15:49:04'),
+(47,258,10,1,'2026-06-24 15:49:04'),
+(48,249,10,4,'2026-06-24 15:49:04'),
+(49,248,10,1,'2026-06-24 15:49:04'),
+(50,277,10,5,'2026-06-24 15:49:04'),
+(51,275,10,5,'2026-06-24 15:49:04'),
+(52,266,10,5,'2026-06-24 15:49:04'),
+(53,267,10,5,'2026-06-24 15:49:04'),
+(54,358,10,5,'2026-06-24 15:49:04'),
+(55,375,10,4,'2026-06-24 15:49:04'),
+(56,393,10,3,'2026-06-24 15:49:04'),
+(57,389,10,1,'2026-06-24 15:49:04'),
+(58,387,10,5,'2026-06-24 15:49:04'),
+(59,381,10,2,'2026-06-24 15:49:04'),
+(60,378,10,4,'2026-06-24 15:49:04'),
+(61,377,10,5,'2026-06-24 15:49:04'),
+(62,336,10,4,'2026-06-24 15:49:04'),
+(63,334,10,3,'2026-06-24 15:49:04'),
+(64,324,10,5,'2026-06-24 15:49:04'),
+(65,323,10,1,'2026-06-24 15:49:04'),
+(66,353,10,3,'2026-06-24 15:49:04'),
+(67,346,10,5,'2026-06-24 15:49:04'),
+(68,443,10,5,'2026-06-24 15:49:04'),
+(69,444,10,2,'2026-06-24 15:49:04'),
+(70,446,10,1,'2026-06-24 15:49:04'),
+(71,440,10,2,'2026-06-24 15:49:04'),
+(72,438,10,5,'2026-06-24 15:49:04'),
+(73,436,10,1,'2026-06-24 15:49:05'),
+(74,464,10,1,'2026-06-24 15:49:05'),
+(75,455,10,4,'2026-06-24 15:49:05'),
+(76,404,10,4,'2026-06-24 15:49:05'),
+(77,431,10,3,'2026-06-24 15:49:05'),
+(78,416,10,3,'2026-06-24 15:49:05'),
+(79,518,10,3,'2026-06-24 15:49:05'),
+(80,521,10,4,'2026-06-24 15:49:05'),
+(81,536,10,1,'2026-06-24 15:49:05'),
+(82,469,10,2,'2026-06-24 15:49:05'),
+(83,485,10,2,'2026-06-24 15:49:05'),
+(84,478,10,2,'2026-06-24 15:49:05'),
+(85,474,10,3,'2026-06-24 15:49:05'),
+(86,491,10,4,'2026-06-24 15:49:05'),
+(87,546,10,5,'2026-06-24 15:49:05'),
+(88,573,10,1,'2026-06-24 15:49:05'),
+(89,572,10,3,'2026-06-24 15:49:05'),
+(90,582,10,4,'2026-06-24 15:49:05'),
+(91,632,10,2,'2026-06-24 15:49:05'),
+(92,626,10,4,'2026-06-24 15:49:05'),
+(93,648,10,1,'2026-06-24 15:49:05'),
+(94,641,10,5,'2026-06-24 15:49:05'),
+(95,599,10,3,'2026-06-24 15:49:05'),
+(96,591,10,1,'2026-06-24 15:49:05'),
+(97,617,10,5,'2026-06-24 15:49:05'),
+(98,616,10,2,'2026-06-24 15:49:05'),
+(99,606,10,5,'2026-06-24 15:49:05'),
+(100,607,10,3,'2026-06-24 15:49:05'),
+(101,610,10,5,'2026-06-24 15:49:05'),
+(102,690,10,3,'2026-06-24 15:49:05'),
+(103,687,10,5,'2026-06-24 15:49:05'),
+(104,685,10,5,'2026-06-24 15:49:05'),
+(105,682,10,1,'2026-06-24 15:49:05'),
+(106,705,10,1,'2026-06-24 15:49:05'),
+(107,700,10,3,'2026-06-24 15:49:05'),
+(108,697,10,2,'2026-06-24 15:49:05'),
+(109,665,10,3,'2026-06-24 15:49:05'),
+(110,659,10,1,'2026-06-24 15:49:05'),
+(111,657,10,3,'2026-06-24 15:49:05'),
+(112,667,10,4,'2026-06-24 15:49:05'),
+(113,677,10,4,'2026-06-24 15:49:05'),
+(114,675,10,4,'2026-06-24 15:49:05'),
+(115,672,10,3,'2026-06-24 15:49:05'),
+(116,714,10,2,'2026-06-24 15:49:05'),
+(117,736,10,5,'2026-06-24 15:49:05'),
+(118,744,10,4,'2026-06-24 15:49:05'),
+(119,751,10,4,'2026-06-24 15:49:05'),
+(120,756,10,28,'2026-06-24 15:49:05'),
+(121,757,10,39,'2026-06-24 15:49:05'),
+(122,761,10,48,'2026-06-24 15:49:05'),
+(123,764,10,62,'2026-06-24 15:49:05'),
+(124,773,10,48,'2026-06-24 15:49:05'),
+(125,774,10,24,'2026-06-24 15:49:05'),
+(126,776,10,44,'2026-06-24 15:49:05'),
+(127,778,10,7,'2026-06-24 15:49:05'),
+(128,779,10,24,'2026-06-24 15:49:05'),
+(129,782,10,8,'2026-06-24 15:49:05'),
+(130,797,10,44,'2026-06-24 15:49:05'),
+(131,801,10,36,'2026-06-24 15:49:05'),
+(132,808,10,40,'2026-06-24 15:49:05'),
+(133,813,10,36,'2026-06-24 15:49:05'),
+(134,818,10,12,'2026-06-24 15:49:05'),
+(135,826,10,62,'2026-06-24 15:49:05'),
+(136,840,10,57,'2026-06-24 15:49:05'),
+(137,839,10,8,'2026-06-24 15:49:05'),
+(138,849,10,46,'2026-06-24 15:49:05'),
+(139,846,10,23,'2026-06-24 15:49:05'),
+(140,845,10,12,'2026-06-24 15:49:05'),
+(141,844,10,33,'2026-06-24 15:49:05'),
+(142,843,10,10,'2026-06-24 15:49:05'),
+(143,851,10,34,'2026-06-24 15:49:05'),
+(144,863,10,25,'2026-06-24 15:49:05'),
+(145,869,10,21,'2026-06-24 15:49:06'),
+(146,876,10,50,'2026-06-24 15:49:06'),
+(147,886,10,13,'2026-06-24 15:49:06'),
+(148,893,10,59,'2026-06-24 15:49:06'),
+(149,890,10,21,'2026-06-24 15:49:06'),
+(150,888,10,45,'2026-06-24 15:49:06'),
+(151,899,10,16,'2026-06-24 15:49:06'),
+(152,895,10,62,'2026-06-24 15:49:06'),
+(153,905,10,61,'2026-06-24 15:49:06'),
+(154,902,10,44,'2026-06-24 15:49:06'),
+(155,912,10,63,'2026-06-24 15:49:06'),
+(156,911,10,13,'2026-06-24 15:49:06'),
+(157,933,10,32,'2026-06-24 15:49:06'),
+(158,929,10,54,'2026-06-24 15:49:06'),
+(159,939,10,23,'2026-06-24 15:49:06'),
+(160,943,10,64,'2026-06-24 15:49:06'),
+(161,950,10,1,'2026-06-24 15:49:06'),
+(162,953,10,18,'2026-06-24 15:49:06'),
+(163,956,10,31,'2026-06-24 15:49:06'),
+(164,957,10,64,'2026-06-24 15:49:06'),
+(165,958,10,39,'2026-06-24 15:49:06'),
+(166,962,10,43,'2026-06-24 15:49:06'),
+(167,972,10,59,'2026-06-24 15:49:06'),
+(168,969,10,11,'2026-06-24 15:49:06'),
+(169,977,10,56,'2026-06-24 15:49:06'),
+(170,984,10,38,'2026-06-24 15:49:06'),
+(171,1000,10,55,'2026-06-24 15:49:06'),
+(172,1007,10,16,'2026-06-24 15:49:06'),
+(173,1023,10,31,'2026-06-24 15:49:06'),
+(174,1032,10,17,'2026-06-24 15:49:06'),
+(175,1030,10,60,'2026-06-24 15:49:06'),
+(176,1039,10,57,'2026-06-24 15:49:06'),
+(177,1045,10,21,'2026-06-24 15:49:06'),
+(178,1062,10,37,'2026-06-24 15:49:06'),
+(179,1056,10,31,'2026-06-24 15:49:06'),
+(180,1069,10,64,'2026-06-24 15:49:06'),
+(181,1079,10,22,'2026-06-24 15:49:06'),
+(182,1090,10,12,'2026-06-24 15:49:06'),
+(183,1088,10,25,'2026-06-24 15:49:06'),
+(184,1086,10,27,'2026-06-24 15:49:06'),
+(185,1085,10,51,'2026-06-24 15:49:06'),
+(186,1112,10,22,'2026-06-24 15:49:06'),
+(187,1108,10,65,'2026-06-24 15:49:06'),
+(188,1114,10,44,'2026-06-24 15:49:06'),
+(189,1125,10,38,'2026-06-24 15:49:06'),
+(190,1167,10,63,'2026-06-24 15:49:06'),
+(191,1181,10,38,'2026-06-24 15:49:06'),
+(192,1178,10,11,'2026-06-24 15:49:06'),
+(193,1186,10,19,'2026-06-24 15:49:06'),
+(194,1184,10,52,'2026-06-24 15:49:06'),
+(195,1197,10,33,'2026-06-24 15:49:06'),
+(196,1191,10,13,'2026-06-24 15:49:06'),
+(197,1202,10,20,'2026-06-24 15:49:06'),
+(198,1208,10,20,'2026-06-24 15:49:06'),
+(199,1225,10,39,'2026-06-24 15:49:06'),
+(200,1223,10,60,'2026-06-24 15:49:06'),
+(201,1222,10,20,'2026-06-24 15:49:06'),
+(202,1221,10,43,'2026-06-24 15:49:06'),
+(203,1232,10,57,'2026-06-24 15:49:06'),
+(204,1240,10,2,'2026-06-24 15:49:06'),
+(205,1246,10,41,'2026-06-24 15:49:06'),
+(206,1245,10,7,'2026-06-24 15:49:06'),
+(207,1257,10,15,'2026-06-24 15:49:06'),
+(208,1251,10,62,'2026-06-24 15:49:06'),
+(209,1269,10,5,'2026-06-24 15:49:07'),
+(210,1277,10,37,'2026-06-24 15:49:07'),
+(211,1276,10,10,'2026-06-24 15:49:07'),
+(212,1275,10,38,'2026-06-24 15:49:07'),
+(213,1287,10,19,'2026-06-24 15:49:07'),
+(214,1297,10,62,'2026-06-24 15:49:07'),
+(215,1303,10,27,'2026-06-24 15:49:07'),
+(216,1300,10,10,'2026-06-24 15:49:07'),
+(217,1307,10,6,'2026-06-24 15:49:07'),
+(218,1306,10,24,'2026-06-24 15:49:07'),
+(219,1318,10,14,'2026-06-24 15:49:07'),
+(220,1315,10,31,'2026-06-24 15:49:07'),
+(221,1313,10,31,'2026-06-24 15:49:07'),
+(222,1325,10,58,'2026-06-24 15:49:07'),
+(223,1337,10,39,'2026-06-24 15:49:07'),
+(224,1331,10,11,'2026-06-24 15:49:07'),
+(225,1340,10,43,'2026-06-24 15:49:07'),
+(226,1339,10,64,'2026-06-24 15:49:07'),
+(227,1354,10,5,'2026-06-24 15:49:07'),
+(228,1359,10,23,'2026-06-24 15:49:07'),
+(229,1356,10,4,'2026-06-24 15:49:07'),
+(230,1367,10,1,'2026-06-24 15:49:07'),
+(231,1366,10,30,'2026-06-24 15:49:07'),
+(232,1372,10,21,'2026-06-24 15:49:07'),
+(233,1389,10,33,'2026-06-24 15:49:07'),
+(234,1387,10,65,'2026-06-24 15:49:07'),
+(235,1411,10,24,'2026-06-24 15:49:07'),
+(236,1440,10,8,'2026-06-24 15:49:07'),
+(237,1436,10,6,'2026-06-24 15:49:07'),
+(238,1449,10,18,'2026-06-24 15:49:07'),
+(239,1456,10,46,'2026-06-24 15:49:07'),
+(240,1471,10,47,'2026-06-24 15:49:07'),
+(241,1479,10,56,'2026-06-24 15:49:07'),
+(242,1476,10,15,'2026-06-24 15:49:07'),
+(243,1487,10,5,'2026-06-24 15:49:07'),
+(244,1496,10,7,'2026-06-24 15:49:07'),
+(245,1506,10,7,'2026-06-24 15:49:07'),
+(246,1513,10,24,'2026-06-24 15:49:07'),
+(247,1511,10,38,'2026-06-24 15:49:07'),
+(248,1520,10,35,'2026-06-24 15:49:07'),
+(249,1533,10,42,'2026-06-24 15:49:07'),
+(250,1532,10,3,'2026-06-24 15:49:07'),
+(251,1530,10,53,'2026-06-24 15:49:07'),
+(252,1536,10,26,'2026-06-24 15:49:07'),
+(253,1545,10,34,'2026-06-24 15:49:07'),
+(254,1542,10,53,'2026-06-24 15:49:07'),
+(255,1556,10,26,'2026-06-24 15:49:07'),
+(256,1563,10,61,'2026-06-24 15:49:07'),
+(257,1562,10,23,'2026-06-24 15:49:07'),
+(258,1573,10,6,'2026-06-24 15:49:07'),
+(259,1594,10,54,'2026-06-24 15:49:07'),
+(260,1589,10,10,'2026-06-24 15:49:07'),
+(261,1602,10,53,'2026-06-24 15:49:07'),
+(262,1604,10,9,'2026-06-24 15:49:07'),
+(263,1617,10,52,'2026-06-24 15:49:07'),
+(264,1613,10,9,'2026-06-24 15:49:07'),
+(265,1620,10,10,'2026-06-24 15:49:07'),
+(266,1629,10,17,'2026-06-24 15:49:07'),
+(267,1638,10,57,'2026-06-24 15:49:07'),
+(268,1645,10,7,'2026-06-24 15:49:07'),
+(269,1655,10,48,'2026-06-24 15:49:07'),
+(270,1653,10,43,'2026-06-24 15:49:07'),
+(271,1663,10,50,'2026-06-24 15:49:07'),
+(272,1666,10,37,'2026-06-24 15:49:07'),
+(273,1681,10,34,'2026-06-24 16:13:05'),
+(274,1680,10,2,'2026-06-24 16:13:05'),
+(275,1715,10,58,'2026-06-24 16:13:05'),
+(276,1722,10,31,'2026-06-24 16:13:05'),
+(277,1719,10,40,'2026-06-24 16:13:05'),
+(278,1726,10,16,'2026-06-24 16:13:05'),
+(279,1731,10,14,'2026-06-24 16:13:06'),
+(280,1732,10,39,'2026-06-24 16:13:06'),
+(281,1752,10,43,'2026-06-24 16:13:08'),
+(282,1749,10,59,'2026-06-24 16:13:08'),
+(283,1747,10,48,'2026-06-24 16:13:08'),
+(284,1766,10,64,'2026-06-24 16:13:10'),
+(285,1761,10,44,'2026-06-24 16:13:10'),
+(286,1778,10,60,'2026-06-24 16:13:12'),
+(287,1780,10,20,'2026-06-24 16:13:12'),
+(288,1789,10,38,'2026-06-24 16:13:12'),
+(289,1791,10,45,'2026-06-24 16:13:12'),
+(290,1797,10,16,'2026-06-24 16:13:14'),
+(291,1803,10,58,'2026-06-24 16:13:14'),
+(292,1806,10,58,'2026-06-24 16:13:14'),
+(293,1809,10,61,'2026-06-24 16:13:16'),
+(294,1817,10,65,'2026-06-24 16:13:16'),
+(295,1819,10,32,'2026-06-24 16:13:16'),
+(296,1823,10,33,'2026-06-24 16:13:18'),
+(297,1836,10,64,'2026-06-24 16:13:18'),
+(298,1830,10,10,'2026-06-24 16:13:18'),
+(299,1829,10,49,'2026-06-24 16:13:18'),
+(300,1838,10,5,'2026-06-24 16:13:18'),
+(301,1839,10,57,'2026-06-24 16:13:18'),
+(302,1844,10,40,'2026-06-24 16:13:20'),
+(303,1842,10,60,'2026-06-24 16:13:20'),
+(304,1852,10,22,'2026-06-24 16:13:20'),
+(305,1856,10,19,'2026-06-24 16:13:22'),
+(306,1859,10,13,'2026-06-24 16:13:22'),
+(307,1880,10,63,'2026-06-24 16:13:24'),
+(308,1877,10,4,'2026-06-24 16:13:24'),
+(309,1889,10,33,'2026-06-24 16:13:24'),
+(310,1895,10,53,'2026-06-24 16:13:26'),
+(311,1902,10,16,'2026-06-24 16:13:26'),
+(312,1914,10,45,'2026-06-24 16:13:28'),
+(313,1911,10,23,'2026-06-24 16:13:28'),
+(314,1907,10,5,'2026-06-24 16:13:28'),
+(315,1921,10,30,'2026-06-24 16:13:28'),
+(316,1939,10,28,'2026-06-24 16:13:32'),
+(317,1943,10,7,'2026-06-24 16:13:33'),
+(318,1950,10,50,'2026-06-24 16:13:35'),
+(319,1953,10,46,'2026-06-24 16:13:35'),
+(320,1963,10,41,'2026-06-24 16:13:35'),
+(321,1966,10,25,'2026-06-24 16:13:37'),
+(322,1965,10,15,'2026-06-24 16:13:37'),
+(323,1987,10,65,'2026-06-24 16:13:39'),
+(324,1994,10,48,'2026-06-24 16:13:39'),
+(325,1993,10,22,'2026-06-24 16:13:39'),
+(326,2007,10,49,'2026-06-24 16:13:41'),
+(327,2006,10,51,'2026-06-24 16:13:41'),
+(328,2004,10,23,'2026-06-24 16:13:41'),
+(329,2008,10,31,'2026-06-24 16:13:41'),
+(330,2010,10,54,'2026-06-24 16:13:43'),
+(331,2011,10,11,'2026-06-24 16:13:43'),
+(332,2034,10,16,'2026-06-24 16:13:45'),
+(333,2040,10,16,'2026-06-24 16:13:47'),
+(334,2041,10,4,'2026-06-24 16:13:47'),
+(335,2043,10,34,'2026-06-24 16:13:47'),
+(336,2064,10,48,'2026-06-24 16:13:49'),
+(337,2062,10,57,'2026-06-24 16:13:49'),
+(338,2060,10,54,'2026-06-24 16:13:49'),
+(339,2058,10,60,'2026-06-24 16:13:49'),
+(340,2068,10,9,'2026-06-24 16:13:49'),
+(341,2070,10,56,'2026-06-24 16:13:49'),
+(342,2071,10,62,'2026-06-24 16:13:49'),
+(343,2079,10,39,'2026-06-24 16:13:51'),
+(344,2077,10,36,'2026-06-24 16:13:51'),
+(345,2084,10,6,'2026-06-24 16:13:51'),
+(346,2086,10,11,'2026-06-24 16:13:53'),
+(347,2090,10,6,'2026-06-24 16:13:53'),
+(348,2120,10,2,'2026-06-24 16:13:57'),
+(349,2117,10,64,'2026-06-24 16:13:57'),
+(350,2115,10,13,'2026-06-24 16:13:57'),
+(351,2124,10,44,'2026-06-24 16:13:57'),
+(352,2136,10,63,'2026-06-24 16:14:00'),
+(353,2135,10,43,'2026-06-24 16:14:00'),
+(354,2131,10,65,'2026-06-24 16:14:00'),
+(355,2140,10,24,'2026-06-24 16:14:00'),
+(356,2149,10,33,'2026-06-24 16:14:02'),
+(357,2148,10,58,'2026-06-24 16:14:02'),
+(358,2161,10,29,'2026-06-24 16:14:02'),
+(359,2165,10,34,'2026-06-24 16:14:04'),
+(360,2173,10,29,'2026-06-24 16:14:04'),
+(361,2171,10,65,'2026-06-24 16:14:04'),
+(362,2169,10,50,'2026-06-24 16:14:04'),
+(363,2168,10,12,'2026-06-24 16:14:04'),
+(364,2176,10,37,'2026-06-24 16:14:06'),
+(365,2185,10,30,'2026-06-24 16:14:06'),
+(366,2193,10,24,'2026-06-24 16:14:06'),
+(367,2209,10,43,'2026-06-24 16:14:08'),
+(368,2214,10,19,'2026-06-24 16:14:10'),
+(369,2220,10,6,'2026-06-24 16:14:10'),
+(370,2217,10,59,'2026-06-24 16:14:10'),
+(371,2216,10,1,'2026-06-24 16:14:10'),
+(372,2229,10,24,'2026-06-24 16:14:12'),
+(373,2231,10,37,'2026-06-24 16:14:12'),
+(374,2240,10,11,'2026-06-24 16:14:12'),
+(375,2247,10,2,'2026-06-24 16:14:14'),
+(376,2256,10,41,'2026-06-24 16:14:14'),
+(377,2259,10,34,'2026-06-24 16:14:16'),
+(378,2270,10,20,'2026-06-24 16:14:16'),
+(379,2279,10,20,'2026-06-24 16:14:18'),
+(380,2281,10,54,'2026-06-24 16:14:18'),
+(381,2282,10,8,'2026-06-24 16:14:18'),
+(382,2285,10,2,'2026-06-24 16:14:20'),
+(383,2290,10,48,'2026-06-24 16:14:20'),
+(384,2289,10,42,'2026-06-24 16:14:20'),
+(385,2306,10,5,'2026-06-24 16:14:22'),
+(386,2300,10,60,'2026-06-24 16:14:22'),
+(387,2313,10,1,'2026-06-24 16:14:22'),
+(388,2323,10,54,'2026-06-24 16:14:24'),
+(389,2322,10,34,'2026-06-24 16:14:24'),
+(390,2321,10,24,'2026-06-24 16:14:24'),
+(391,2326,10,56,'2026-06-24 16:14:24'),
+(392,2350,10,38,'2026-06-24 16:14:29'),
+(393,2357,10,56,'2026-06-24 16:14:29'),
+(394,2366,10,20,'2026-06-24 16:14:31'),
+(395,2387,10,39,'2026-06-24 16:14:33'),
+(396,2383,10,32,'2026-06-24 16:14:33'),
+(397,2392,10,16,'2026-06-24 16:14:35'),
+(398,2405,10,48,'2026-06-24 16:14:35'),
+(399,2399,10,16,'2026-06-24 16:14:35'),
+(400,2413,10,45,'2026-06-24 16:14:37'),
+(401,2422,10,45,'2026-06-24 16:14:37'),
+(402,2421,10,50,'2026-06-24 16:14:37'),
+(403,2424,10,24,'2026-06-24 16:14:37'),
+(404,2432,10,46,'2026-06-24 16:14:39'),
+(405,2431,10,18,'2026-06-24 16:14:39'),
+(406,2445,10,12,'2026-06-24 16:14:41'),
+(407,2463,10,61,'2026-06-24 16:14:43'),
+(408,2467,10,60,'2026-06-24 16:14:45'),
+(409,2475,10,6,'2026-06-24 16:14:45'),
+(410,2474,10,20,'2026-06-24 16:14:45'),
+(411,2473,10,60,'2026-06-24 16:14:45'),
+(412,2471,10,1,'2026-06-24 16:14:45'),
+(413,2469,10,15,'2026-06-24 16:14:45'),
+(414,2480,10,65,'2026-06-24 16:14:45'),
+(415,2490,10,45,'2026-06-24 16:14:47'),
+(416,2487,10,1,'2026-06-24 16:14:47'),
+(417,2507,10,20,'2026-06-24 16:14:49'),
+(418,2503,10,38,'2026-06-24 16:14:49'),
+(419,2510,10,9,'2026-06-24 16:14:49'),
+(420,2512,10,54,'2026-06-24 16:14:49'),
+(421,2514,10,58,'2026-06-24 16:14:52'),
+(422,2519,10,17,'2026-06-24 16:14:52'),
+(423,2515,10,28,'2026-06-24 16:14:52'),
+(424,2525,10,26,'2026-06-24 16:14:52'),
+(425,2530,10,45,'2026-06-24 16:14:54'),
+(426,2541,10,18,'2026-06-24 16:14:54'),
+(427,2549,10,48,'2026-06-24 16:14:56'),
+(428,2559,10,21,'2026-06-24 16:14:56'),
+(429,2555,10,62,'2026-06-24 16:14:56'),
+(430,2568,10,28,'2026-06-24 16:14:58'),
+(431,2566,10,28,'2026-06-24 16:14:58'),
+(432,2571,10,30,'2026-06-24 16:14:58'),
+(433,2570,10,42,'2026-06-24 16:14:58'),
+(434,2577,10,17,'2026-06-24 16:14:58'),
+(435,2578,10,24,'2026-06-24 16:15:00'),
+(436,2583,10,62,'2026-06-24 16:15:00'),
+(437,2588,10,21,'2026-06-24 16:15:00'),
+(438,2598,10,6,'2026-06-24 16:15:02'),
+(439,2617,10,40,'2026-06-24 16:15:04'),
+(440,2615,10,26,'2026-06-24 16:15:04'),
+(441,2646,10,5,'2026-06-24 16:15:08'),
+(442,2655,10,45,'2026-06-24 16:15:10'),
+(443,2661,10,47,'2026-06-24 16:15:10'),
+(444,2658,10,60,'2026-06-24 16:15:10'),
+(445,2678,10,30,'2026-06-24 16:15:12'),
+(446,2674,10,35,'2026-06-24 16:15:12'),
+(447,2686,10,38,'2026-06-24 16:15:14'),
+(448,2695,10,5,'2026-06-24 16:15:14'),
+(449,2694,10,7,'2026-06-24 16:15:14'),
+(450,2702,10,63,'2026-06-24 16:15:17'),
+(451,2703,10,62,'2026-06-24 16:15:17'),
+(452,2710,10,27,'2026-06-24 16:15:17'),
+(453,2729,10,63,'2026-06-24 16:15:19'),
+(454,2727,10,63,'2026-06-24 16:15:19'),
+(455,2726,10,55,'2026-06-24 16:15:19'),
+(456,2734,10,10,'2026-06-24 16:15:21'),
+(457,2745,10,44,'2026-06-24 16:15:21'),
+(458,2743,10,53,'2026-06-24 16:15:21'),
+(459,2739,10,53,'2026-06-24 16:15:21'),
+(460,2747,10,9,'2026-06-24 16:15:23'),
+(461,2752,10,48,'2026-06-24 16:15:23'),
+(462,2751,10,27,'2026-06-24 16:15:23'),
+(463,2750,10,43,'2026-06-24 16:15:23'),
+(464,2760,10,51,'2026-06-24 16:15:23'),
+(465,2754,10,39,'2026-06-24 16:15:23'),
+(466,2762,10,38,'2026-06-24 16:15:23'),
+(467,2775,10,50,'2026-06-24 16:15:25'),
+(468,2789,10,29,'2026-06-24 16:15:27'),
+(469,2793,10,27,'2026-06-24 16:15:27'),
+(470,2795,10,35,'2026-06-24 16:15:29'),
+(471,2805,10,34,'2026-06-24 16:15:29'),
+(472,2802,10,56,'2026-06-24 16:15:29'),
+(473,2810,10,65,'2026-06-24 16:15:31'),
+(474,2817,10,1,'2026-06-24 16:15:31'),
+(475,2816,10,16,'2026-06-24 16:15:31'),
+(476,2823,10,6,'2026-06-24 16:15:31'),
+(477,2824,10,10,'2026-06-24 16:15:31'),
+(478,2845,10,57,'2026-06-24 16:15:35'),
+(479,2856,10,31,'2026-06-24 16:15:37'),
+(480,2867,10,31,'2026-06-24 16:15:37'),
+(481,2888,10,36,'2026-06-24 16:15:41'),
+(482,2891,10,63,'2026-06-24 16:15:41'),
+(483,2909,10,3,'2026-06-24 16:15:44'),
+(484,2920,10,15,'2026-06-24 16:15:44'),
+(485,2915,10,40,'2026-06-24 16:15:44'),
+(486,2912,10,59,'2026-06-24 16:15:44'),
+(487,2924,10,53,'2026-06-24 16:15:46'),
+(488,2933,10,51,'2026-06-24 16:15:46'),
+(489,2939,10,11,'2026-06-24 16:15:48'),
+(490,2941,10,24,'2026-06-24 16:15:48'),
+(491,2942,10,40,'2026-06-24 16:15:48'),
+(492,2943,10,9,'2026-06-24 16:15:48'),
+(493,2948,10,48,'2026-06-24 16:15:48'),
+(494,2946,10,45,'2026-06-24 16:15:48');
+/*!40000 ALTER TABLE `processed_production` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `production_log`
 --
 
 DROP TABLE IF EXISTS `production_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `production_log` (
-  `LogID` int(11) NOT NULL,
+  `LogID` int(11) NOT NULL AUTO_INCREMENT,
   `ProductionOrderID` int(11) NOT NULL,
   `MachineID` int(11) NOT NULL,
   `StartOperatorID` int(11) NOT NULL,
@@ -1039,31 +1618,46 @@ CREATE TABLE `production_log` (
   `Status` enum('Active','Closed') DEFAULT 'Active',
   `Notes` text DEFAULT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`LogID`),
+  KEY `MachineID` (`MachineID`),
+  KEY `StartOperatorID` (`StartOperatorID`),
+  KEY `EndOperatorID` (`EndOperatorID`),
+  KEY `idx_prodlog_order` (`ProductionOrderID`),
+  KEY `idx_prodlog_date` (`StartTime`),
+  KEY `idx_prodlog_status` (`Status`),
+  CONSTRAINT `production_log_ibfk_1` FOREIGN KEY (`ProductionOrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE,
+  CONSTRAINT `production_log_ibfk_2` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`),
+  CONSTRAINT `production_log_ibfk_3` FOREIGN KEY (`StartOperatorID`) REFERENCES `user` (`OperatorID`),
+  CONSTRAINT `production_log_ibfk_4` FOREIGN KEY (`EndOperatorID`) REFERENCES `user` (`OperatorID`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `production_log`
---
-
-TRUNCATE TABLE `production_log`;
 --
 -- Dumping data for table `production_log`
 --
 
-INSERT INTO `production_log` (`LogID`, `ProductionOrderID`, `MachineID`, `StartOperatorID`, `EndOperatorID`, `StartTime`, `EndTime`, `ShiftCount`, `Status`, `Notes`, `CreatedAt`, `UpdatedAt`) VALUES
-(3, 7, 4, 1, 1, '2026-01-23 14:55:00', '2026-01-23 14:55:00', 0.00, 'Closed', '', '2026-01-23 13:55:34', '2026-01-23 13:55:39'),
-(4, 6, 4, 3, NULL, '2026-01-24 08:53:32', NULL, 0.00, 'Active', NULL, '2026-01-24 07:53:32', '2026-01-24 07:53:32');
-
--- --------------------------------------------------------
+LOCK TABLES `production_log` WRITE;
+/*!40000 ALTER TABLE `production_log` DISABLE KEYS */;
+INSERT INTO `production_log` VALUES
+(3,7,4,1,1,'2026-01-23 14:55:00','2026-01-23 14:55:00',0,0.00,'Closed','','2026-01-23 13:55:34','2026-01-23 13:55:39'),
+(4,6,4,3,3,'2026-01-24 08:53:32','2026-06-24 15:02:57',217809,0.00,'Closed',NULL,'2026-01-24 07:53:32','2026-06-24 15:02:57'),
+(5,8,4,3,3,'2026-06-24 15:03:09','2026-06-24 15:03:13',0,0.00,'Closed',NULL,'2026-06-24 15:03:09','2026-06-24 15:03:13'),
+(6,7,4,3,3,'2026-06-24 15:03:15','2026-06-24 15:03:17',0,0.00,'Closed',NULL,'2026-06-24 15:03:15','2026-06-24 15:03:17'),
+(7,9,4,3,3,'2026-06-24 15:03:19','2026-06-24 15:03:21',0,0.00,'Closed',NULL,'2026-06-24 15:03:19','2026-06-24 15:03:21'),
+(8,10,3,3,NULL,'2026-06-24 15:05:36',NULL,NULL,0.00,'Active',NULL,'2026-06-24 15:05:36','2026-06-24 15:05:36');
+/*!40000 ALTER TABLE `production_log` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `production_order`
 --
 
 DROP TABLE IF EXISTS `production_order`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `production_order` (
-  `OrderID` int(11) NOT NULL,
+  `OrderID` int(11) NOT NULL AUTO_INCREMENT,
   `ArticleID` int(11) NOT NULL,
   `RecipeID` int(11) DEFAULT NULL,
   `TargetQuantity` int(11) NOT NULL,
@@ -1077,53 +1671,75 @@ CREATE TABLE `production_order` (
   `ActualStartDate` datetime DEFAULT NULL,
   `PlannedEndDate` date NOT NULL,
   `ActualEndDate` datetime DEFAULT NULL,
-  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`OrderID`),
+  KEY `ArticleID` (`ArticleID`),
+  KEY `fk_order_deleted_by` (`DeletedBy`),
+  KEY `fk_order_recipe` (`RecipeID`),
+  CONSTRAINT `fk_order_deleted_by` FOREIGN KEY (`DeletedBy`) REFERENCES `user` (`OperatorID`) ON DELETE SET NULL,
+  CONSTRAINT `fk_order_recipe` FOREIGN KEY (`RecipeID`) REFERENCES `production_recipes` (`RecipeID`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `production_order`
---
-
-TRUNCATE TABLE `production_order`;
 --
 -- Dumping data for table `production_order`
 --
 
-INSERT INTO `production_order` (`OrderID`, `ArticleID`, `RecipeID`, `TargetQuantity`, `ProducedQuantity`, `RejectQuantity`, `Status`, `IsDeleted`, `DeletedAt`, `DeletedBy`, `PlannedStartDate`, `ActualStartDate`, `PlannedEndDate`, `ActualEndDate`, `CreatedAt`) VALUES
-(6, 4, 1, 1234, 0, 0, 'Active', 0, NULL, NULL, '2026-01-22', '2026-01-24 09:53:32', '2026-01-22', NULL, '2026-01-22 10:42:37'),
-(7, 4, 1, 5000, 0, 0, 'Planned', 0, NULL, NULL, '2026-01-22', NULL, '2026-01-22', NULL, '2026-01-22 12:46:21'),
-(8, 4, 3, 500, 0, 0, 'Planned', 0, NULL, NULL, '2026-01-24', NULL, '2026-01-26', NULL, '2026-01-24 08:02:48'),
-(9, 4, 1, 500, 0, 0, 'Planned', 0, NULL, NULL, '2026-02-23', NULL, '2026-02-23', NULL, '2026-02-23 08:48:20');
-
--- --------------------------------------------------------
+LOCK TABLES `production_order` WRITE;
+/*!40000 ALTER TABLE `production_order` DISABLE KEYS */;
+INSERT INTO `production_order` VALUES
+(6,4,1,1234,0,0,'Closed',0,NULL,NULL,'2026-01-22','2026-01-24 09:53:32','2026-01-22','2026-06-24 15:02:57','2026-01-22 10:42:37'),
+(7,4,1,5000,0,0,'Closed',0,NULL,NULL,'2026-01-22','2026-06-24 15:03:15','2026-01-22','2026-06-24 15:03:17','2026-01-22 12:46:21'),
+(8,4,3,500,0,0,'Closed',0,NULL,NULL,'2026-01-24','2026-06-24 15:03:09','2026-01-26','2026-06-24 15:03:13','2026-01-24 08:02:48'),
+(9,4,1,500,0,0,'Closed',0,NULL,NULL,'2026-02-23','2026-06-24 15:03:19','2026-02-23','2026-06-24 15:03:21','2026-02-23 08:48:20'),
+(10,2,2,500,13009,0,'Active',0,NULL,NULL,'2026-06-24','2026-06-24 15:05:36','2026-06-24',NULL,'2026-06-24 15:05:01');
+/*!40000 ALTER TABLE `production_order` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `production_order_progress`
 --
 
 DROP TABLE IF EXISTS `production_order_progress`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `production_order_progress` (
-  `ProgressID` int(11) NOT NULL,
+  `ProgressID` int(11) NOT NULL AUTO_INCREMENT,
   `OrderID` int(11) NOT NULL,
   `ArticleID` int(11) NOT NULL,
-  `UnprintedQuantity` int(11) NOT NULL DEFAULT 0,
-  `LastUpdated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `ProgressType` enum('Input','Output') NOT NULL DEFAULT 'Output',
+  `CurrentQuantity` decimal(14,4) NOT NULL DEFAULT 0.0000,
+  `LastUpdated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ProgressID`),
+  UNIQUE KEY `unique_order_article` (`OrderID`,`ArticleID`),
+  UNIQUE KEY `unique_order_article_type` (`OrderID`,`ArticleID`,`ProgressType`),
+  KEY `fk_pop_article` (`ArticleID`),
+  CONSTRAINT `fk_pop_article` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_pop_order` FOREIGN KEY (`OrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=991 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Truncate table before insert `production_order_progress`
+-- Dumping data for table `production_order_progress`
 --
 
-TRUNCATE TABLE `production_order_progress`;
--- --------------------------------------------------------
+LOCK TABLES `production_order_progress` WRITE;
+/*!40000 ALTER TABLE `production_order_progress` DISABLE KEYS */;
+INSERT INTO `production_order_progress` VALUES
+(1,10,2,'Output',0.0000,'2026-06-24 16:16:10'),
+(2,10,5,'Input',4106.1300,'2026-06-24 16:15:48');
+/*!40000 ALTER TABLE `production_order_progress` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `production_recipes`
 --
 
 DROP TABLE IF EXISTS `production_recipes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `production_recipes` (
-  `RecipeID` int(11) NOT NULL,
+  `RecipeID` int(11) NOT NULL AUTO_INCREMENT,
   `ArticleID` int(11) NOT NULL,
   `MachineID` int(11) NOT NULL,
   `Sequence` int(11) NOT NULL DEFAULT 0,
@@ -1133,32 +1749,38 @@ CREATE TABLE `production_recipes` (
   `IsActive` tinyint(1) NOT NULL DEFAULT 1,
   `Notes` text DEFAULT NULL,
   `CreatedAt` datetime NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`RecipeID`),
+  KEY `fk_recipe_machine` (`MachineID`),
+  KEY `idx_recipe_lookup` (`ArticleID`,`MachineID`),
+  CONSTRAINT `fk_recipe_article` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_recipe_machine` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `production_recipes`
---
-
-TRUNCATE TABLE `production_recipes`;
 --
 -- Dumping data for table `production_recipes`
 --
 
-INSERT INTO `production_recipes` (`RecipeID`, `ArticleID`, `MachineID`, `Sequence`, `OperationDescription`, `EstimatedTime`, `Version`, `IsActive`, `Notes`, `CreatedAt`, `UpdatedAt`) VALUES
-(1, 4, 4, 0, 'Finished part', 5.00, '0', 1, '', '2026-01-22 11:28:36', '2026-01-22 11:28:36'),
-(2, 2, 3, 0, 'Semimanufactured part', 5.00, '0', 1, '', '2026-01-22 11:28:53', '2026-01-22 11:28:53'),
-(3, 4, 4, 0, 'asdasdasd', 300.00, 'RevA', 1, 'sadasdasd', '2026-01-24 10:02:30', '2026-01-24 10:02:30');
-
--- --------------------------------------------------------
+LOCK TABLES `production_recipes` WRITE;
+/*!40000 ALTER TABLE `production_recipes` DISABLE KEYS */;
+INSERT INTO `production_recipes` VALUES
+(1,4,4,0,'Finished part',5.00,'0',1,'','2026-01-22 11:28:36','2026-01-22 11:28:36'),
+(2,2,3,0,'Semimanufactured part',5.00,'0',1,'','2026-01-22 11:28:53','2026-01-22 11:28:53'),
+(3,4,4,0,'Packaging',300.00,'RevA',1,'\r\n','2026-01-24 10:02:30','2026-06-24 14:51:05'),
+(4,3,7,0,'Washing\r\n',30.00,'Rev-1',1,'','2026-06-24 14:18:45','2026-06-24 14:18:45');
+/*!40000 ALTER TABLE `production_recipes` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `raw_material_log`
 --
 
 DROP TABLE IF EXISTS `raw_material_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `raw_material_log` (
-  `LogID` int(11) NOT NULL,
+  `LogID` int(11) NOT NULL AUTO_INCREMENT,
   `ProductionOrderID` int(11) NOT NULL,
   `OperatorID` int(11) NOT NULL,
   `BatchCode` varchar(100) NOT NULL,
@@ -1168,69 +1790,116 @@ CREATE TABLE `raw_material_log` (
   `ScanTime` datetime DEFAULT current_timestamp(),
   `Notes` text DEFAULT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`LogID`),
+  KEY `OperatorID` (`OperatorID`),
+  KEY `ArticleID` (`ArticleID`),
+  KEY `MachineID` (`MachineID`),
+  KEY `idx_rm_batch` (`BatchCode`),
+  KEY `idx_rm_order` (`ProductionOrderID`),
+  KEY `idx_rm_date` (`ScanTime`),
+  CONSTRAINT `raw_material_log_ibfk_1` FOREIGN KEY (`ProductionOrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE,
+  CONSTRAINT `raw_material_log_ibfk_2` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`),
+  CONSTRAINT `raw_material_log_ibfk_3` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`) ON DELETE SET NULL,
+  CONSTRAINT `raw_material_log_ibfk_4` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Truncate table before insert `raw_material_log`
+-- Dumping data for table `raw_material_log`
 --
 
-TRUNCATE TABLE `raw_material_log`;
--- --------------------------------------------------------
+LOCK TABLES `raw_material_log` WRITE;
+/*!40000 ALTER TABLE `raw_material_log` DISABLE KEYS */;
+INSERT INTO `raw_material_log` VALUES
+(1,10,3,'R123456',5,3,1234.00,'2026-06-24 15:39:00','','2026-06-24 15:39:53','2026-06-24 15:39:53'),
+(2,10,3,'R1232323',5,3,2700.00,'2026-06-24 15:39:00','','2026-06-24 15:58:20','2026-06-24 15:58:20'),
+(3,10,3,'R1243552345',5,3,7000.00,'2026-06-24 15:58:00','','2026-06-24 16:11:20','2026-06-24 16:11:20');
+/*!40000 ALTER TABLE `raw_material_log` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `recipe_inputs`
 --
 
 DROP TABLE IF EXISTS `recipe_inputs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `recipe_inputs` (
-  `InputID` int(11) NOT NULL,
+  `InputID` int(11) NOT NULL AUTO_INCREMENT,
   `RecipeID` int(11) NOT NULL,
   `ArticleID` int(11) NOT NULL,
   `Quantity` decimal(10,4) NOT NULL DEFAULT 1.0000,
   `Unit` varchar(50) NOT NULL DEFAULT 'unit',
   `InputType` enum('part','resource','consumable') NOT NULL DEFAULT 'part',
   `CreatedAt` datetime NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`InputID`),
+  KEY `fk_recipe_inputs_recipe` (`RecipeID`),
+  KEY `fk_recipe_inputs_article` (`ArticleID`),
+  CONSTRAINT `fk_recipe_inputs_article` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`),
+  CONSTRAINT `fk_recipe_inputs_recipe` FOREIGN KEY (`RecipeID`) REFERENCES `production_recipes` (`RecipeID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Truncate table before insert `recipe_inputs`
+-- Dumping data for table `recipe_inputs`
 --
 
-TRUNCATE TABLE `recipe_inputs`;
--- --------------------------------------------------------
+LOCK TABLES `recipe_inputs` WRITE;
+/*!40000 ALTER TABLE `recipe_inputs` DISABLE KEYS */;
+INSERT INTO `recipe_inputs` VALUES
+(1,1,2,1.0000,'unit','part','2026-06-24 14:17:28','2026-06-24 14:17:28'),
+(2,2,5,0.4300,'unit','consumable','2026-06-24 14:18:10','2026-06-24 14:18:10'),
+(3,4,2,1.0000,'unit','part','2026-06-24 14:18:54','2026-06-24 14:18:54');
+/*!40000 ALTER TABLE `recipe_inputs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `recipe_outputs`
 --
 
 DROP TABLE IF EXISTS `recipe_outputs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `recipe_outputs` (
-  `OutputID` int(11) NOT NULL,
+  `OutputID` int(11) NOT NULL AUTO_INCREMENT,
   `RecipeID` int(11) NOT NULL,
   `ArticleID` int(11) NOT NULL,
   `Quantity` decimal(10,4) NOT NULL DEFAULT 1.0000,
   `Unit` varchar(50) NOT NULL DEFAULT 'unit',
   `IsPrimary` tinyint(1) NOT NULL DEFAULT 1,
   `CreatedAt` datetime NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`OutputID`),
+  KEY `fk_recipe_outputs_recipe` (`RecipeID`),
+  KEY `fk_recipe_outputs_article` (`ArticleID`),
+  CONSTRAINT `fk_recipe_outputs_article` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`),
+  CONSTRAINT `fk_recipe_outputs_recipe` FOREIGN KEY (`RecipeID`) REFERENCES `production_recipes` (`RecipeID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Truncate table before insert `recipe_outputs`
+-- Dumping data for table `recipe_outputs`
 --
 
-TRUNCATE TABLE `recipe_outputs`;
--- --------------------------------------------------------
+LOCK TABLES `recipe_outputs` WRITE;
+/*!40000 ALTER TABLE `recipe_outputs` DISABLE KEYS */;
+INSERT INTO `recipe_outputs` VALUES
+(1,2,2,1.0000,'unit',1,'2026-06-24 14:18:19','2026-06-24 14:18:19'),
+(2,4,3,1.0000,'unit',1,'2026-06-24 14:18:57','2026-06-24 14:18:57');
+/*!40000 ALTER TABLE `recipe_outputs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `reject`
 --
 
 DROP TABLE IF EXISTS `reject`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reject` (
-  `RejectID` int(11) NOT NULL,
+  `RejectID` int(11) NOT NULL AUTO_INCREMENT,
   `ArticleID` int(11) NOT NULL,
   `OrderID` int(11) NOT NULL,
   `OperatorID` int(11) NOT NULL,
@@ -1239,1565 +1908,3329 @@ CREATE TABLE `reject` (
   `ReasonID` int(11) NOT NULL,
   `Quantity` int(11) NOT NULL,
   `Notes` text DEFAULT NULL,
-  `RejectDate` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `RejectDate` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`RejectID`),
+  KEY `OrderID` (`OrderID`),
+  KEY `CategoryID` (`CategoryID`),
+  KEY `ReasonID` (`ReasonID`),
+  KEY `rejects_ibfk_1` (`ArticleID`),
+  KEY `fk_reject_operator` (`OperatorID`),
+  KEY `fk_reject_machine` (`MachineID`),
+  KEY `idx_reject_date` (`RejectDate`),
+  CONSTRAINT `fk_reject_machine` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`),
+  CONSTRAINT `fk_reject_operator` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`),
+  CONSTRAINT `reject_ibfk_1` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`) ON DELETE CASCADE,
+  CONSTRAINT `reject_ibfk_2` FOREIGN KEY (`OrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE,
+  CONSTRAINT `reject_ibfk_3` FOREIGN KEY (`CategoryID`) REFERENCES `reject_category` (`CategoryID`) ON DELETE CASCADE,
+  CONSTRAINT `reject_ibfk_4` FOREIGN KEY (`ReasonID`) REFERENCES `reject_reason` (`ReasonID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `reject`
---
-
-TRUNCATE TABLE `reject`;
 --
 -- Dumping data for table `reject`
 --
 
-INSERT INTO `reject` (`RejectID`, `ArticleID`, `OrderID`, `OperatorID`, `MachineID`, `CategoryID`, `ReasonID`, `Quantity`, `Notes`, `RejectDate`) VALUES
-(2, 4, 6, 3, 4, 3, 12, 50, '', '2026-02-04 17:09:56'),
-(3, 4, 6, 3, 4, 3, 13, 1500, '', '2026-02-04 17:10:07'),
-(4, 4, 6, 3, 4, 2, 2, 1777, '', '2026-02-04 17:10:18'),
-(5, 4, 6, 3, 4, 3, 12, 6, '', '2026-03-06 08:24:00'),
-(6, 4, 6, 3, 4, 3, 13, 1, 'test', '2026-05-22 19:48:25');
+LOCK TABLES `reject` WRITE;
+/*!40000 ALTER TABLE `reject` DISABLE KEYS */;
+INSERT INTO `reject` VALUES
+(2,4,6,3,4,3,12,50,'','2026-02-04 17:09:56'),
+(3,4,6,3,4,3,13,1500,'','2026-02-04 17:10:07'),
+(4,4,6,3,4,2,2,1777,'','2026-02-04 17:10:18'),
+(5,4,6,3,4,3,12,6,'','2026-03-06 08:24:00'),
+(6,4,6,3,4,3,13,1,'test','2026-05-22 19:48:25'),
+(7,2,10,3,3,3,12,5,'','2026-06-24 16:00:14');
+/*!40000 ALTER TABLE `reject` ENABLE KEYS */;
+UNLOCK TABLES;
+ALTER DATABASE `xooiduyr_mes` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 
--- --------------------------------------------------------
+
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `xooiduyr_mes` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 
 --
 -- Table structure for table `reject_category`
 --
 
 DROP TABLE IF EXISTS `reject_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reject_category` (
-  `CategoryID` int(11) NOT NULL,
+  `CategoryID` int(11) NOT NULL AUTO_INCREMENT,
   `CategoryName` varchar(255) NOT NULL,
   `PlantID` int(11) DEFAULT NULL,
-  `SectionID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `SectionID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`CategoryID`),
+  UNIQUE KEY `CategoryName` (`CategoryName`),
+  KEY `fk_rc_section` (`SectionID`),
+  KEY `idx_rc_location` (`PlantID`,`SectionID`),
+  CONSTRAINT `fk_rc_plant` FOREIGN KEY (`PlantID`) REFERENCES `plant` (`PlantID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_rc_section` FOREIGN KEY (`SectionID`) REFERENCES `section` (`SectionID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `reject_category`
---
-
-TRUNCATE TABLE `reject_category`;
 --
 -- Dumping data for table `reject_category`
 --
 
-INSERT INTO `reject_category` (`CategoryID`, `CategoryName`, `PlantID`, `SectionID`) VALUES
-(1, 'Surface Defects', NULL, NULL),
-(2, 'Mechanical Issues', NULL, NULL),
-(3, 'Material Defect', NULL, NULL),
-(4, 'Machine Malfunction', NULL, NULL),
-(5, 'Operator Error', NULL, NULL),
-(6, 'Process Deviation', NULL, NULL),
-(7, 'Quality Assurance', NULL, NULL);
-
--- --------------------------------------------------------
+LOCK TABLES `reject_category` WRITE;
+/*!40000 ALTER TABLE `reject_category` DISABLE KEYS */;
+INSERT INTO `reject_category` VALUES
+(1,'Surface Defects',NULL,NULL),
+(2,'Mechanical Issues',NULL,NULL),
+(3,'Material Defect',NULL,NULL),
+(4,'Machine Malfunction',NULL,NULL),
+(5,'Operator Error',NULL,NULL),
+(6,'Process Deviation',NULL,NULL),
+(7,'Quality Assurance',NULL,NULL);
+/*!40000 ALTER TABLE `reject_category` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `reject_reason`
 --
 
 DROP TABLE IF EXISTS `reject_reason`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reject_reason` (
-  `ReasonID` int(11) NOT NULL,
+  `ReasonID` int(11) NOT NULL AUTO_INCREMENT,
   `ReasonName` varchar(255) NOT NULL,
   `CategoryID` int(11) NOT NULL,
   `PlantID` int(11) DEFAULT NULL,
-  `SectionID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `SectionID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ReasonID`),
+  UNIQUE KEY `ReasonName` (`ReasonName`),
+  KEY `CategoryID` (`CategoryID`),
+  KEY `fk_rr_section` (`SectionID`),
+  KEY `idx_rr_location` (`PlantID`,`SectionID`),
+  CONSTRAINT `fk_rr_plant` FOREIGN KEY (`PlantID`) REFERENCES `plant` (`PlantID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_rr_section` FOREIGN KEY (`SectionID`) REFERENCES `section` (`SectionID`) ON DELETE CASCADE,
+  CONSTRAINT `reject_reason_ibfk_1` FOREIGN KEY (`CategoryID`) REFERENCES `reject_category` (`CategoryID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `reject_reason`
---
-
-TRUNCATE TABLE `reject_reason`;
 --
 -- Dumping data for table `reject_reason`
 --
 
-INSERT INTO `reject_reason` (`ReasonID`, `ReasonName`, `CategoryID`, `PlantID`, `SectionID`) VALUES
-(1, 'Scratches', 1, NULL, NULL),
-(2, 'Dents', 2, NULL, NULL),
-(3, 'Scratch / Dent', 1, NULL, NULL),
-(4, 'Wrong Color / Shade', 1, NULL, NULL),
-(5, 'Material Contamination', 1, NULL, NULL),
-(6, 'Dimension Out of Tolerance', 1, NULL, NULL),
-(7, 'Tool Breakage', 2, NULL, NULL),
-(8, 'Overheating', 2, NULL, NULL),
-(9, 'Power Failure', 2, NULL, NULL),
-(10, 'Calibration Drift', 2, NULL, NULL),
-(11, 'Handling Damage', 3, NULL, NULL),
-(12, 'Incorrect Setup', 3, NULL, NULL),
-(13, 'Packaging Error', 3, NULL, NULL);
-
--- --------------------------------------------------------
+LOCK TABLES `reject_reason` WRITE;
+/*!40000 ALTER TABLE `reject_reason` DISABLE KEYS */;
+INSERT INTO `reject_reason` VALUES
+(1,'Scratches',1,NULL,NULL),
+(2,'Dents',2,NULL,NULL),
+(3,'Scratch / Dent',1,NULL,NULL),
+(4,'Wrong Color / Shade',1,NULL,NULL),
+(5,'Material Contamination',1,NULL,NULL),
+(6,'Dimension Out of Tolerance',1,NULL,NULL),
+(7,'Tool Breakage',2,NULL,NULL),
+(8,'Overheating',2,NULL,NULL),
+(9,'Power Failure',2,NULL,NULL),
+(10,'Calibration Drift',2,NULL,NULL),
+(11,'Handling Damage',3,NULL,NULL),
+(12,'Incorrect Setup',3,NULL,NULL),
+(13,'Packaging Error',3,NULL,NULL);
+/*!40000 ALTER TABLE `reject_reason` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `section`
 --
 
 DROP TABLE IF EXISTS `section`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `section` (
-  `SectionID` int(11) NOT NULL,
+  `SectionID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(150) NOT NULL,
   `PlantID` int(11) NOT NULL,
   `Description` text DEFAULT NULL,
   `FloorAreaSqM` decimal(10,2) DEFAULT 0.00,
   `MaxCapacity` int(11) DEFAULT 0,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`SectionID`),
+  KEY `PlantID` (`PlantID`),
+  CONSTRAINT `fk_section_plant` FOREIGN KEY (`PlantID`) REFERENCES `plant` (`PlantID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=490 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `section`
---
-
-TRUNCATE TABLE `section`;
 --
 -- Dumping data for table `section`
 --
 
-INSERT INTO `section` (`SectionID`, `Name`, `PlantID`, `Description`, `FloorAreaSqM`, `MaxCapacity`, `CreatedAt`, `UpdatedAt`) VALUES
-(472, 'Raw Materials & Coil Storage', 158, 'Incoming coil storage area', 1500.00, 500, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(473, 'Processing Floor', 158, 'Main manufacturing line', 3000.00, 50, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(474, 'Packaging & Shipping', 158, 'Final goods preparation', 1000.00, 20, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(475, 'Raw Materials & Coil Storage', 159, 'Incoming coil storage area', 1500.00, 500, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(476, 'Processing Floor', 159, 'Main manufacturing line', 3000.00, 50, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(477, 'Packaging & Shipping', 159, 'Final goods preparation', 1000.00, 20, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(478, 'Raw Materials & Coil Storage', 160, 'Incoming coil storage area', 1500.00, 500, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(479, 'Processing Floor', 160, 'Main manufacturing line', 3000.00, 50, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(480, 'Packaging & Shipping', 160, 'Final goods preparation', 1000.00, 20, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(481, 'Raw Materials & Coil Storage', 161, 'Incoming coil storage area', 1500.00, 500, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(482, 'Processing Floor', 161, 'Main manufacturing line', 3000.00, 50, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(483, 'Packaging & Shipping', 161, 'Final goods preparation', 1000.00, 20, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(484, 'Raw Materials & Coil Storage', 162, 'Incoming coil storage area', 1500.00, 500, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(485, 'Processing Floor', 162, 'Main manufacturing line', 3000.00, 50, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(486, 'Packaging & Shipping', 162, 'Final goods preparation', 1000.00, 20, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(487, 'Raw Materials & Coil Storage', 163, 'Incoming coil storage area', 1500.00, 500, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(488, 'Processing Floor', 163, 'Main manufacturing line', 3000.00, 50, '2025-12-26 19:35:42', '2025-12-26 19:35:42'),
-(489, 'Packaging & Shipping', 163, 'Final goods preparation', 1000.00, 20, '2025-12-26 19:35:42', '2025-12-26 19:35:42');
-
--- --------------------------------------------------------
+LOCK TABLES `section` WRITE;
+/*!40000 ALTER TABLE `section` DISABLE KEYS */;
+INSERT INTO `section` VALUES
+(472,'Raw Materials & Coil Storage',158,'Incoming coil storage area',1500.00,500,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(473,'Processing Floor',158,'Main manufacturing line',3000.00,50,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(474,'Packaging & Shipping',158,'Final goods preparation',1000.00,20,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(475,'Raw Materials & Coil Storage',159,'Incoming coil storage area',1500.00,500,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(476,'Processing Floor',159,'Main manufacturing line',3000.00,50,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(477,'Packaging & Shipping',159,'Final goods preparation',1000.00,20,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(478,'Raw Materials & Coil Storage',160,'Incoming coil storage area',1500.00,500,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(479,'Processing Floor',160,'Main manufacturing line',3000.00,50,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(480,'Packaging & Shipping',160,'Final goods preparation',1000.00,20,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(481,'Raw Materials & Coil Storage',161,'Incoming coil storage area',1500.00,500,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(482,'Processing Floor',161,'Main manufacturing line',3000.00,50,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(483,'Packaging & Shipping',161,'Final goods preparation',1000.00,20,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(484,'Raw Materials & Coil Storage',162,'Incoming coil storage area',1500.00,500,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(485,'Processing Floor',162,'Main manufacturing line',3000.00,50,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(486,'Packaging & Shipping',162,'Final goods preparation',1000.00,20,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(487,'Raw Materials & Coil Storage',163,'Incoming coil storage area',1500.00,500,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(488,'Processing Floor',163,'Main manufacturing line',3000.00,50,'2025-12-26 19:35:42','2025-12-26 19:35:42'),
+(489,'Packaging & Shipping',163,'Final goods preparation',1000.00,20,'2025-12-26 19:35:42','2025-12-26 19:35:42');
+/*!40000 ALTER TABLE `section` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `shifts`
 --
 
 DROP TABLE IF EXISTS `shifts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `shifts` (
-  `ShiftID` int(11) NOT NULL,
+  `ShiftID` int(11) NOT NULL AUTO_INCREMENT,
   `OrderID` int(11) NOT NULL,
   `StartDate` datetime NOT NULL,
   `EndDate` datetime DEFAULT NULL,
   `OperatorID` int(11) DEFAULT NULL,
-  `ShiftProduction` int(11) DEFAULT 0
+  `ShiftProduction` int(11) DEFAULT 0,
+  PRIMARY KEY (`ShiftID`),
+  KEY `OrderID` (`OrderID`),
+  KEY `OperatorID` (`OperatorID`),
+  CONSTRAINT `shifts_ibfk_1` FOREIGN KEY (`OrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE,
+  CONSTRAINT `shifts_ibfk_2` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Truncate table before insert `shifts`
+-- Dumping data for table `shifts`
 --
 
-TRUNCATE TABLE `shifts`;
--- --------------------------------------------------------
+LOCK TABLES `shifts` WRITE;
+/*!40000 ALTER TABLE `shifts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shifts` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
 --
 
 DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
-  `OperatorID` int(11) NOT NULL,
+  `OperatorID` int(11) NOT NULL AUTO_INCREMENT,
   `OperatorUsername` varchar(50) NOT NULL,
   `OperatorPassword` varchar(255) NOT NULL,
   `OperatorRoles` varchar(255) NOT NULL DEFAULT 'operator',
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`OperatorID`),
+  UNIQUE KEY `OperatorUsername` (`OperatorUsername`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `user`
---
-
-TRUNCATE TABLE `user`;
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`OperatorID`, `OperatorUsername`, `OperatorPassword`, `OperatorRoles`, `CreatedAt`, `UpdatedAt`) VALUES
-(1, '__BO__ADMIN', '$2y$10$vmKrs6Z/urZHVJOTu/BeDeeIDsdibrfzuDCZQTNEeSx33L0R.sfs6', 'admin', '2025-10-04 11:36:07', '2026-04-21 14:15:46'),
-(2, 'Operator2', '0000', 'operator', '2026-01-23 16:06:30', '2026-01-23 16:06:30'),
-(3, 'Operator1', '0000', 'operator', '2026-01-23 16:06:38', '2026-01-23 16:06:38');
-
--- --------------------------------------------------------
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES
+(1,'__BO__ADMIN','$2y$10$vmKrs6Z/urZHVJOTu/BeDeeIDsdibrfzuDCZQTNEeSx33L0R.sfs6','admin','2025-10-04 11:36:07','2026-04-21 14:15:46'),
+(2,'Operator2','$2y$10$c5i/zEFjNSvn47ezv4Q0sOb1p98mVmkSKWt1PZJEdzs3WkwIDV.gi','operator','2026-01-23 16:06:30','2026-06-24 15:04:19'),
+(3,'Operator1','$2y$10$Gi1YIaHi2izHxrCIL6Bd9ef/Ao.Po1NRDXZGw4XN1KolHl/TI6gnu','operator','2026-01-23 16:06:38','2026-06-24 15:04:07');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `wago`
 --
 
 DROP TABLE IF EXISTS `wago`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `wago` (
-  `LogID` int(11) NOT NULL,
+  `LogID` int(11) NOT NULL AUTO_INCREMENT,
   `MachineID` int(11) DEFAULT 1,
   `Timestamp` datetime NOT NULL,
   `ProductionCount` int(11) NOT NULL DEFAULT 1,
-  `Processed` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `Processed` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`LogID`),
+  KEY `idx_timestamp` (`Timestamp`),
+  KEY `fk_machine_id` (`MachineID`),
+  CONSTRAINT `fk_machine_id` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`) ON DELETE SET NULL ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3039 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Truncate table before insert `wago`
---
-
-TRUNCATE TABLE `wago`;
 --
 -- Dumping data for table `wago`
 --
 
-INSERT INTO `wago` (`LogID`, `MachineID`, `Timestamp`, `ProductionCount`, `Processed`) VALUES
-(1, 1, '2025-10-03 12:00:00', 1, 0),
-(2, 1, '2025-10-03 12:01:00', 1, 0),
-(3, 7, '2026-01-23 15:51:05', 3, 0),
-(4, 4, '2026-01-23 15:51:07', 3, 0),
-(5, 3, '2026-01-23 15:51:09', 2, 0),
-(6, 6, '2026-01-23 15:51:11', 3, 0),
-(7, 1, '2026-01-23 15:51:13', 3, 0),
-(8, 5, '2026-01-23 15:51:14', 5, 0),
-(9, 6, '2026-02-23 09:20:11', 4, 0),
-(10, 7, '2026-02-23 09:20:12', 4, 0),
-(11, 1, '2026-02-23 09:20:13', 5, 0),
-(12, 6, '2026-02-23 09:20:16', 3, 0),
-(13, 6, '2026-02-23 09:20:18', 2, 0),
-(14, 3, '2026-02-23 09:20:20', 3, 0),
-(15, 4, '2026-02-23 09:20:21', 1, 0),
-(16, 6, '2026-02-23 09:20:22', 5, 0),
-(17, 5, '2026-02-23 09:20:23', 3, 0),
-(18, 5, '2026-02-23 09:20:24', 5, 0),
-(19, 1, '2026-02-23 09:20:25', 1, 0),
-(20, 3, '2026-02-23 09:20:27', 1, 0),
-(21, 4, '2026-02-23 09:20:27', 5, 0),
-(22, 7, '2026-02-23 09:20:28', 1, 0),
-(23, 7, '2026-02-23 09:20:29', 5, 0),
-(24, 7, '2026-02-23 09:20:30', 2, 0),
-(25, 3, '2026-02-23 09:20:32', 2, 0),
-(26, 6, '2026-02-23 09:20:33', 5, 0),
-(27, 5, '2026-02-23 09:20:34', 2, 0),
-(28, 5, '2026-02-23 09:20:36', 3, 0),
-(29, 3, '2026-02-23 09:20:38', 5, 0),
-(30, 4, '2026-02-23 09:20:39', 4, 0),
-(31, 4, '2026-02-23 09:20:40', 5, 0),
-(32, 1, '2026-02-23 09:20:41', 4, 0),
-(33, 5, '2026-02-23 09:20:42', 2, 0),
-(34, 1, '2026-02-23 09:20:44', 1, 0),
-(35, 6, '2026-02-23 09:20:45', 5, 0),
-(36, 3, '2026-02-23 09:20:48', 4, 0),
-(37, 6, '2026-02-23 09:20:50', 1, 0),
-(38, 4, '2026-02-23 09:20:52', 5, 0),
-(39, 6, '2026-02-23 09:20:54', 1, 0),
-(40, 3, '2026-02-23 09:20:55', 5, 0),
-(41, 4, '2026-02-23 09:20:58', 3, 0),
-(42, 4, '2026-02-23 09:20:59', 1, 0),
-(43, 7, '2026-02-23 09:21:01', 4, 0),
-(44, 6, '2026-02-23 09:21:02', 3, 0),
-(45, 1, '2026-02-23 09:21:04', 3, 0),
-(46, 4, '2026-02-23 09:21:06', 4, 0),
-(47, 5, '2026-02-23 09:21:08', 4, 0),
-(48, 7, '2026-02-23 09:21:08', 5, 0),
-(49, 7, '2026-02-23 09:21:10', 1, 0),
-(50, 3, '2026-02-23 09:21:12', 5, 0),
-(51, 7, '2026-02-23 09:21:13', 4, 0),
-(52, 1, '2026-02-23 09:21:14', 3, 0),
-(53, 3, '2026-02-23 09:21:16', 4, 0),
-(54, 1, '2026-02-23 09:21:18', 2, 0),
-(55, 1, '2026-02-23 09:21:19', 1, 0),
-(56, 7, '2026-02-23 09:21:20', 2, 0),
-(57, 7, '2026-02-23 09:21:23', 2, 0),
-(58, 6, '2026-02-23 09:21:24', 1, 0),
-(59, 3, '2026-02-23 09:21:25', 5, 0),
-(60, 6, '2026-02-23 09:21:26', 1, 0),
-(61, 3, '2026-02-23 09:21:29', 5, 0),
-(62, 1, '2026-02-23 09:21:31', 2, 0),
-(63, 4, '2026-02-23 09:21:32', 3, 0),
-(64, 4, '2026-02-23 09:21:33', 4, 0),
-(65, 4, '2026-02-23 09:21:35', 2, 0),
-(66, 7, '2026-02-23 09:21:36', 1, 0),
-(67, 7, '2026-02-23 09:21:38', 5, 0),
-(68, 7, '2026-02-23 09:21:39', 3, 0),
-(69, 7, '2026-02-23 09:21:40', 3, 0),
-(70, 4, '2026-02-23 09:21:42', 5, 0),
-(71, 5, '2026-02-23 09:21:44', 2, 0),
-(72, 1, '2026-02-23 09:21:46', 4, 0),
-(73, 5, '2026-02-23 09:21:48', 4, 0),
-(74, 5, '2026-02-23 09:21:49', 5, 0),
-(75, 3, '2026-02-23 09:21:50', 2, 0),
-(76, 7, '2026-02-23 09:21:52', 4, 0),
-(77, 5, '2026-02-23 09:21:55', 2, 0),
-(78, 6, '2026-02-23 09:21:55', 3, 0),
-(79, 4, '2026-02-23 09:21:56', 4, 0),
-(80, 6, '2026-02-23 09:21:59', 5, 0),
-(81, 5, '2026-02-23 09:22:02', 3, 0),
-(82, 6, '2026-02-23 09:22:03', 5, 0),
-(83, 5, '2026-02-23 09:22:05', 1, 0),
-(84, 4, '2026-02-23 09:22:07', 5, 0),
-(85, 3, '2026-02-23 09:22:09', 5, 0),
-(86, 3, '2026-02-23 09:22:11', 4, 0),
-(87, 3, '2026-02-23 09:22:13', 4, 0),
-(88, 7, '2026-02-23 09:22:15', 3, 0),
-(89, 1, '2026-02-23 09:22:17', 4, 0),
-(90, 1, '2026-02-23 09:22:20', 4, 0),
-(91, 5, '2026-02-23 09:22:21', 2, 0),
-(92, 3, '2026-02-23 09:22:22', 5, 0),
-(93, 6, '2026-02-23 09:22:24', 2, 0),
-(94, 7, '2026-02-23 09:22:25', 2, 0),
-(95, 3, '2026-02-23 09:22:25', 1, 0),
-(96, 6, '2026-02-23 09:22:27', 3, 0),
-(97, 3, '2026-02-23 09:22:28', 5, 0),
-(98, 6, '2026-02-23 09:22:30', 5, 0),
-(99, 6, '2026-02-23 09:22:30', 3, 0),
-(100, 5, '2026-02-23 09:22:31', 5, 0),
-(101, 1, '2026-02-23 09:22:33', 5, 0),
-(102, 5, '2026-02-23 09:22:34', 4, 0),
-(103, 4, '2026-02-23 09:22:35', 2, 0),
-(104, 5, '2026-02-23 09:22:36', 3, 0),
-(105, 1, '2026-02-23 09:22:37', 5, 0),
-(106, 5, '2026-02-23 09:22:39', 4, 0),
-(107, 3, '2026-02-23 09:22:40', 2, 0),
-(108, 1, '2026-02-23 09:22:41', 5, 0),
-(109, 4, '2026-02-23 09:22:42', 3, 0),
-(110, 6, '2026-02-23 09:22:44', 2, 0),
-(111, 4, '2026-02-23 09:22:46', 1, 0),
-(112, 5, '2026-02-23 09:22:48', 1, 0),
-(113, 5, '2026-02-23 09:22:51', 3, 0),
-(114, 6, '2026-02-23 09:22:53', 1, 0),
-(115, 3, '2026-02-23 09:22:55', 4, 0),
-(116, 6, '2026-02-23 09:22:58', 2, 0),
-(117, 3, '2026-02-23 09:23:01', 5, 0),
-(118, 6, '2026-02-23 09:23:04', 2, 0),
-(119, 6, '2026-02-23 09:23:05', 4, 0),
-(120, 7, '2026-02-23 09:23:07', 1, 0),
-(121, 6, '2026-02-23 09:23:09', 3, 0),
-(122, 4, '2026-02-23 09:23:10', 4, 0),
-(123, 3, '2026-02-23 09:23:11', 3, 0),
-(124, 6, '2026-02-23 09:23:12', 1, 0),
-(125, 7, '2026-02-23 09:23:13', 4, 0),
-(126, 7, '2026-02-23 09:23:13', 3, 0),
-(127, 4, '2026-02-23 09:23:14', 2, 0),
-(128, 4, '2026-02-23 09:23:16', 4, 0),
-(129, 5, '2026-02-23 09:23:18', 5, 0),
-(130, 5, '2026-02-23 09:23:19', 3, 0),
-(131, 5, '2026-02-23 09:23:20', 4, 0),
-(132, 1, '2026-02-23 09:23:22', 3, 0),
-(133, 7, '2026-02-23 09:23:24', 4, 0),
-(134, 4, '2026-02-23 09:23:26', 4, 0),
-(135, 7, '2026-02-23 09:23:27', 5, 0),
-(136, 3, '2026-02-23 09:23:29', 5, 0),
-(137, 7, '2026-02-23 09:23:31', 2, 0),
-(138, 4, '2026-02-23 09:23:32', 2, 0),
-(139, 6, '2026-02-23 09:23:34', 3, 0),
-(140, 3, '2026-02-23 09:23:35', 4, 0),
-(141, 3, '2026-02-23 09:23:38', 4, 0),
-(142, 1, '2026-02-23 09:23:39', 5, 0),
-(143, 4, '2026-02-23 09:23:41', 1, 0),
-(144, 1, '2026-02-23 09:23:42', 3, 0),
-(145, 7, '2026-02-23 09:23:44', 5, 0),
-(146, 5, '2026-02-23 09:23:45', 3, 0),
-(147, 6, '2026-02-23 09:23:48', 3, 0),
-(148, 4, '2026-02-23 09:23:49', 1, 0),
-(149, 6, '2026-02-23 09:23:51', 2, 0),
-(150, 5, '2026-02-23 09:23:53', 1, 0),
-(151, 3, '2026-02-23 09:23:54', 1, 0),
-(152, 5, '2026-02-23 09:23:57', 2, 0),
-(153, 1, '2026-02-23 09:23:58', 3, 0),
-(154, 5, '2026-02-23 09:24:00', 1, 0),
-(155, 5, '2026-02-23 09:24:00', 5, 0),
-(156, 4, '2026-02-23 09:24:02', 3, 0),
-(157, 6, '2026-02-23 09:24:05', 2, 0),
-(158, 3, '2026-02-23 09:24:07', 3, 0),
-(159, 1, '2026-02-23 09:24:09', 3, 0),
-(160, 5, '2026-02-23 09:24:12', 3, 0),
-(161, 7, '2026-02-23 09:24:13', 5, 0),
-(162, 1, '2026-02-23 09:24:16', 3, 0),
-(163, 5, '2026-02-23 09:24:18', 5, 0),
-(164, 1, '2026-02-23 09:24:19', 1, 0),
-(165, 6, '2026-02-23 09:24:21', 1, 0),
-(166, 4, '2026-02-23 09:24:24', 1, 0),
-(167, 1, '2026-02-23 09:24:25', 5, 0),
-(168, 5, '2026-02-23 09:24:26', 5, 0),
-(169, 3, '2026-02-23 09:24:27', 4, 0),
-(170, 7, '2026-02-23 09:24:29', 5, 0),
-(171, 4, '2026-02-23 09:24:30', 4, 0),
-(172, 3, '2026-02-23 09:24:31', 5, 0),
-(173, 1, '2026-02-23 09:24:33', 4, 0),
-(174, 4, '2026-02-23 10:41:25', 5, 0),
-(175, 6, '2026-02-23 10:41:27', 5, 0),
-(176, 7, '2026-02-23 10:41:27', 1, 0),
-(177, 1, '2026-02-23 10:51:20', 5, 0),
-(178, 6, '2026-02-23 10:51:20', 4, 0),
-(179, 5, '2026-02-23 10:51:20', 3, 0),
-(180, 5, '2026-02-23 10:51:20', 1, 0),
-(181, 7, '2026-02-23 10:51:21', 3, 0),
-(182, 1, '2026-02-23 10:51:21', 1, 0),
-(183, 3, '2026-02-23 10:51:21', 2, 0),
-(184, 6, '2026-02-23 10:51:21', 4, 0),
-(185, 5, '2026-02-23 10:51:21', 4, 0),
-(186, 4, '2026-02-23 10:51:21', 5, 0),
-(187, 5, '2026-02-23 10:51:21', 2, 0),
-(188, 3, '2026-02-23 10:51:21', 5, 0),
-(189, 1, '2026-02-23 10:51:21', 4, 0),
-(190, 1, '2026-02-23 10:51:21', 2, 0),
-(191, 3, '2026-02-23 10:51:21', 3, 0),
-(192, 5, '2026-02-23 10:51:21', 4, 0),
-(193, 1, '2026-02-23 10:51:21', 1, 0),
-(194, 1, '2026-02-23 10:51:21', 1, 0),
-(195, 1, '2026-02-23 10:51:21', 5, 0),
-(196, 5, '2026-02-23 10:51:21', 3, 0),
-(197, 3, '2026-02-23 10:51:21', 2, 0),
-(198, 5, '2026-02-23 10:51:21', 2, 0),
-(199, 6, '2026-02-23 10:51:21', 3, 0),
-(200, 7, '2026-02-23 10:51:21', 3, 0),
-(201, 3, '2026-02-23 10:51:21', 1, 0),
-(202, 3, '2026-02-23 10:51:21', 2, 0),
-(203, 4, '2026-02-23 10:51:21', 1, 0),
-(204, 1, '2026-02-23 10:51:21', 1, 0),
-(205, 4, '2026-02-23 10:51:21', 1, 0),
-(206, 1, '2026-02-23 10:51:21', 3, 0),
-(207, 6, '2026-02-23 10:51:21', 3, 0),
-(208, 5, '2026-02-23 10:51:21', 3, 0),
-(209, 4, '2026-02-23 10:51:21', 4, 0),
-(210, 6, '2026-02-23 10:51:21', 3, 0),
-(211, 6, '2026-02-23 10:51:21', 2, 0),
-(212, 1, '2026-02-23 10:51:21', 1, 0),
-(213, 4, '2026-02-23 10:51:21', 1, 0),
-(214, 6, '2026-02-23 10:51:21', 4, 0),
-(215, 7, '2026-02-23 10:51:21', 5, 0),
-(216, 6, '2026-02-23 10:51:21', 5, 0),
-(217, 5, '2026-02-23 10:51:21', 5, 0),
-(218, 1, '2026-02-23 10:51:21', 5, 0),
-(219, 5, '2026-02-23 10:51:21', 4, 0),
-(220, 7, '2026-02-23 10:51:21', 1, 0),
-(221, 6, '2026-02-23 10:51:21', 4, 0),
-(222, 4, '2026-02-23 10:51:21', 1, 0),
-(223, 7, '2026-02-23 10:51:21', 3, 0),
-(224, 3, '2026-02-23 10:51:21', 5, 0),
-(225, 7, '2026-02-23 10:51:21', 5, 0),
-(226, 4, '2026-02-23 10:51:21', 1, 0),
-(227, 6, '2026-02-23 10:51:21', 2, 0),
-(228, 7, '2026-02-23 10:51:21', 2, 0),
-(229, 4, '2026-02-23 10:51:21', 5, 0),
-(230, 7, '2026-02-23 10:51:21', 4, 0),
-(231, 1, '2026-02-23 10:51:21', 5, 0),
-(232, 3, '2026-02-23 10:51:21', 4, 0),
-(233, 7, '2026-02-23 10:51:21', 5, 0),
-(234, 4, '2026-02-23 10:51:21', 3, 0),
-(235, 7, '2026-02-23 10:51:21', 5, 0),
-(236, 5, '2026-02-23 10:51:21', 1, 0),
-(237, 4, '2026-02-23 10:51:21', 2, 0),
-(238, 7, '2026-02-23 10:51:21', 4, 0),
-(239, 6, '2026-02-23 10:51:21', 4, 0),
-(240, 3, '2026-02-23 10:51:21', 3, 0),
-(241, 5, '2026-02-23 10:51:21', 2, 0),
-(242, 3, '2026-02-23 10:51:21', 4, 0),
-(243, 7, '2026-02-23 10:51:21', 3, 0),
-(244, 3, '2026-02-23 10:51:21', 3, 0),
-(245, 6, '2026-02-23 10:51:21', 3, 0),
-(246, 7, '2026-02-23 10:51:22', 1, 0),
-(247, 1, '2026-02-23 10:51:22', 3, 0),
-(248, 3, '2026-02-23 10:51:22', 1, 0),
-(249, 3, '2026-02-23 10:51:22', 4, 0),
-(250, 6, '2026-02-23 10:51:22', 3, 0),
-(251, 4, '2026-02-23 10:51:22', 4, 0),
-(252, 7, '2026-02-23 10:51:22', 2, 0),
-(253, 7, '2026-02-23 10:51:22', 1, 0),
-(254, 4, '2026-02-23 10:51:22', 2, 0),
-(255, 6, '2026-02-23 10:51:22', 3, 0),
-(256, 6, '2026-02-23 10:51:22', 3, 0),
-(257, 7, '2026-02-23 10:51:22', 3, 0),
-(258, 3, '2026-02-23 10:51:22', 1, 0),
-(259, 3, '2026-02-23 10:51:22', 1, 0),
-(260, 7, '2026-02-23 10:51:22', 3, 0),
-(261, 4, '2026-02-23 10:51:22', 2, 0),
-(262, 7, '2026-02-23 10:51:22', 1, 0),
-(263, 1, '2026-02-23 10:51:22', 4, 0),
-(264, 7, '2026-02-23 10:51:22', 1, 0),
-(265, 6, '2026-02-23 10:51:22', 5, 0),
-(266, 3, '2026-02-23 10:51:22', 5, 0),
-(267, 3, '2026-02-23 10:51:22', 5, 0),
-(268, 7, '2026-02-23 10:51:22', 5, 0),
-(269, 6, '2026-02-23 10:51:22', 5, 0),
-(270, 1, '2026-02-23 10:51:22', 5, 0),
-(271, 5, '2026-02-23 10:51:22', 4, 0),
-(272, 5, '2026-02-23 10:51:22', 2, 0),
-(273, 4, '2026-02-23 10:51:22', 4, 0),
-(274, 7, '2026-02-23 10:51:22', 4, 0),
-(275, 3, '2026-02-23 10:51:22', 5, 0),
-(276, 1, '2026-02-23 10:51:22', 1, 0),
-(277, 3, '2026-02-23 10:51:22', 5, 0),
-(278, 7, '2026-02-23 10:51:22', 5, 0),
-(279, 1, '2026-02-23 10:51:22', 5, 0),
-(280, 7, '2026-02-23 10:51:22', 5, 0),
-(281, 5, '2026-02-23 10:51:22', 3, 0),
-(282, 4, '2026-02-23 10:51:22', 2, 0),
-(283, 3, '2026-02-23 10:51:22', 4, 0),
-(284, 7, '2026-02-23 10:51:22', 4, 0),
-(285, 7, '2026-02-23 10:51:22', 4, 0),
-(286, 6, '2026-02-23 10:51:22', 1, 0),
-(287, 3, '2026-02-23 10:51:22', 2, 0),
-(288, 5, '2026-02-23 10:51:22', 4, 0),
-(289, 6, '2026-02-23 10:51:22', 3, 0),
-(290, 3, '2026-02-23 10:51:22', 4, 0),
-(291, 5, '2026-02-23 10:51:22', 5, 0),
-(292, 7, '2026-02-23 10:51:22', 5, 0),
-(293, 4, '2026-02-23 10:51:22', 5, 0),
-(294, 1, '2026-02-23 10:51:22', 3, 0),
-(295, 4, '2026-02-23 10:51:22', 4, 0),
-(296, 4, '2026-02-23 10:51:22', 1, 0),
-(297, 4, '2026-02-23 10:51:22', 4, 0),
-(298, 1, '2026-02-23 10:51:22', 5, 0),
-(299, 4, '2026-02-23 10:51:22', 3, 0),
-(300, 6, '2026-02-23 10:51:22', 2, 0),
-(301, 6, '2026-02-23 10:51:22', 5, 0),
-(302, 3, '2026-02-23 10:51:22', 4, 0),
-(303, 6, '2026-02-23 10:51:22', 4, 0),
-(304, 6, '2026-02-23 10:51:22', 4, 0),
-(305, 7, '2026-02-23 10:51:22', 3, 0),
-(306, 1, '2026-02-23 10:51:22', 2, 0),
-(307, 6, '2026-02-23 10:51:22', 1, 0),
-(308, 1, '2026-02-23 10:51:22', 2, 0),
-(309, 4, '2026-02-23 10:51:22', 4, 0),
-(310, 7, '2026-02-23 10:51:22', 5, 0),
-(311, 5, '2026-02-23 10:51:22', 4, 0),
-(312, 4, '2026-02-23 10:51:22', 1, 0),
-(313, 5, '2026-02-23 10:51:22', 4, 0),
-(314, 6, '2026-02-23 10:51:22', 5, 0),
-(315, 4, '2026-02-23 10:51:22', 4, 0),
-(316, 1, '2026-02-23 10:51:22', 2, 0),
-(317, 4, '2026-02-23 10:51:22', 2, 0),
-(318, 3, '2026-02-23 10:51:22', 3, 0),
-(319, 6, '2026-02-23 10:51:23', 4, 0),
-(320, 6, '2026-02-23 10:51:23', 1, 0),
-(321, 7, '2026-02-23 10:51:23', 1, 0),
-(322, 5, '2026-02-23 10:51:23', 5, 0),
-(323, 3, '2026-02-23 10:51:23', 1, 0),
-(324, 3, '2026-02-23 10:51:23', 5, 0),
-(325, 4, '2026-02-23 10:51:23', 4, 0),
-(326, 6, '2026-02-23 10:51:23', 4, 0),
-(327, 7, '2026-02-23 10:51:23', 1, 0),
-(328, 1, '2026-02-23 10:51:23', 1, 0),
-(329, 4, '2026-02-23 10:51:23', 1, 0),
-(330, 5, '2026-02-23 10:51:23', 5, 0),
-(331, 4, '2026-02-23 10:51:23', 4, 0),
-(332, 5, '2026-02-23 10:51:23', 1, 0),
-(333, 6, '2026-02-23 10:51:23', 4, 0),
-(334, 3, '2026-02-23 10:51:23', 3, 0),
-(335, 4, '2026-02-23 10:51:23', 4, 0),
-(336, 3, '2026-02-23 10:51:23', 4, 0),
-(337, 6, '2026-02-23 10:51:23', 3, 0),
-(338, 1, '2026-02-23 10:51:23', 3, 0),
-(339, 7, '2026-02-23 10:51:23', 4, 0),
-(340, 6, '2026-02-23 10:51:23', 1, 0),
-(341, 4, '2026-02-23 10:51:23', 4, 0),
-(342, 6, '2026-02-23 10:51:23', 5, 0),
-(343, 1, '2026-02-23 10:51:23', 4, 0),
-(344, 1, '2026-02-23 10:51:23', 5, 0),
-(345, 5, '2026-02-23 10:51:23', 3, 0),
-(346, 3, '2026-02-23 10:51:23', 5, 0),
-(347, 5, '2026-02-23 10:51:23', 2, 0),
-(348, 4, '2026-02-23 10:51:23', 1, 0),
-(349, 7, '2026-02-23 10:51:23', 5, 0),
-(350, 6, '2026-02-23 10:51:23', 3, 0),
-(351, 4, '2026-02-23 10:51:23', 1, 0),
-(352, 5, '2026-02-23 10:51:23', 3, 0),
-(353, 3, '2026-02-23 10:51:23', 3, 0),
-(354, 5, '2026-02-23 10:51:23', 3, 0),
-(355, 5, '2026-02-23 10:51:23', 3, 0),
-(356, 4, '2026-02-23 10:51:23', 3, 0),
-(357, 1, '2026-02-23 10:51:23', 5, 0),
-(358, 3, '2026-02-23 10:51:23', 5, 0),
-(359, 5, '2026-02-23 10:51:23', 5, 0),
-(360, 1, '2026-02-23 10:51:23', 2, 0),
-(361, 7, '2026-02-23 10:51:23', 1, 0),
-(362, 1, '2026-02-23 10:51:23', 3, 0),
-(363, 7, '2026-02-23 10:51:23', 4, 0),
-(364, 7, '2026-02-23 10:51:23', 5, 0),
-(365, 4, '2026-02-23 10:51:23', 5, 0),
-(366, 6, '2026-02-23 10:51:23', 1, 0),
-(367, 1, '2026-02-23 10:51:23', 5, 0),
-(368, 6, '2026-02-23 10:51:23', 4, 0),
-(369, 7, '2026-02-23 10:51:23', 1, 0),
-(370, 6, '2026-02-23 10:51:23', 3, 0),
-(371, 6, '2026-02-23 10:51:23', 3, 0),
-(372, 7, '2026-02-23 10:51:23', 5, 0),
-(373, 5, '2026-02-23 10:51:23', 5, 0),
-(374, 4, '2026-02-23 10:51:23', 5, 0),
-(375, 3, '2026-02-23 10:51:23', 4, 0),
-(376, 4, '2026-02-23 10:51:23', 5, 0),
-(377, 3, '2026-02-23 10:51:23', 5, 0),
-(378, 3, '2026-02-23 10:51:23', 4, 0),
-(379, 4, '2026-02-23 10:51:23', 3, 0),
-(380, 6, '2026-02-23 10:51:23', 5, 0),
-(381, 3, '2026-02-23 10:51:23', 2, 0),
-(382, 6, '2026-02-23 10:51:23', 3, 0),
-(383, 4, '2026-02-23 10:51:23', 2, 0),
-(384, 5, '2026-02-23 10:51:23', 1, 0),
-(385, 7, '2026-02-23 10:51:23', 2, 0),
-(386, 5, '2026-02-23 10:51:23', 5, 0),
-(387, 3, '2026-02-23 10:51:23', 5, 0),
-(388, 4, '2026-02-23 10:51:23', 5, 0),
-(389, 3, '2026-02-23 10:51:23', 1, 0),
-(390, 5, '2026-02-23 10:51:23', 4, 0),
-(391, 7, '2026-02-23 10:51:23', 3, 0),
-(392, 1, '2026-02-23 10:51:23', 1, 0),
-(393, 3, '2026-02-23 10:51:23', 3, 0),
-(394, 1, '2026-02-23 10:51:23', 2, 0),
-(395, 6, '2026-02-23 10:51:24', 3, 0),
-(396, 4, '2026-02-23 10:51:24', 4, 0),
-(397, 4, '2026-02-23 10:51:24', 4, 0),
-(398, 5, '2026-02-23 10:51:24', 1, 0),
-(399, 6, '2026-02-23 10:51:24', 5, 0),
-(400, 4, '2026-02-23 10:51:24', 3, 0),
-(401, 6, '2026-02-23 10:51:24', 3, 0),
-(402, 5, '2026-02-23 10:51:24', 5, 0),
-(403, 6, '2026-02-23 10:51:24', 5, 0),
-(404, 3, '2026-02-23 10:51:24', 4, 0),
-(405, 4, '2026-02-23 10:51:24', 3, 0),
-(406, 1, '2026-02-23 10:51:24', 5, 0),
-(407, 1, '2026-02-23 10:51:24', 3, 0),
-(408, 4, '2026-02-23 10:51:24', 3, 0),
-(409, 4, '2026-02-23 10:51:24', 1, 0),
-(410, 5, '2026-02-23 10:51:24', 3, 0),
-(411, 7, '2026-02-23 10:51:24', 5, 0),
-(412, 6, '2026-02-23 10:51:24', 2, 0),
-(413, 1, '2026-02-23 10:51:24', 3, 0),
-(414, 7, '2026-02-23 10:51:24', 5, 0),
-(415, 4, '2026-02-23 10:51:24', 5, 0),
-(416, 3, '2026-02-23 10:51:24', 3, 0),
-(417, 5, '2026-02-23 10:51:24', 2, 0),
-(418, 7, '2026-02-23 10:51:24', 3, 0),
-(419, 1, '2026-02-23 10:51:24', 2, 0),
-(420, 6, '2026-02-23 10:51:24', 1, 0),
-(421, 6, '2026-02-23 10:51:24', 2, 0),
-(422, 5, '2026-02-23 10:51:24', 3, 0),
-(423, 7, '2026-02-23 10:51:24', 2, 0),
-(424, 7, '2026-02-23 10:51:24', 4, 0),
-(425, 1, '2026-02-23 10:51:24', 1, 0),
-(426, 7, '2026-02-23 10:51:24', 3, 0),
-(427, 4, '2026-02-23 10:51:24', 3, 0),
-(428, 5, '2026-02-23 10:51:24', 2, 0),
-(429, 1, '2026-02-23 10:51:24', 4, 0),
-(430, 4, '2026-02-23 10:51:24', 5, 0),
-(431, 3, '2026-02-23 10:51:24', 3, 0),
-(432, 1, '2026-02-23 10:51:24', 2, 0),
-(433, 6, '2026-02-23 10:51:24', 5, 0),
-(434, 1, '2026-02-23 10:51:24', 4, 0),
-(435, 6, '2026-02-23 10:51:24', 2, 0),
-(436, 3, '2026-02-23 10:51:24', 1, 0),
-(437, 5, '2026-02-23 10:51:24', 5, 0),
-(438, 3, '2026-02-23 10:51:24', 5, 0),
-(439, 1, '2026-02-23 10:51:24', 3, 0),
-(440, 3, '2026-02-23 10:51:24', 2, 0),
-(441, 1, '2026-02-23 10:51:24', 5, 0),
-(442, 5, '2026-02-23 10:51:24', 3, 0),
-(443, 3, '2026-02-23 10:51:24', 5, 0),
-(444, 3, '2026-02-23 10:51:24', 2, 0),
-(445, 7, '2026-02-23 10:51:24', 5, 0),
-(446, 3, '2026-02-23 10:51:24', 1, 0),
-(447, 5, '2026-02-23 10:51:24', 2, 0),
-(448, 1, '2026-02-23 10:51:24', 4, 0),
-(449, 7, '2026-02-23 10:51:24', 1, 0),
-(450, 4, '2026-02-23 10:51:24', 2, 0),
-(451, 5, '2026-02-23 10:51:24', 2, 0),
-(452, 5, '2026-02-23 10:51:24', 2, 0),
-(453, 7, '2026-02-23 10:51:24', 4, 0),
-(454, 4, '2026-02-23 10:51:24', 2, 0),
-(455, 3, '2026-02-23 10:51:24', 4, 0),
-(456, 6, '2026-02-23 10:51:24', 3, 0),
-(457, 6, '2026-02-23 10:51:24', 2, 0),
-(458, 6, '2026-02-23 10:51:24', 3, 0),
-(459, 4, '2026-02-23 10:51:24', 1, 0),
-(460, 4, '2026-02-23 10:51:24', 3, 0),
-(461, 1, '2026-02-23 10:51:24', 1, 0),
-(462, 5, '2026-02-23 10:51:24', 5, 0),
-(463, 5, '2026-02-23 10:51:24', 5, 0),
-(464, 3, '2026-02-23 10:51:24', 1, 0),
-(465, 6, '2026-02-23 10:51:24', 4, 0),
-(466, 7, '2026-02-23 10:51:24', 4, 0),
-(467, 4, '2026-02-23 10:51:24', 3, 0),
-(468, 6, '2026-02-23 10:51:24', 1, 0),
-(469, 3, '2026-02-23 10:51:25', 2, 0),
-(470, 1, '2026-02-23 10:51:25', 3, 0),
-(471, 4, '2026-02-23 10:51:25', 3, 0),
-(472, 7, '2026-02-23 10:51:25', 2, 0),
-(473, 1, '2026-02-23 10:51:25', 4, 0),
-(474, 3, '2026-02-23 10:51:25', 3, 0),
-(475, 1, '2026-02-23 10:51:25', 1, 0),
-(476, 7, '2026-02-23 10:51:25', 5, 0),
-(477, 6, '2026-02-23 10:51:25', 5, 0),
-(478, 3, '2026-02-23 10:51:25', 2, 0),
-(479, 7, '2026-02-23 10:51:25', 2, 0),
-(480, 6, '2026-02-23 10:51:25', 4, 0),
-(481, 4, '2026-02-23 10:51:25', 5, 0),
-(482, 1, '2026-02-23 10:51:25', 1, 0),
-(483, 1, '2026-02-23 10:51:25', 2, 0),
-(484, 6, '2026-02-23 10:51:25', 3, 0),
-(485, 3, '2026-02-23 10:51:25', 2, 0),
-(486, 4, '2026-02-23 10:51:25', 4, 0),
-(487, 4, '2026-02-23 10:51:25', 2, 0),
-(488, 7, '2026-02-23 10:51:25', 4, 0),
-(489, 4, '2026-02-23 10:51:25', 5, 0),
-(490, 6, '2026-02-23 10:51:25', 5, 0),
-(491, 3, '2026-02-23 10:51:25', 4, 0),
-(492, 6, '2026-02-23 10:51:25', 5, 0),
-(493, 6, '2026-02-23 10:51:25', 5, 0),
-(494, 4, '2026-02-23 10:51:25', 4, 0),
-(495, 4, '2026-02-23 10:51:25', 2, 0),
-(496, 6, '2026-02-23 10:51:25', 3, 0),
-(497, 5, '2026-02-23 10:51:25', 3, 0),
-(498, 7, '2026-02-23 10:51:25', 2, 0),
-(499, 1, '2026-02-23 10:51:25', 1, 0),
-(500, 1, '2026-02-23 10:51:25', 4, 0),
-(501, 1, '2026-02-23 10:51:25', 3, 0),
-(502, 6, '2026-02-23 10:51:25', 5, 0),
-(503, 7, '2026-02-23 10:51:25', 4, 0),
-(504, 5, '2026-02-23 10:51:25', 3, 0),
-(505, 1, '2026-02-23 10:51:25', 3, 0),
-(506, 1, '2026-02-23 10:51:25', 3, 0),
-(507, 6, '2026-02-23 10:51:25', 2, 0),
-(508, 4, '2026-02-23 10:51:25', 1, 0),
-(509, 1, '2026-02-23 10:51:25', 5, 0),
-(510, 1, '2026-02-23 10:51:25', 5, 0),
-(511, 1, '2026-02-23 10:51:25', 5, 0),
-(512, 7, '2026-02-23 10:51:25', 2, 0),
-(513, 7, '2026-02-23 10:51:25', 2, 0),
-(514, 4, '2026-02-23 10:51:25', 4, 0),
-(515, 5, '2026-02-23 10:51:25', 4, 0),
-(516, 1, '2026-02-23 10:51:25', 3, 0),
-(517, 5, '2026-02-23 10:51:25', 3, 0),
-(518, 3, '2026-02-23 10:51:25', 3, 0),
-(519, 5, '2026-02-23 10:51:25', 4, 0),
-(520, 4, '2026-02-23 10:51:25', 2, 0),
-(521, 3, '2026-02-23 10:51:25', 4, 0),
-(522, 4, '2026-02-23 10:51:25', 3, 0),
-(523, 7, '2026-02-23 10:51:25', 5, 0),
-(524, 1, '2026-02-23 10:51:25', 4, 0),
-(525, 5, '2026-02-23 10:51:25', 1, 0),
-(526, 6, '2026-02-23 10:51:25', 3, 0),
-(527, 7, '2026-02-23 10:51:25', 4, 0),
-(528, 5, '2026-02-23 10:51:25', 4, 0),
-(529, 7, '2026-02-23 10:51:25', 5, 0),
-(530, 5, '2026-02-23 10:51:25', 5, 0),
-(531, 1, '2026-02-23 10:51:25', 4, 0),
-(532, 7, '2026-02-23 10:51:25', 2, 0),
-(533, 5, '2026-02-23 10:51:25', 3, 0),
-(534, 5, '2026-02-23 10:51:25', 5, 0),
-(535, 7, '2026-02-23 10:51:25', 2, 0),
-(536, 3, '2026-02-23 10:51:25', 1, 0),
-(537, 5, '2026-02-23 10:51:25', 4, 0),
-(538, 5, '2026-02-23 10:51:25', 5, 0),
-(539, 1, '2026-02-23 10:51:25', 5, 0),
-(540, 7, '2026-02-23 10:51:25', 4, 0),
-(541, 1, '2026-02-23 10:51:26', 1, 0),
-(542, 7, '2026-02-23 10:51:26', 4, 0),
-(543, 5, '2026-02-23 10:51:26', 1, 0),
-(544, 6, '2026-02-23 10:51:26', 3, 0),
-(545, 5, '2026-02-23 10:51:26', 2, 0),
-(546, 3, '2026-02-23 10:51:26', 5, 0),
-(547, 5, '2026-02-23 10:51:26', 4, 0),
-(548, 1, '2026-02-23 10:51:26', 4, 0),
-(549, 6, '2026-02-23 10:51:26', 4, 0),
-(550, 4, '2026-02-23 12:50:42', 1, 0),
-(551, 5, '2026-02-23 12:50:42', 4, 0),
-(552, 7, '2026-02-23 12:50:42', 5, 0),
-(553, 5, '2026-02-23 12:50:42', 2, 0),
-(554, 1, '2026-02-23 12:50:42', 1, 0),
-(555, 1, '2026-02-23 12:50:42', 3, 0),
-(556, 1, '2026-02-23 12:50:42', 3, 0),
-(557, 1, '2026-02-23 12:50:42', 4, 0),
-(558, 7, '2026-02-23 12:50:42', 4, 0),
-(559, 6, '2026-02-23 12:50:42', 5, 0),
-(560, 6, '2026-02-23 12:50:42', 2, 0),
-(561, 4, '2026-02-23 12:50:42', 1, 0),
-(562, 7, '2026-02-23 12:50:42', 4, 0),
-(563, 7, '2026-02-23 12:50:42', 3, 0),
-(564, 7, '2026-02-23 12:50:42', 2, 0),
-(565, 5, '2026-02-23 12:50:42', 3, 0),
-(566, 4, '2026-02-23 12:50:42', 3, 0),
-(567, 6, '2026-02-23 12:50:42', 5, 0),
-(568, 1, '2026-02-23 12:50:42', 3, 0),
-(569, 1, '2026-02-23 12:50:42', 3, 0),
-(570, 4, '2026-02-23 12:50:42', 3, 0),
-(571, 5, '2026-02-23 12:50:42', 1, 0),
-(572, 3, '2026-02-23 12:50:42', 3, 0),
-(573, 3, '2026-02-23 12:50:42', 1, 0),
-(574, 5, '2026-02-23 12:50:42', 4, 0),
-(575, 1, '2026-02-23 12:50:42', 2, 0),
-(576, 1, '2026-02-23 12:50:42', 3, 0),
-(577, 7, '2026-02-23 12:50:42', 2, 0),
-(578, 1, '2026-02-23 12:50:42', 4, 0),
-(579, 4, '2026-02-23 12:50:42', 3, 0),
-(580, 4, '2026-02-23 12:50:42', 1, 0),
-(581, 1, '2026-02-23 12:50:42', 4, 0),
-(582, 3, '2026-02-23 12:50:42', 4, 0),
-(583, 5, '2026-02-23 12:50:42', 4, 0),
-(584, 1, '2026-02-23 12:50:42', 2, 0),
-(585, 4, '2026-02-23 12:50:42', 1, 0),
-(586, 1, '2026-02-23 12:50:42', 4, 0),
-(587, 1, '2026-02-23 12:50:42', 4, 0),
-(588, 5, '2026-02-23 12:50:42', 3, 0),
-(589, 1, '2026-02-23 12:50:43', 5, 0),
-(590, 7, '2026-02-23 12:50:43', 3, 0),
-(591, 3, '2026-02-23 12:50:43', 1, 0),
-(592, 4, '2026-02-23 12:50:43', 1, 0),
-(593, 7, '2026-02-23 12:50:43', 1, 0),
-(594, 7, '2026-02-23 12:50:43', 5, 0),
-(595, 7, '2026-02-23 12:50:43', 3, 0),
-(596, 1, '2026-02-23 12:50:43', 5, 0),
-(597, 1, '2026-02-23 12:50:43', 4, 0),
-(598, 5, '2026-02-23 12:50:43', 4, 0),
-(599, 3, '2026-02-23 12:50:43', 3, 0),
-(600, 1, '2026-02-23 12:50:43', 5, 0),
-(601, 6, '2026-02-23 12:50:43', 3, 0),
-(602, 4, '2026-02-23 12:50:43', 3, 0),
-(603, 5, '2026-02-23 12:50:43', 1, 0),
-(604, 7, '2026-02-23 12:50:43', 4, 0),
-(605, 4, '2026-02-23 12:50:43', 3, 0),
-(606, 3, '2026-02-23 12:50:43', 5, 0),
-(607, 3, '2026-02-23 12:50:43', 3, 0),
-(608, 5, '2026-02-23 12:50:43', 3, 0),
-(609, 6, '2026-02-23 12:50:43', 4, 0),
-(610, 3, '2026-02-23 12:50:43', 5, 0),
-(611, 1, '2026-02-23 12:50:43', 3, 0),
-(612, 7, '2026-02-23 12:50:43', 2, 0),
-(613, 5, '2026-02-23 12:50:43', 4, 0),
-(614, 5, '2026-02-23 12:50:43', 5, 0),
-(615, 4, '2026-02-23 12:50:43', 1, 0),
-(616, 3, '2026-02-23 12:50:43', 2, 0),
-(617, 3, '2026-02-23 12:50:43', 5, 0),
-(618, 4, '2026-02-23 12:50:43', 2, 0),
-(619, 4, '2026-02-23 12:50:43', 4, 0),
-(620, 1, '2026-02-23 12:50:43', 3, 0),
-(621, 4, '2026-02-23 12:50:43', 1, 0),
-(622, 6, '2026-02-23 12:50:43', 5, 0),
-(623, 4, '2026-02-23 12:50:43', 4, 0),
-(624, 7, '2026-02-23 12:50:43', 1, 0),
-(625, 1, '2026-02-23 12:50:43', 3, 0),
-(626, 3, '2026-02-23 12:50:43', 4, 0),
-(627, 7, '2026-02-23 12:50:43', 3, 0),
-(628, 5, '2026-02-23 12:50:43', 3, 0),
-(629, 5, '2026-02-23 12:50:43', 1, 0),
-(630, 1, '2026-02-23 12:50:43', 2, 0),
-(631, 4, '2026-02-23 12:50:43', 4, 0),
-(632, 3, '2026-02-23 12:50:43', 2, 0),
-(633, 1, '2026-02-23 12:50:43', 1, 0),
-(634, 4, '2026-02-23 12:50:43', 1, 0),
-(635, 4, '2026-02-23 12:50:43', 4, 0),
-(636, 4, '2026-02-23 12:50:43', 3, 0),
-(637, 6, '2026-02-23 12:50:43', 3, 0),
-(638, 4, '2026-02-23 12:50:43', 4, 0),
-(639, 1, '2026-02-23 12:50:43', 5, 0),
-(640, 5, '2026-02-23 12:50:43', 3, 0),
-(641, 3, '2026-02-23 12:50:43', 5, 0),
-(642, 7, '2026-02-23 12:50:43', 4, 0),
-(643, 1, '2026-02-23 12:50:43', 3, 0),
-(644, 1, '2026-02-23 12:50:43', 3, 0),
-(645, 6, '2026-02-23 12:50:43', 1, 0),
-(646, 7, '2026-02-23 12:50:43', 4, 0),
-(647, 1, '2026-02-23 12:50:43', 3, 0),
-(648, 3, '2026-02-23 12:50:43', 1, 0),
-(649, 4, '2026-02-23 12:50:43', 1, 0),
-(650, 7, '2026-02-23 12:50:43', 1, 0),
-(651, 4, '2026-02-23 12:50:43', 2, 0),
-(652, 5, '2026-02-23 12:50:43', 2, 0),
-(653, 1, '2026-02-23 12:50:43', 1, 0),
-(654, 6, '2026-02-23 12:50:44', 1, 0),
-(655, 6, '2026-02-23 12:50:44', 1, 0),
-(656, 6, '2026-02-23 12:50:44', 2, 0),
-(657, 3, '2026-02-23 12:50:44', 3, 0),
-(658, 7, '2026-02-23 12:50:44', 1, 0),
-(659, 3, '2026-02-23 12:50:44', 1, 0),
-(660, 4, '2026-02-23 12:50:44', 2, 0),
-(661, 4, '2026-02-23 12:50:44', 2, 0),
-(662, 6, '2026-02-23 12:50:44', 3, 0),
-(663, 1, '2026-02-23 12:50:44', 3, 0),
-(664, 5, '2026-02-23 12:50:44', 5, 0),
-(665, 3, '2026-02-23 12:50:44', 3, 0),
-(666, 4, '2026-02-23 12:50:44', 5, 0),
-(667, 3, '2026-02-23 12:50:44', 4, 0),
-(668, 7, '2026-02-23 12:50:44', 5, 0),
-(669, 5, '2026-02-23 12:50:44', 4, 0),
-(670, 5, '2026-02-23 12:50:44', 2, 0),
-(671, 4, '2026-02-23 12:50:44', 1, 0),
-(672, 3, '2026-02-23 12:50:44', 3, 0),
-(673, 1, '2026-02-23 12:50:44', 3, 0),
-(674, 4, '2026-02-23 12:50:44', 4, 0),
-(675, 3, '2026-02-23 12:50:44', 4, 0),
-(676, 5, '2026-02-23 12:50:44', 5, 0),
-(677, 3, '2026-02-23 12:50:44', 4, 0),
-(678, 1, '2026-02-23 12:50:44', 4, 0),
-(679, 4, '2026-02-23 12:50:44', 2, 0),
-(680, 4, '2026-02-23 12:50:44', 1, 0),
-(681, 6, '2026-02-23 12:50:44', 5, 0),
-(682, 3, '2026-02-23 12:50:44', 1, 0),
-(683, 5, '2026-02-23 12:50:44', 1, 0),
-(684, 7, '2026-02-23 12:50:44', 5, 0),
-(685, 3, '2026-02-23 12:50:44', 5, 0),
-(686, 6, '2026-02-23 12:50:44', 2, 0),
-(687, 3, '2026-02-23 12:50:44', 5, 0),
-(688, 7, '2026-02-23 12:50:44', 4, 0),
-(689, 1, '2026-02-23 12:50:44', 3, 0),
-(690, 3, '2026-02-23 12:50:44', 3, 0),
-(691, 7, '2026-02-23 12:50:44', 3, 0),
-(692, 4, '2026-02-23 12:50:44', 3, 0),
-(693, 7, '2026-02-23 12:50:44', 2, 0),
-(694, 4, '2026-02-23 12:50:44', 5, 0),
-(695, 1, '2026-02-23 12:50:44', 5, 0),
-(696, 4, '2026-02-23 12:50:44', 4, 0),
-(697, 3, '2026-02-23 12:50:44', 2, 0),
-(698, 6, '2026-02-23 12:50:44', 5, 0),
-(699, 1, '2026-02-23 12:50:44', 2, 0),
-(700, 3, '2026-02-23 12:50:44', 3, 0),
-(701, 4, '2026-02-23 12:50:44', 2, 0),
-(702, 1, '2026-02-23 12:50:44', 5, 0),
-(703, 1, '2026-02-23 12:50:44', 5, 0),
-(704, 4, '2026-02-23 12:50:44', 4, 0),
-(705, 3, '2026-02-23 12:50:44', 1, 0),
-(706, 6, '2026-02-23 12:50:44', 4, 0),
-(707, 4, '2026-02-23 12:50:44', 2, 0),
-(708, 5, '2026-02-23 14:48:46', 4, 0),
-(709, 7, '2026-02-23 15:15:08', 1, 0),
-(710, 5, '2026-02-23 15:15:09', 3, 0),
-(711, 1, '2026-02-24 09:11:46', 1, 0),
-(712, 5, '2026-02-24 09:11:49', 5, 0),
-(713, 7, '2026-02-24 09:11:51', 3, 0),
-(714, 3, '2026-02-24 09:11:52', 2, 0),
-(715, 1, '2026-02-24 09:11:54', 2, 0),
-(716, 6, '2026-02-24 09:11:57', 4, 0),
-(717, 4, '2026-02-24 09:11:58', 3, 0),
-(718, 5, '2026-02-24 09:12:01', 4, 0),
-(719, 4, '2026-02-24 09:12:03', 5, 0),
-(720, 7, '2026-02-24 09:12:05', 5, 0),
-(721, 1, '2026-02-24 09:12:07', 3, 0),
-(722, 6, '2026-02-24 09:12:09', 4, 0),
-(723, 7, '2026-02-24 09:12:12', 4, 0),
-(724, 6, '2026-02-24 09:12:14', 1, 0),
-(725, 7, '2026-02-24 09:12:16', 3, 0),
-(726, 1, '2026-02-24 09:12:17', 3, 0),
-(727, 1, '2026-02-24 09:12:20', 1, 0),
-(728, 1, '2026-02-24 09:12:21', 5, 0),
-(729, 1, '2026-02-24 09:12:21', 1, 0),
-(730, 4, '2026-02-24 09:12:24', 2, 0),
-(731, 7, '2026-02-24 09:12:26', 5, 0),
-(732, 4, '2026-02-24 09:12:27', 3, 0),
-(733, 1, '2026-02-24 09:12:30', 1, 0),
-(734, 1, '2026-02-24 09:12:31', 5, 0),
-(735, 5, '2026-02-24 09:12:34', 3, 0),
-(736, 3, '2026-02-24 09:12:35', 5, 0),
-(737, 5, '2026-02-24 09:12:38', 3, 0),
-(738, 4, '2026-02-24 09:12:39', 1, 0),
-(739, 6, '2026-02-24 09:12:42', 5, 0),
-(740, 5, '2026-02-24 09:12:44', 3, 0);
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `adjustment`
---
-ALTER TABLE `adjustment`
-  ADD PRIMARY KEY (`AdjustmentID`);
-
---
--- Indexes for table `api_audit_log`
---
-ALTER TABLE `api_audit_log`
-  ADD PRIMARY KEY (`AuditID`),
-  ADD KEY `KeyID` (`KeyID`),
-  ADD KEY `idx_audit_action` (`Action`),
-  ADD KEY `idx_audit_time` (`Timestamp`);
-
---
--- Indexes for table `api_keys`
---
-ALTER TABLE `api_keys`
-  ADD PRIMARY KEY (`KeyID`),
-  ADD UNIQUE KEY `KeyString` (`KeyString`),
-  ADD KEY `UserID` (`UserID`);
-
---
--- Indexes for table `article`
---
-ALTER TABLE `article`
-  ADD PRIMARY KEY (`ArticleID`),
-  ADD KEY `idx_name` (`Name`),
-  ADD KEY `idx_quality` (`QualityControl`);
-
---
--- Indexes for table `batch_log`
---
-ALTER TABLE `batch_log`
-  ADD PRIMARY KEY (`BatchID`),
-  ADD UNIQUE KEY `BatchCode` (`BatchCode`),
-  ADD KEY `ArticleID` (`ArticleID`),
-  ADD KEY `OperatorID` (`OperatorID`),
-  ADD KEY `MachineID` (`MachineID`),
-  ADD KEY `idx_batch_code` (`BatchCode`),
-  ADD KEY `idx_batch_order` (`ProductionOrderID`),
-  ADD KEY `idx_batch_date` (`PrintTime`);
-
---
--- Indexes for table `city`
---
-ALTER TABLE `city`
-  ADD PRIMARY KEY (`CityID`),
-  ADD KEY `CountryID` (`CountryID`);
-
---
--- Indexes for table `country`
---
-ALTER TABLE `country`
-  ADD PRIMARY KEY (`CountryID`),
-  ADD UNIQUE KEY `ISOCode` (`ISOCode`);
-
---
--- Indexes for table `machine`
---
-ALTER TABLE `machine`
-  ADD PRIMARY KEY (`MachineID`),
-  ADD KEY `fk_machine_plant` (`PlantID`),
-  ADD KEY `fk_machine_section` (`SectionID`);
-
---
--- Indexes for table `machine_planning`
---
-ALTER TABLE `machine_planning`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_machine_date` (`machine_code`,`plan_date`);
-
---
--- Indexes for table `machine_stop_category`
---
-ALTER TABLE `machine_stop_category`
-  ADD PRIMARY KEY (`CategoryID`),
-  ADD UNIQUE KEY `CategoryName` (`CategoryName`);
-
---
--- Indexes for table `machine_stop_log`
---
-ALTER TABLE `machine_stop_log`
-  ADD PRIMARY KEY (`StopID`),
-  ADD KEY `OperatorID` (`OperatorID`),
-  ADD KEY `ProductionOrderID` (`ProductionOrderID`),
-  ADD KEY `CategoryID` (`CategoryID`),
-  ADD KEY `ReasonID` (`ReasonID`),
-  ADD KEY `idx_stop_start` (`StartTime`),
-  ADD KEY `idx_stop_machine` (`MachineID`);
-
---
--- Indexes for table `machine_stop_reason`
---
-ALTER TABLE `machine_stop_reason`
-  ADD PRIMARY KEY (`ReasonID`),
-  ADD UNIQUE KEY `ReasonName` (`ReasonName`),
-  ADD KEY `CategoryID` (`CategoryID`);
-
---
--- Indexes for table `operator_log`
---
-ALTER TABLE `operator_log`
-  ADD PRIMARY KEY (`LogID`),
-  ADD KEY `OperatorID` (`OperatorID`),
-  ADD KEY `MachineID` (`MachineID`);
-
---
--- Indexes for table `plant`
---
-ALTER TABLE `plant`
-  ADD PRIMARY KEY (`PlantID`),
-  ADD KEY `CityID` (`CityID`);
-
---
--- Indexes for table `processed_production`
---
-ALTER TABLE `processed_production`
-  ADD PRIMARY KEY (`ProcessedID`),
-  ADD KEY `LogID` (`LogID`),
-  ADD KEY `OrderID` (`OrderID`);
-
---
--- Indexes for table `production_log`
---
-ALTER TABLE `production_log`
-  ADD PRIMARY KEY (`LogID`),
-  ADD KEY `MachineID` (`MachineID`),
-  ADD KEY `StartOperatorID` (`StartOperatorID`),
-  ADD KEY `EndOperatorID` (`EndOperatorID`),
-  ADD KEY `idx_prodlog_order` (`ProductionOrderID`),
-  ADD KEY `idx_prodlog_date` (`StartTime`),
-  ADD KEY `idx_prodlog_status` (`Status`);
-
---
--- Indexes for table `production_order`
---
-ALTER TABLE `production_order`
-  ADD PRIMARY KEY (`OrderID`),
-  ADD KEY `ArticleID` (`ArticleID`),
-  ADD KEY `fk_order_deleted_by` (`DeletedBy`),
-  ADD KEY `fk_order_recipe` (`RecipeID`);
-
---
--- Indexes for table `production_order_progress`
---
-ALTER TABLE `production_order_progress`
-  ADD PRIMARY KEY (`ProgressID`),
-  ADD UNIQUE KEY `unique_order_article` (`OrderID`,`ArticleID`),
-  ADD KEY `fk_pop_article` (`ArticleID`);
-
---
--- Indexes for table `production_recipes`
---
-ALTER TABLE `production_recipes`
-  ADD PRIMARY KEY (`RecipeID`),
-  ADD KEY `fk_recipe_machine` (`MachineID`),
-  ADD KEY `idx_recipe_lookup` (`ArticleID`,`MachineID`);
-
---
--- Indexes for table `raw_material_log`
---
-ALTER TABLE `raw_material_log`
-  ADD PRIMARY KEY (`LogID`),
-  ADD KEY `OperatorID` (`OperatorID`),
-  ADD KEY `ArticleID` (`ArticleID`),
-  ADD KEY `MachineID` (`MachineID`),
-  ADD KEY `idx_rm_batch` (`BatchCode`),
-  ADD KEY `idx_rm_order` (`ProductionOrderID`),
-  ADD KEY `idx_rm_date` (`ScanTime`);
-
---
--- Indexes for table `recipe_inputs`
---
-ALTER TABLE `recipe_inputs`
-  ADD PRIMARY KEY (`InputID`),
-  ADD KEY `fk_recipe_inputs_recipe` (`RecipeID`),
-  ADD KEY `fk_recipe_inputs_article` (`ArticleID`);
-
---
--- Indexes for table `recipe_outputs`
---
-ALTER TABLE `recipe_outputs`
-  ADD PRIMARY KEY (`OutputID`),
-  ADD KEY `fk_recipe_outputs_recipe` (`RecipeID`),
-  ADD KEY `fk_recipe_outputs_article` (`ArticleID`);
-
---
--- Indexes for table `reject`
---
-ALTER TABLE `reject`
-  ADD PRIMARY KEY (`RejectID`),
-  ADD KEY `OrderID` (`OrderID`),
-  ADD KEY `CategoryID` (`CategoryID`),
-  ADD KEY `ReasonID` (`ReasonID`),
-  ADD KEY `rejects_ibfk_1` (`ArticleID`),
-  ADD KEY `fk_reject_operator` (`OperatorID`),
-  ADD KEY `fk_reject_machine` (`MachineID`),
-  ADD KEY `idx_reject_date` (`RejectDate`);
-
---
--- Indexes for table `reject_category`
---
-ALTER TABLE `reject_category`
-  ADD PRIMARY KEY (`CategoryID`),
-  ADD UNIQUE KEY `CategoryName` (`CategoryName`),
-  ADD KEY `fk_rc_section` (`SectionID`),
-  ADD KEY `idx_rc_location` (`PlantID`,`SectionID`);
-
---
--- Indexes for table `reject_reason`
---
-ALTER TABLE `reject_reason`
-  ADD PRIMARY KEY (`ReasonID`),
-  ADD UNIQUE KEY `ReasonName` (`ReasonName`),
-  ADD KEY `CategoryID` (`CategoryID`),
-  ADD KEY `fk_rr_section` (`SectionID`),
-  ADD KEY `idx_rr_location` (`PlantID`,`SectionID`);
-
---
--- Indexes for table `section`
---
-ALTER TABLE `section`
-  ADD PRIMARY KEY (`SectionID`),
-  ADD KEY `PlantID` (`PlantID`);
-
---
--- Indexes for table `shifts`
---
-ALTER TABLE `shifts`
-  ADD PRIMARY KEY (`ShiftID`),
-  ADD KEY `OrderID` (`OrderID`),
-  ADD KEY `OperatorID` (`OperatorID`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`OperatorID`),
-  ADD UNIQUE KEY `OperatorUsername` (`OperatorUsername`);
-
---
--- Indexes for table `wago`
---
-ALTER TABLE `wago`
-  ADD PRIMARY KEY (`LogID`),
-  ADD KEY `idx_timestamp` (`Timestamp`),
-  ADD KEY `fk_machine_id` (`MachineID`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `adjustment`
---
-ALTER TABLE `adjustment`
-  MODIFY `AdjustmentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `api_audit_log`
---
-ALTER TABLE `api_audit_log`
-  MODIFY `AuditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
-
---
--- AUTO_INCREMENT for table `api_keys`
---
-ALTER TABLE `api_keys`
-  MODIFY `KeyID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
-
---
--- AUTO_INCREMENT for table `article`
---
-ALTER TABLE `article`
-  MODIFY `ArticleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `batch_log`
---
-ALTER TABLE `batch_log`
-  MODIFY `BatchID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `city`
---
-ALTER TABLE `city`
-  MODIFY `CityID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
-
---
--- AUTO_INCREMENT for table `country`
---
-ALTER TABLE `country`
-  MODIFY `CountryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
-
---
--- AUTO_INCREMENT for table `machine`
---
-ALTER TABLE `machine`
-  MODIFY `MachineID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `machine_planning`
---
-ALTER TABLE `machine_planning`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4651;
-
---
--- AUTO_INCREMENT for table `machine_stop_category`
---
-ALTER TABLE `machine_stop_category`
-  MODIFY `CategoryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `machine_stop_log`
---
-ALTER TABLE `machine_stop_log`
-  MODIFY `StopID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `machine_stop_reason`
---
-ALTER TABLE `machine_stop_reason`
-  MODIFY `ReasonID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT for table `operator_log`
---
-ALTER TABLE `operator_log`
-  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `plant`
---
-ALTER TABLE `plant`
-  MODIFY `PlantID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
-
---
--- AUTO_INCREMENT for table `processed_production`
---
-ALTER TABLE `processed_production`
-  MODIFY `ProcessedID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `production_log`
---
-ALTER TABLE `production_log`
-  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `production_order`
---
-ALTER TABLE `production_order`
-  MODIFY `OrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `production_order_progress`
---
-ALTER TABLE `production_order_progress`
-  MODIFY `ProgressID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `production_recipes`
---
-ALTER TABLE `production_recipes`
-  MODIFY `RecipeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `raw_material_log`
---
-ALTER TABLE `raw_material_log`
-  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `recipe_inputs`
---
-ALTER TABLE `recipe_inputs`
-  MODIFY `InputID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `recipe_outputs`
---
-ALTER TABLE `recipe_outputs`
-  MODIFY `OutputID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `reject`
---
-ALTER TABLE `reject`
-  MODIFY `RejectID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `reject_category`
---
-ALTER TABLE `reject_category`
-  MODIFY `CategoryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `reject_reason`
---
-ALTER TABLE `reject_reason`
-  MODIFY `ReasonID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT for table `section`
---
-ALTER TABLE `section`
-  MODIFY `SectionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=490;
-
---
--- AUTO_INCREMENT for table `shifts`
---
-ALTER TABLE `shifts`
-  MODIFY `ShiftID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `OperatorID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `wago`
---
-ALTER TABLE `wago`
-  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=741;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `api_audit_log`
---
-ALTER TABLE `api_audit_log`
-  ADD CONSTRAINT `fk_audit_key` FOREIGN KEY (`KeyID`) REFERENCES `api_keys` (`KeyID`) ON DELETE SET NULL;
-
---
--- Constraints for table `api_keys`
---
-ALTER TABLE `api_keys`
-  ADD CONSTRAINT `fk_apikey_user` FOREIGN KEY (`UserID`) REFERENCES `user` (`OperatorID`) ON DELETE CASCADE;
-
---
--- Constraints for table `batch_log`
---
-ALTER TABLE `batch_log`
-  ADD CONSTRAINT `batch_log_ibfk_1` FOREIGN KEY (`ProductionOrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `batch_log_ibfk_2` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`),
-  ADD CONSTRAINT `batch_log_ibfk_3` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`),
-  ADD CONSTRAINT `batch_log_ibfk_4` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`);
-
---
--- Constraints for table `city`
---
-ALTER TABLE `city`
-  ADD CONSTRAINT `fk_city_country` FOREIGN KEY (`CountryID`) REFERENCES `country` (`CountryID`) ON DELETE CASCADE;
-
---
--- Constraints for table `machine`
---
-ALTER TABLE `machine`
-  ADD CONSTRAINT `fk_machine_plant` FOREIGN KEY (`PlantID`) REFERENCES `plant` (`PlantID`) ON DELETE SET NULL,
-  ADD CONSTRAINT `fk_machine_section` FOREIGN KEY (`SectionID`) REFERENCES `section` (`SectionID`) ON DELETE SET NULL;
-
---
--- Constraints for table `machine_stop_log`
---
-ALTER TABLE `machine_stop_log`
-  ADD CONSTRAINT `machine_stop_log_ibfk_1` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`),
-  ADD CONSTRAINT `machine_stop_log_ibfk_2` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`),
-  ADD CONSTRAINT `machine_stop_log_ibfk_3` FOREIGN KEY (`ProductionOrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE SET NULL,
-  ADD CONSTRAINT `machine_stop_log_ibfk_4` FOREIGN KEY (`CategoryID`) REFERENCES `machine_stop_category` (`CategoryID`) ON DELETE SET NULL,
-  ADD CONSTRAINT `machine_stop_log_ibfk_5` FOREIGN KEY (`ReasonID`) REFERENCES `machine_stop_reason` (`ReasonID`) ON DELETE SET NULL;
-
---
--- Constraints for table `machine_stop_reason`
---
-ALTER TABLE `machine_stop_reason`
-  ADD CONSTRAINT `machine_stop_reason_ibfk_1` FOREIGN KEY (`CategoryID`) REFERENCES `machine_stop_category` (`CategoryID`) ON DELETE CASCADE;
-
---
--- Constraints for table `operator_log`
---
-ALTER TABLE `operator_log`
-  ADD CONSTRAINT `operator_log_ibfk_1` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`),
-  ADD CONSTRAINT `operator_log_ibfk_2` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`);
-
---
--- Constraints for table `plant`
---
-ALTER TABLE `plant`
-  ADD CONSTRAINT `fk_plant_city` FOREIGN KEY (`CityID`) REFERENCES `city` (`CityID`);
-
---
--- Constraints for table `processed_production`
---
-ALTER TABLE `processed_production`
-  ADD CONSTRAINT `processed_production_ibfk_1` FOREIGN KEY (`LogID`) REFERENCES `wago` (`LogID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `processed_production_ibfk_2` FOREIGN KEY (`OrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE;
-
---
--- Constraints for table `production_log`
---
-ALTER TABLE `production_log`
-  ADD CONSTRAINT `production_log_ibfk_1` FOREIGN KEY (`ProductionOrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `production_log_ibfk_2` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`),
-  ADD CONSTRAINT `production_log_ibfk_3` FOREIGN KEY (`StartOperatorID`) REFERENCES `user` (`OperatorID`),
-  ADD CONSTRAINT `production_log_ibfk_4` FOREIGN KEY (`EndOperatorID`) REFERENCES `user` (`OperatorID`);
-
---
--- Constraints for table `production_order`
---
-ALTER TABLE `production_order`
-  ADD CONSTRAINT `fk_order_deleted_by` FOREIGN KEY (`DeletedBy`) REFERENCES `user` (`OperatorID`) ON DELETE SET NULL,
-  ADD CONSTRAINT `fk_order_recipe` FOREIGN KEY (`RecipeID`) REFERENCES `production_recipes` (`RecipeID`) ON DELETE SET NULL;
-
---
--- Constraints for table `production_order_progress`
---
-ALTER TABLE `production_order_progress`
-  ADD CONSTRAINT `fk_pop_article` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_pop_order` FOREIGN KEY (`OrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE;
-
---
--- Constraints for table `production_recipes`
---
-ALTER TABLE `production_recipes`
-  ADD CONSTRAINT `fk_recipe_article` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_recipe_machine` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`) ON DELETE CASCADE;
-
---
--- Constraints for table `raw_material_log`
---
-ALTER TABLE `raw_material_log`
-  ADD CONSTRAINT `raw_material_log_ibfk_1` FOREIGN KEY (`ProductionOrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `raw_material_log_ibfk_2` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`),
-  ADD CONSTRAINT `raw_material_log_ibfk_3` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`) ON DELETE SET NULL,
-  ADD CONSTRAINT `raw_material_log_ibfk_4` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`) ON DELETE SET NULL;
-
---
--- Constraints for table `recipe_inputs`
---
-ALTER TABLE `recipe_inputs`
-  ADD CONSTRAINT `fk_recipe_inputs_article` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`),
-  ADD CONSTRAINT `fk_recipe_inputs_recipe` FOREIGN KEY (`RecipeID`) REFERENCES `production_recipes` (`RecipeID`) ON DELETE CASCADE;
-
---
--- Constraints for table `recipe_outputs`
---
-ALTER TABLE `recipe_outputs`
-  ADD CONSTRAINT `fk_recipe_outputs_article` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`),
-  ADD CONSTRAINT `fk_recipe_outputs_recipe` FOREIGN KEY (`RecipeID`) REFERENCES `production_recipes` (`RecipeID`) ON DELETE CASCADE;
-
---
--- Constraints for table `reject`
---
-ALTER TABLE `reject`
-  ADD CONSTRAINT `fk_reject_machine` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`),
-  ADD CONSTRAINT `fk_reject_operator` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`),
-  ADD CONSTRAINT `reject_ibfk_1` FOREIGN KEY (`ArticleID`) REFERENCES `article` (`ArticleID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `reject_ibfk_2` FOREIGN KEY (`OrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `reject_ibfk_3` FOREIGN KEY (`CategoryID`) REFERENCES `reject_category` (`CategoryID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `reject_ibfk_4` FOREIGN KEY (`ReasonID`) REFERENCES `reject_reason` (`ReasonID`) ON DELETE CASCADE;
-
---
--- Constraints for table `reject_category`
---
-ALTER TABLE `reject_category`
-  ADD CONSTRAINT `fk_rc_plant` FOREIGN KEY (`PlantID`) REFERENCES `plant` (`PlantID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_rc_section` FOREIGN KEY (`SectionID`) REFERENCES `section` (`SectionID`) ON DELETE CASCADE;
-
---
--- Constraints for table `reject_reason`
---
-ALTER TABLE `reject_reason`
-  ADD CONSTRAINT `fk_rr_plant` FOREIGN KEY (`PlantID`) REFERENCES `plant` (`PlantID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_rr_section` FOREIGN KEY (`SectionID`) REFERENCES `section` (`SectionID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `reject_reason_ibfk_1` FOREIGN KEY (`CategoryID`) REFERENCES `reject_category` (`CategoryID`) ON DELETE CASCADE;
-
---
--- Constraints for table `section`
---
-ALTER TABLE `section`
-  ADD CONSTRAINT `fk_section_plant` FOREIGN KEY (`PlantID`) REFERENCES `plant` (`PlantID`) ON DELETE CASCADE;
-
---
--- Constraints for table `shifts`
---
-ALTER TABLE `shifts`
-  ADD CONSTRAINT `shifts_ibfk_1` FOREIGN KEY (`OrderID`) REFERENCES `production_order` (`OrderID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `shifts_ibfk_2` FOREIGN KEY (`OperatorID`) REFERENCES `user` (`OperatorID`) ON DELETE SET NULL;
-
---
--- Constraints for table `wago`
---
-ALTER TABLE `wago`
-  ADD CONSTRAINT `fk_machine_id` FOREIGN KEY (`MachineID`) REFERENCES `machine` (`MachineID`) ON DELETE SET NULL ON UPDATE NO ACTION;
-COMMIT;
-
+LOCK TABLES `wago` WRITE;
+/*!40000 ALTER TABLE `wago` DISABLE KEYS */;
+INSERT INTO `wago` VALUES
+(1,1,'2025-10-03 12:00:00',1,1),
+(2,1,'2025-10-03 12:01:00',1,1),
+(3,7,'2026-01-23 15:51:05',3,1),
+(4,4,'2026-01-23 15:51:07',3,1),
+(5,3,'2026-01-23 15:51:09',2,1),
+(6,6,'2026-01-23 15:51:11',3,1),
+(7,1,'2026-01-23 15:51:13',3,1),
+(8,5,'2026-01-23 15:51:14',5,1),
+(9,6,'2026-02-23 09:20:11',4,1),
+(10,7,'2026-02-23 09:20:12',4,1),
+(11,1,'2026-02-23 09:20:13',5,1),
+(12,6,'2026-02-23 09:20:16',3,1),
+(13,6,'2026-02-23 09:20:18',2,1),
+(14,3,'2026-02-23 09:20:20',3,1),
+(15,4,'2026-02-23 09:20:21',1,1),
+(16,6,'2026-02-23 09:20:22',5,1),
+(17,5,'2026-02-23 09:20:23',3,1),
+(18,5,'2026-02-23 09:20:24',5,1),
+(19,1,'2026-02-23 09:20:25',1,1),
+(20,3,'2026-02-23 09:20:27',1,1),
+(21,4,'2026-02-23 09:20:27',5,1),
+(22,7,'2026-02-23 09:20:28',1,1),
+(23,7,'2026-02-23 09:20:29',5,1),
+(24,7,'2026-02-23 09:20:30',2,1),
+(25,3,'2026-02-23 09:20:32',2,1),
+(26,6,'2026-02-23 09:20:33',5,1),
+(27,5,'2026-02-23 09:20:34',2,1),
+(28,5,'2026-02-23 09:20:36',3,1),
+(29,3,'2026-02-23 09:20:38',5,1),
+(30,4,'2026-02-23 09:20:39',4,1),
+(31,4,'2026-02-23 09:20:40',5,1),
+(32,1,'2026-02-23 09:20:41',4,1),
+(33,5,'2026-02-23 09:20:42',2,1),
+(34,1,'2026-02-23 09:20:44',1,1),
+(35,6,'2026-02-23 09:20:45',5,1),
+(36,3,'2026-02-23 09:20:48',4,1),
+(37,6,'2026-02-23 09:20:50',1,1),
+(38,4,'2026-02-23 09:20:52',5,1),
+(39,6,'2026-02-23 09:20:54',1,1),
+(40,3,'2026-02-23 09:20:55',5,1),
+(41,4,'2026-02-23 09:20:58',3,1),
+(42,4,'2026-02-23 09:20:59',1,1),
+(43,7,'2026-02-23 09:21:01',4,1),
+(44,6,'2026-02-23 09:21:02',3,1),
+(45,1,'2026-02-23 09:21:04',3,1),
+(46,4,'2026-02-23 09:21:06',4,1),
+(47,5,'2026-02-23 09:21:08',4,1),
+(48,7,'2026-02-23 09:21:08',5,1),
+(49,7,'2026-02-23 09:21:10',1,1),
+(50,3,'2026-02-23 09:21:12',5,1),
+(51,7,'2026-02-23 09:21:13',4,1),
+(52,1,'2026-02-23 09:21:14',3,1),
+(53,3,'2026-02-23 09:21:16',4,1),
+(54,1,'2026-02-23 09:21:18',2,1),
+(55,1,'2026-02-23 09:21:19',1,1),
+(56,7,'2026-02-23 09:21:20',2,1),
+(57,7,'2026-02-23 09:21:23',2,1),
+(58,6,'2026-02-23 09:21:24',1,1),
+(59,3,'2026-02-23 09:21:25',5,1),
+(60,6,'2026-02-23 09:21:26',1,1),
+(61,3,'2026-02-23 09:21:29',5,1),
+(62,1,'2026-02-23 09:21:31',2,1),
+(63,4,'2026-02-23 09:21:32',3,1),
+(64,4,'2026-02-23 09:21:33',4,1),
+(65,4,'2026-02-23 09:21:35',2,1),
+(66,7,'2026-02-23 09:21:36',1,1),
+(67,7,'2026-02-23 09:21:38',5,1),
+(68,7,'2026-02-23 09:21:39',3,1),
+(69,7,'2026-02-23 09:21:40',3,1),
+(70,4,'2026-02-23 09:21:42',5,1),
+(71,5,'2026-02-23 09:21:44',2,1),
+(72,1,'2026-02-23 09:21:46',4,1),
+(73,5,'2026-02-23 09:21:48',4,1),
+(74,5,'2026-02-23 09:21:49',5,1),
+(75,3,'2026-02-23 09:21:50',2,1),
+(76,7,'2026-02-23 09:21:52',4,1),
+(77,5,'2026-02-23 09:21:55',2,1),
+(78,6,'2026-02-23 09:21:55',3,1),
+(79,4,'2026-02-23 09:21:56',4,1),
+(80,6,'2026-02-23 09:21:59',5,1),
+(81,5,'2026-02-23 09:22:02',3,1),
+(82,6,'2026-02-23 09:22:03',5,1),
+(83,5,'2026-02-23 09:22:05',1,1),
+(84,4,'2026-02-23 09:22:07',5,1),
+(85,3,'2026-02-23 09:22:09',5,1),
+(86,3,'2026-02-23 09:22:11',4,1),
+(87,3,'2026-02-23 09:22:13',4,1),
+(88,7,'2026-02-23 09:22:15',3,1),
+(89,1,'2026-02-23 09:22:17',4,1),
+(90,1,'2026-02-23 09:22:20',4,1),
+(91,5,'2026-02-23 09:22:21',2,1),
+(92,3,'2026-02-23 09:22:22',5,1),
+(93,6,'2026-02-23 09:22:24',2,1),
+(94,7,'2026-02-23 09:22:25',2,1),
+(95,3,'2026-02-23 09:22:25',1,1),
+(96,6,'2026-02-23 09:22:27',3,1),
+(97,3,'2026-02-23 09:22:28',5,1),
+(98,6,'2026-02-23 09:22:30',5,1),
+(99,6,'2026-02-23 09:22:30',3,1),
+(100,5,'2026-02-23 09:22:31',5,1),
+(101,1,'2026-02-23 09:22:33',5,1),
+(102,5,'2026-02-23 09:22:34',4,1),
+(103,4,'2026-02-23 09:22:35',2,1),
+(104,5,'2026-02-23 09:22:36',3,1),
+(105,1,'2026-02-23 09:22:37',5,1),
+(106,5,'2026-02-23 09:22:39',4,1),
+(107,3,'2026-02-23 09:22:40',2,1),
+(108,1,'2026-02-23 09:22:41',5,1),
+(109,4,'2026-02-23 09:22:42',3,1),
+(110,6,'2026-02-23 09:22:44',2,1),
+(111,4,'2026-02-23 09:22:46',1,1),
+(112,5,'2026-02-23 09:22:48',1,1),
+(113,5,'2026-02-23 09:22:51',3,1),
+(114,6,'2026-02-23 09:22:53',1,1),
+(115,3,'2026-02-23 09:22:55',4,1),
+(116,6,'2026-02-23 09:22:58',2,1),
+(117,3,'2026-02-23 09:23:01',5,1),
+(118,6,'2026-02-23 09:23:04',2,1),
+(119,6,'2026-02-23 09:23:05',4,1),
+(120,7,'2026-02-23 09:23:07',1,1),
+(121,6,'2026-02-23 09:23:09',3,1),
+(122,4,'2026-02-23 09:23:10',4,1),
+(123,3,'2026-02-23 09:23:11',3,1),
+(124,6,'2026-02-23 09:23:12',1,1),
+(125,7,'2026-02-23 09:23:13',4,1),
+(126,7,'2026-02-23 09:23:13',3,1),
+(127,4,'2026-02-23 09:23:14',2,1),
+(128,4,'2026-02-23 09:23:16',4,1),
+(129,5,'2026-02-23 09:23:18',5,1),
+(130,5,'2026-02-23 09:23:19',3,1),
+(131,5,'2026-02-23 09:23:20',4,1),
+(132,1,'2026-02-23 09:23:22',3,1),
+(133,7,'2026-02-23 09:23:24',4,1),
+(134,4,'2026-02-23 09:23:26',4,1),
+(135,7,'2026-02-23 09:23:27',5,1),
+(136,3,'2026-02-23 09:23:29',5,1),
+(137,7,'2026-02-23 09:23:31',2,1),
+(138,4,'2026-02-23 09:23:32',2,1),
+(139,6,'2026-02-23 09:23:34',3,1),
+(140,3,'2026-02-23 09:23:35',4,1),
+(141,3,'2026-02-23 09:23:38',4,1),
+(142,1,'2026-02-23 09:23:39',5,1),
+(143,4,'2026-02-23 09:23:41',1,1),
+(144,1,'2026-02-23 09:23:42',3,1),
+(145,7,'2026-02-23 09:23:44',5,1),
+(146,5,'2026-02-23 09:23:45',3,1),
+(147,6,'2026-02-23 09:23:48',3,1),
+(148,4,'2026-02-23 09:23:49',1,1),
+(149,6,'2026-02-23 09:23:51',2,1),
+(150,5,'2026-02-23 09:23:53',1,1),
+(151,3,'2026-02-23 09:23:54',1,1),
+(152,5,'2026-02-23 09:23:57',2,1),
+(153,1,'2026-02-23 09:23:58',3,1),
+(154,5,'2026-02-23 09:24:00',1,1),
+(155,5,'2026-02-23 09:24:00',5,1),
+(156,4,'2026-02-23 09:24:02',3,1),
+(157,6,'2026-02-23 09:24:05',2,1),
+(158,3,'2026-02-23 09:24:07',3,1),
+(159,1,'2026-02-23 09:24:09',3,1),
+(160,5,'2026-02-23 09:24:12',3,1),
+(161,7,'2026-02-23 09:24:13',5,1),
+(162,1,'2026-02-23 09:24:16',3,1),
+(163,5,'2026-02-23 09:24:18',5,1),
+(164,1,'2026-02-23 09:24:19',1,1),
+(165,6,'2026-02-23 09:24:21',1,1),
+(166,4,'2026-02-23 09:24:24',1,1),
+(167,1,'2026-02-23 09:24:25',5,1),
+(168,5,'2026-02-23 09:24:26',5,1),
+(169,3,'2026-02-23 09:24:27',4,1),
+(170,7,'2026-02-23 09:24:29',5,1),
+(171,4,'2026-02-23 09:24:30',4,1),
+(172,3,'2026-02-23 09:24:31',5,1),
+(173,1,'2026-02-23 09:24:33',4,1),
+(174,4,'2026-02-23 10:41:25',5,1),
+(175,6,'2026-02-23 10:41:27',5,1),
+(176,7,'2026-02-23 10:41:27',1,1),
+(177,1,'2026-02-23 10:51:20',5,1),
+(178,6,'2026-02-23 10:51:20',4,1),
+(179,5,'2026-02-23 10:51:20',3,1),
+(180,5,'2026-02-23 10:51:20',1,1),
+(181,7,'2026-02-23 10:51:21',3,1),
+(182,1,'2026-02-23 10:51:21',1,1),
+(183,3,'2026-02-23 10:51:21',2,1),
+(184,6,'2026-02-23 10:51:21',4,1),
+(185,5,'2026-02-23 10:51:21',4,1),
+(186,4,'2026-02-23 10:51:21',5,1),
+(187,5,'2026-02-23 10:51:21',2,1),
+(188,3,'2026-02-23 10:51:21',5,1),
+(189,1,'2026-02-23 10:51:21',4,1),
+(190,1,'2026-02-23 10:51:21',2,1),
+(191,3,'2026-02-23 10:51:21',3,1),
+(192,5,'2026-02-23 10:51:21',4,1),
+(193,1,'2026-02-23 10:51:21',1,1),
+(194,1,'2026-02-23 10:51:21',1,1),
+(195,1,'2026-02-23 10:51:21',5,1),
+(196,5,'2026-02-23 10:51:21',3,1),
+(197,3,'2026-02-23 10:51:21',2,1),
+(198,5,'2026-02-23 10:51:21',2,1),
+(199,6,'2026-02-23 10:51:21',3,1),
+(200,7,'2026-02-23 10:51:21',3,1),
+(201,3,'2026-02-23 10:51:21',1,1),
+(202,3,'2026-02-23 10:51:21',2,1),
+(203,4,'2026-02-23 10:51:21',1,1),
+(204,1,'2026-02-23 10:51:21',1,1),
+(205,4,'2026-02-23 10:51:21',1,1),
+(206,1,'2026-02-23 10:51:21',3,1),
+(207,6,'2026-02-23 10:51:21',3,1),
+(208,5,'2026-02-23 10:51:21',3,1),
+(209,4,'2026-02-23 10:51:21',4,1),
+(210,6,'2026-02-23 10:51:21',3,1),
+(211,6,'2026-02-23 10:51:21',2,1),
+(212,1,'2026-02-23 10:51:21',1,1),
+(213,4,'2026-02-23 10:51:21',1,1),
+(214,6,'2026-02-23 10:51:21',4,1),
+(215,7,'2026-02-23 10:51:21',5,1),
+(216,6,'2026-02-23 10:51:21',5,1),
+(217,5,'2026-02-23 10:51:21',5,1),
+(218,1,'2026-02-23 10:51:21',5,1),
+(219,5,'2026-02-23 10:51:21',4,1),
+(220,7,'2026-02-23 10:51:21',1,1),
+(221,6,'2026-02-23 10:51:21',4,1),
+(222,4,'2026-02-23 10:51:21',1,1),
+(223,7,'2026-02-23 10:51:21',3,1),
+(224,3,'2026-02-23 10:51:21',5,1),
+(225,7,'2026-02-23 10:51:21',5,1),
+(226,4,'2026-02-23 10:51:21',1,1),
+(227,6,'2026-02-23 10:51:21',2,1),
+(228,7,'2026-02-23 10:51:21',2,1),
+(229,4,'2026-02-23 10:51:21',5,1),
+(230,7,'2026-02-23 10:51:21',4,1),
+(231,1,'2026-02-23 10:51:21',5,1),
+(232,3,'2026-02-23 10:51:21',4,1),
+(233,7,'2026-02-23 10:51:21',5,1),
+(234,4,'2026-02-23 10:51:21',3,1),
+(235,7,'2026-02-23 10:51:21',5,1),
+(236,5,'2026-02-23 10:51:21',1,1),
+(237,4,'2026-02-23 10:51:21',2,1),
+(238,7,'2026-02-23 10:51:21',4,1),
+(239,6,'2026-02-23 10:51:21',4,1),
+(240,3,'2026-02-23 10:51:21',3,1),
+(241,5,'2026-02-23 10:51:21',2,1),
+(242,3,'2026-02-23 10:51:21',4,1),
+(243,7,'2026-02-23 10:51:21',3,1),
+(244,3,'2026-02-23 10:51:21',3,1),
+(245,6,'2026-02-23 10:51:21',3,1),
+(246,7,'2026-02-23 10:51:22',1,1),
+(247,1,'2026-02-23 10:51:22',3,1),
+(248,3,'2026-02-23 10:51:22',1,1),
+(249,3,'2026-02-23 10:51:22',4,1),
+(250,6,'2026-02-23 10:51:22',3,1),
+(251,4,'2026-02-23 10:51:22',4,1),
+(252,7,'2026-02-23 10:51:22',2,1),
+(253,7,'2026-02-23 10:51:22',1,1),
+(254,4,'2026-02-23 10:51:22',2,1),
+(255,6,'2026-02-23 10:51:22',3,1),
+(256,6,'2026-02-23 10:51:22',3,1),
+(257,7,'2026-02-23 10:51:22',3,1),
+(258,3,'2026-02-23 10:51:22',1,1),
+(259,3,'2026-02-23 10:51:22',1,1),
+(260,7,'2026-02-23 10:51:22',3,1),
+(261,4,'2026-02-23 10:51:22',2,1),
+(262,7,'2026-02-23 10:51:22',1,1),
+(263,1,'2026-02-23 10:51:22',4,1),
+(264,7,'2026-02-23 10:51:22',1,1),
+(265,6,'2026-02-23 10:51:22',5,1),
+(266,3,'2026-02-23 10:51:22',5,1),
+(267,3,'2026-02-23 10:51:22',5,1),
+(268,7,'2026-02-23 10:51:22',5,1),
+(269,6,'2026-02-23 10:51:22',5,1),
+(270,1,'2026-02-23 10:51:22',5,1),
+(271,5,'2026-02-23 10:51:22',4,1),
+(272,5,'2026-02-23 10:51:22',2,1),
+(273,4,'2026-02-23 10:51:22',4,1),
+(274,7,'2026-02-23 10:51:22',4,1),
+(275,3,'2026-02-23 10:51:22',5,1),
+(276,1,'2026-02-23 10:51:22',1,1),
+(277,3,'2026-02-23 10:51:22',5,1),
+(278,7,'2026-02-23 10:51:22',5,1),
+(279,1,'2026-02-23 10:51:22',5,1),
+(280,7,'2026-02-23 10:51:22',5,1),
+(281,5,'2026-02-23 10:51:22',3,1),
+(282,4,'2026-02-23 10:51:22',2,1),
+(283,3,'2026-02-23 10:51:22',4,1),
+(284,7,'2026-02-23 10:51:22',4,1),
+(285,7,'2026-02-23 10:51:22',4,1),
+(286,6,'2026-02-23 10:51:22',1,1),
+(287,3,'2026-02-23 10:51:22',2,1),
+(288,5,'2026-02-23 10:51:22',4,1),
+(289,6,'2026-02-23 10:51:22',3,1),
+(290,3,'2026-02-23 10:51:22',4,1),
+(291,5,'2026-02-23 10:51:22',5,1),
+(292,7,'2026-02-23 10:51:22',5,1),
+(293,4,'2026-02-23 10:51:22',5,1),
+(294,1,'2026-02-23 10:51:22',3,1),
+(295,4,'2026-02-23 10:51:22',4,1),
+(296,4,'2026-02-23 10:51:22',1,1),
+(297,4,'2026-02-23 10:51:22',4,1),
+(298,1,'2026-02-23 10:51:22',5,1),
+(299,4,'2026-02-23 10:51:22',3,1),
+(300,6,'2026-02-23 10:51:22',2,1),
+(301,6,'2026-02-23 10:51:22',5,1),
+(302,3,'2026-02-23 10:51:22',4,1),
+(303,6,'2026-02-23 10:51:22',4,1),
+(304,6,'2026-02-23 10:51:22',4,1),
+(305,7,'2026-02-23 10:51:22',3,1),
+(306,1,'2026-02-23 10:51:22',2,1),
+(307,6,'2026-02-23 10:51:22',1,1),
+(308,1,'2026-02-23 10:51:22',2,1),
+(309,4,'2026-02-23 10:51:22',4,1),
+(310,7,'2026-02-23 10:51:22',5,1),
+(311,5,'2026-02-23 10:51:22',4,1),
+(312,4,'2026-02-23 10:51:22',1,1),
+(313,5,'2026-02-23 10:51:22',4,1),
+(314,6,'2026-02-23 10:51:22',5,1),
+(315,4,'2026-02-23 10:51:22',4,1),
+(316,1,'2026-02-23 10:51:22',2,1),
+(317,4,'2026-02-23 10:51:22',2,1),
+(318,3,'2026-02-23 10:51:22',3,1),
+(319,6,'2026-02-23 10:51:23',4,1),
+(320,6,'2026-02-23 10:51:23',1,1),
+(321,7,'2026-02-23 10:51:23',1,1),
+(322,5,'2026-02-23 10:51:23',5,1),
+(323,3,'2026-02-23 10:51:23',1,1),
+(324,3,'2026-02-23 10:51:23',5,1),
+(325,4,'2026-02-23 10:51:23',4,1),
+(326,6,'2026-02-23 10:51:23',4,1),
+(327,7,'2026-02-23 10:51:23',1,1),
+(328,1,'2026-02-23 10:51:23',1,1),
+(329,4,'2026-02-23 10:51:23',1,1),
+(330,5,'2026-02-23 10:51:23',5,1),
+(331,4,'2026-02-23 10:51:23',4,1),
+(332,5,'2026-02-23 10:51:23',1,1),
+(333,6,'2026-02-23 10:51:23',4,1),
+(334,3,'2026-02-23 10:51:23',3,1),
+(335,4,'2026-02-23 10:51:23',4,1),
+(336,3,'2026-02-23 10:51:23',4,1),
+(337,6,'2026-02-23 10:51:23',3,1),
+(338,1,'2026-02-23 10:51:23',3,1),
+(339,7,'2026-02-23 10:51:23',4,1),
+(340,6,'2026-02-23 10:51:23',1,1),
+(341,4,'2026-02-23 10:51:23',4,1),
+(342,6,'2026-02-23 10:51:23',5,1),
+(343,1,'2026-02-23 10:51:23',4,1),
+(344,1,'2026-02-23 10:51:23',5,1),
+(345,5,'2026-02-23 10:51:23',3,1),
+(346,3,'2026-02-23 10:51:23',5,1),
+(347,5,'2026-02-23 10:51:23',2,1),
+(348,4,'2026-02-23 10:51:23',1,1),
+(349,7,'2026-02-23 10:51:23',5,1),
+(350,6,'2026-02-23 10:51:23',3,1),
+(351,4,'2026-02-23 10:51:23',1,1),
+(352,5,'2026-02-23 10:51:23',3,1),
+(353,3,'2026-02-23 10:51:23',3,1),
+(354,5,'2026-02-23 10:51:23',3,1),
+(355,5,'2026-02-23 10:51:23',3,1),
+(356,4,'2026-02-23 10:51:23',3,1),
+(357,1,'2026-02-23 10:51:23',5,1),
+(358,3,'2026-02-23 10:51:23',5,1),
+(359,5,'2026-02-23 10:51:23',5,1),
+(360,1,'2026-02-23 10:51:23',2,1),
+(361,7,'2026-02-23 10:51:23',1,1),
+(362,1,'2026-02-23 10:51:23',3,1),
+(363,7,'2026-02-23 10:51:23',4,1),
+(364,7,'2026-02-23 10:51:23',5,1),
+(365,4,'2026-02-23 10:51:23',5,1),
+(366,6,'2026-02-23 10:51:23',1,1),
+(367,1,'2026-02-23 10:51:23',5,1),
+(368,6,'2026-02-23 10:51:23',4,1),
+(369,7,'2026-02-23 10:51:23',1,1),
+(370,6,'2026-02-23 10:51:23',3,1),
+(371,6,'2026-02-23 10:51:23',3,1),
+(372,7,'2026-02-23 10:51:23',5,1),
+(373,5,'2026-02-23 10:51:23',5,1),
+(374,4,'2026-02-23 10:51:23',5,1),
+(375,3,'2026-02-23 10:51:23',4,1),
+(376,4,'2026-02-23 10:51:23',5,1),
+(377,3,'2026-02-23 10:51:23',5,1),
+(378,3,'2026-02-23 10:51:23',4,1),
+(379,4,'2026-02-23 10:51:23',3,1),
+(380,6,'2026-02-23 10:51:23',5,1),
+(381,3,'2026-02-23 10:51:23',2,1),
+(382,6,'2026-02-23 10:51:23',3,1),
+(383,4,'2026-02-23 10:51:23',2,1),
+(384,5,'2026-02-23 10:51:23',1,1),
+(385,7,'2026-02-23 10:51:23',2,1),
+(386,5,'2026-02-23 10:51:23',5,1),
+(387,3,'2026-02-23 10:51:23',5,1),
+(388,4,'2026-02-23 10:51:23',5,1),
+(389,3,'2026-02-23 10:51:23',1,1),
+(390,5,'2026-02-23 10:51:23',4,1),
+(391,7,'2026-02-23 10:51:23',3,1),
+(392,1,'2026-02-23 10:51:23',1,1),
+(393,3,'2026-02-23 10:51:23',3,1),
+(394,1,'2026-02-23 10:51:23',2,1),
+(395,6,'2026-02-23 10:51:24',3,1),
+(396,4,'2026-02-23 10:51:24',4,1),
+(397,4,'2026-02-23 10:51:24',4,1),
+(398,5,'2026-02-23 10:51:24',1,1),
+(399,6,'2026-02-23 10:51:24',5,1),
+(400,4,'2026-02-23 10:51:24',3,1),
+(401,6,'2026-02-23 10:51:24',3,1),
+(402,5,'2026-02-23 10:51:24',5,1),
+(403,6,'2026-02-23 10:51:24',5,1),
+(404,3,'2026-02-23 10:51:24',4,1),
+(405,4,'2026-02-23 10:51:24',3,1),
+(406,1,'2026-02-23 10:51:24',5,1),
+(407,1,'2026-02-23 10:51:24',3,1),
+(408,4,'2026-02-23 10:51:24',3,1),
+(409,4,'2026-02-23 10:51:24',1,1),
+(410,5,'2026-02-23 10:51:24',3,1),
+(411,7,'2026-02-23 10:51:24',5,1),
+(412,6,'2026-02-23 10:51:24',2,1),
+(413,1,'2026-02-23 10:51:24',3,1),
+(414,7,'2026-02-23 10:51:24',5,1),
+(415,4,'2026-02-23 10:51:24',5,1),
+(416,3,'2026-02-23 10:51:24',3,1),
+(417,5,'2026-02-23 10:51:24',2,1),
+(418,7,'2026-02-23 10:51:24',3,1),
+(419,1,'2026-02-23 10:51:24',2,1),
+(420,6,'2026-02-23 10:51:24',1,1),
+(421,6,'2026-02-23 10:51:24',2,1),
+(422,5,'2026-02-23 10:51:24',3,1),
+(423,7,'2026-02-23 10:51:24',2,1),
+(424,7,'2026-02-23 10:51:24',4,1),
+(425,1,'2026-02-23 10:51:24',1,1),
+(426,7,'2026-02-23 10:51:24',3,1),
+(427,4,'2026-02-23 10:51:24',3,1),
+(428,5,'2026-02-23 10:51:24',2,1),
+(429,1,'2026-02-23 10:51:24',4,1),
+(430,4,'2026-02-23 10:51:24',5,1),
+(431,3,'2026-02-23 10:51:24',3,1),
+(432,1,'2026-02-23 10:51:24',2,1),
+(433,6,'2026-02-23 10:51:24',5,1),
+(434,1,'2026-02-23 10:51:24',4,1),
+(435,6,'2026-02-23 10:51:24',2,1),
+(436,3,'2026-02-23 10:51:24',1,1),
+(437,5,'2026-02-23 10:51:24',5,1),
+(438,3,'2026-02-23 10:51:24',5,1),
+(439,1,'2026-02-23 10:51:24',3,1),
+(440,3,'2026-02-23 10:51:24',2,1),
+(441,1,'2026-02-23 10:51:24',5,1),
+(442,5,'2026-02-23 10:51:24',3,1),
+(443,3,'2026-02-23 10:51:24',5,1),
+(444,3,'2026-02-23 10:51:24',2,1),
+(445,7,'2026-02-23 10:51:24',5,1),
+(446,3,'2026-02-23 10:51:24',1,1),
+(447,5,'2026-02-23 10:51:24',2,1),
+(448,1,'2026-02-23 10:51:24',4,1),
+(449,7,'2026-02-23 10:51:24',1,1),
+(450,4,'2026-02-23 10:51:24',2,1),
+(451,5,'2026-02-23 10:51:24',2,1),
+(452,5,'2026-02-23 10:51:24',2,1),
+(453,7,'2026-02-23 10:51:24',4,1),
+(454,4,'2026-02-23 10:51:24',2,1),
+(455,3,'2026-02-23 10:51:24',4,1),
+(456,6,'2026-02-23 10:51:24',3,1),
+(457,6,'2026-02-23 10:51:24',2,1),
+(458,6,'2026-02-23 10:51:24',3,1),
+(459,4,'2026-02-23 10:51:24',1,1),
+(460,4,'2026-02-23 10:51:24',3,1),
+(461,1,'2026-02-23 10:51:24',1,1),
+(462,5,'2026-02-23 10:51:24',5,1),
+(463,5,'2026-02-23 10:51:24',5,1),
+(464,3,'2026-02-23 10:51:24',1,1),
+(465,6,'2026-02-23 10:51:24',4,1),
+(466,7,'2026-02-23 10:51:24',4,1),
+(467,4,'2026-02-23 10:51:24',3,1),
+(468,6,'2026-02-23 10:51:24',1,1),
+(469,3,'2026-02-23 10:51:25',2,1),
+(470,1,'2026-02-23 10:51:25',3,1),
+(471,4,'2026-02-23 10:51:25',3,1),
+(472,7,'2026-02-23 10:51:25',2,1),
+(473,1,'2026-02-23 10:51:25',4,1),
+(474,3,'2026-02-23 10:51:25',3,1),
+(475,1,'2026-02-23 10:51:25',1,1),
+(476,7,'2026-02-23 10:51:25',5,1),
+(477,6,'2026-02-23 10:51:25',5,1),
+(478,3,'2026-02-23 10:51:25',2,1),
+(479,7,'2026-02-23 10:51:25',2,1),
+(480,6,'2026-02-23 10:51:25',4,1),
+(481,4,'2026-02-23 10:51:25',5,1),
+(482,1,'2026-02-23 10:51:25',1,1),
+(483,1,'2026-02-23 10:51:25',2,1),
+(484,6,'2026-02-23 10:51:25',3,1),
+(485,3,'2026-02-23 10:51:25',2,1),
+(486,4,'2026-02-23 10:51:25',4,1),
+(487,4,'2026-02-23 10:51:25',2,1),
+(488,7,'2026-02-23 10:51:25',4,1),
+(489,4,'2026-02-23 10:51:25',5,1),
+(490,6,'2026-02-23 10:51:25',5,1),
+(491,3,'2026-02-23 10:51:25',4,1),
+(492,6,'2026-02-23 10:51:25',5,1),
+(493,6,'2026-02-23 10:51:25',5,1),
+(494,4,'2026-02-23 10:51:25',4,1),
+(495,4,'2026-02-23 10:51:25',2,1),
+(496,6,'2026-02-23 10:51:25',3,1),
+(497,5,'2026-02-23 10:51:25',3,1),
+(498,7,'2026-02-23 10:51:25',2,1),
+(499,1,'2026-02-23 10:51:25',1,1),
+(500,1,'2026-02-23 10:51:25',4,1),
+(501,1,'2026-02-23 10:51:25',3,1),
+(502,6,'2026-02-23 10:51:25',5,1),
+(503,7,'2026-02-23 10:51:25',4,1),
+(504,5,'2026-02-23 10:51:25',3,1),
+(505,1,'2026-02-23 10:51:25',3,1),
+(506,1,'2026-02-23 10:51:25',3,1),
+(507,6,'2026-02-23 10:51:25',2,1),
+(508,4,'2026-02-23 10:51:25',1,1),
+(509,1,'2026-02-23 10:51:25',5,1),
+(510,1,'2026-02-23 10:51:25',5,1),
+(511,1,'2026-02-23 10:51:25',5,1),
+(512,7,'2026-02-23 10:51:25',2,1),
+(513,7,'2026-02-23 10:51:25',2,1),
+(514,4,'2026-02-23 10:51:25',4,1),
+(515,5,'2026-02-23 10:51:25',4,1),
+(516,1,'2026-02-23 10:51:25',3,1),
+(517,5,'2026-02-23 10:51:25',3,1),
+(518,3,'2026-02-23 10:51:25',3,1),
+(519,5,'2026-02-23 10:51:25',4,1),
+(520,4,'2026-02-23 10:51:25',2,1),
+(521,3,'2026-02-23 10:51:25',4,1),
+(522,4,'2026-02-23 10:51:25',3,1),
+(523,7,'2026-02-23 10:51:25',5,1),
+(524,1,'2026-02-23 10:51:25',4,1),
+(525,5,'2026-02-23 10:51:25',1,1),
+(526,6,'2026-02-23 10:51:25',3,1),
+(527,7,'2026-02-23 10:51:25',4,1),
+(528,5,'2026-02-23 10:51:25',4,1),
+(529,7,'2026-02-23 10:51:25',5,1),
+(530,5,'2026-02-23 10:51:25',5,1),
+(531,1,'2026-02-23 10:51:25',4,1),
+(532,7,'2026-02-23 10:51:25',2,1),
+(533,5,'2026-02-23 10:51:25',3,1),
+(534,5,'2026-02-23 10:51:25',5,1),
+(535,7,'2026-02-23 10:51:25',2,1),
+(536,3,'2026-02-23 10:51:25',1,1),
+(537,5,'2026-02-23 10:51:25',4,1),
+(538,5,'2026-02-23 10:51:25',5,1),
+(539,1,'2026-02-23 10:51:25',5,1),
+(540,7,'2026-02-23 10:51:25',4,1),
+(541,1,'2026-02-23 10:51:26',1,1),
+(542,7,'2026-02-23 10:51:26',4,1),
+(543,5,'2026-02-23 10:51:26',1,1),
+(544,6,'2026-02-23 10:51:26',3,1),
+(545,5,'2026-02-23 10:51:26',2,1),
+(546,3,'2026-02-23 10:51:26',5,1),
+(547,5,'2026-02-23 10:51:26',4,1),
+(548,1,'2026-02-23 10:51:26',4,1),
+(549,6,'2026-02-23 10:51:26',4,1),
+(550,4,'2026-02-23 12:50:42',1,1),
+(551,5,'2026-02-23 12:50:42',4,1),
+(552,7,'2026-02-23 12:50:42',5,1),
+(553,5,'2026-02-23 12:50:42',2,1),
+(554,1,'2026-02-23 12:50:42',1,1),
+(555,1,'2026-02-23 12:50:42',3,1),
+(556,1,'2026-02-23 12:50:42',3,1),
+(557,1,'2026-02-23 12:50:42',4,1),
+(558,7,'2026-02-23 12:50:42',4,1),
+(559,6,'2026-02-23 12:50:42',5,1),
+(560,6,'2026-02-23 12:50:42',2,1),
+(561,4,'2026-02-23 12:50:42',1,1),
+(562,7,'2026-02-23 12:50:42',4,1),
+(563,7,'2026-02-23 12:50:42',3,1),
+(564,7,'2026-02-23 12:50:42',2,1),
+(565,5,'2026-02-23 12:50:42',3,1),
+(566,4,'2026-02-23 12:50:42',3,1),
+(567,6,'2026-02-23 12:50:42',5,1),
+(568,1,'2026-02-23 12:50:42',3,1),
+(569,1,'2026-02-23 12:50:42',3,1),
+(570,4,'2026-02-23 12:50:42',3,1),
+(571,5,'2026-02-23 12:50:42',1,1),
+(572,3,'2026-02-23 12:50:42',3,1),
+(573,3,'2026-02-23 12:50:42',1,1),
+(574,5,'2026-02-23 12:50:42',4,1),
+(575,1,'2026-02-23 12:50:42',2,1),
+(576,1,'2026-02-23 12:50:42',3,1),
+(577,7,'2026-02-23 12:50:42',2,1),
+(578,1,'2026-02-23 12:50:42',4,1),
+(579,4,'2026-02-23 12:50:42',3,1),
+(580,4,'2026-02-23 12:50:42',1,1),
+(581,1,'2026-02-23 12:50:42',4,1),
+(582,3,'2026-02-23 12:50:42',4,1),
+(583,5,'2026-02-23 12:50:42',4,1),
+(584,1,'2026-02-23 12:50:42',2,1),
+(585,4,'2026-02-23 12:50:42',1,1),
+(586,1,'2026-02-23 12:50:42',4,1),
+(587,1,'2026-02-23 12:50:42',4,1),
+(588,5,'2026-02-23 12:50:42',3,1),
+(589,1,'2026-02-23 12:50:43',5,1),
+(590,7,'2026-02-23 12:50:43',3,1),
+(591,3,'2026-02-23 12:50:43',1,1),
+(592,4,'2026-02-23 12:50:43',1,1),
+(593,7,'2026-02-23 12:50:43',1,1),
+(594,7,'2026-02-23 12:50:43',5,1),
+(595,7,'2026-02-23 12:50:43',3,1),
+(596,1,'2026-02-23 12:50:43',5,1),
+(597,1,'2026-02-23 12:50:43',4,1),
+(598,5,'2026-02-23 12:50:43',4,1),
+(599,3,'2026-02-23 12:50:43',3,1),
+(600,1,'2026-02-23 12:50:43',5,1),
+(601,6,'2026-02-23 12:50:43',3,1),
+(602,4,'2026-02-23 12:50:43',3,1),
+(603,5,'2026-02-23 12:50:43',1,1),
+(604,7,'2026-02-23 12:50:43',4,1),
+(605,4,'2026-02-23 12:50:43',3,1),
+(606,3,'2026-02-23 12:50:43',5,1),
+(607,3,'2026-02-23 12:50:43',3,1),
+(608,5,'2026-02-23 12:50:43',3,1),
+(609,6,'2026-02-23 12:50:43',4,1),
+(610,3,'2026-02-23 12:50:43',5,1),
+(611,1,'2026-02-23 12:50:43',3,1),
+(612,7,'2026-02-23 12:50:43',2,1),
+(613,5,'2026-02-23 12:50:43',4,1),
+(614,5,'2026-02-23 12:50:43',5,1),
+(615,4,'2026-02-23 12:50:43',1,1),
+(616,3,'2026-02-23 12:50:43',2,1),
+(617,3,'2026-02-23 12:50:43',5,1),
+(618,4,'2026-02-23 12:50:43',2,1),
+(619,4,'2026-02-23 12:50:43',4,1),
+(620,1,'2026-02-23 12:50:43',3,1),
+(621,4,'2026-02-23 12:50:43',1,1),
+(622,6,'2026-02-23 12:50:43',5,1),
+(623,4,'2026-02-23 12:50:43',4,1),
+(624,7,'2026-02-23 12:50:43',1,1),
+(625,1,'2026-02-23 12:50:43',3,1),
+(626,3,'2026-02-23 12:50:43',4,1),
+(627,7,'2026-02-23 12:50:43',3,1),
+(628,5,'2026-02-23 12:50:43',3,1),
+(629,5,'2026-02-23 12:50:43',1,1),
+(630,1,'2026-02-23 12:50:43',2,1),
+(631,4,'2026-02-23 12:50:43',4,1),
+(632,3,'2026-02-23 12:50:43',2,1),
+(633,1,'2026-02-23 12:50:43',1,1),
+(634,4,'2026-02-23 12:50:43',1,1),
+(635,4,'2026-02-23 12:50:43',4,1),
+(636,4,'2026-02-23 12:50:43',3,1),
+(637,6,'2026-02-23 12:50:43',3,1),
+(638,4,'2026-02-23 12:50:43',4,1),
+(639,1,'2026-02-23 12:50:43',5,1),
+(640,5,'2026-02-23 12:50:43',3,1),
+(641,3,'2026-02-23 12:50:43',5,1),
+(642,7,'2026-02-23 12:50:43',4,1),
+(643,1,'2026-02-23 12:50:43',3,1),
+(644,1,'2026-02-23 12:50:43',3,1),
+(645,6,'2026-02-23 12:50:43',1,1),
+(646,7,'2026-02-23 12:50:43',4,1),
+(647,1,'2026-02-23 12:50:43',3,1),
+(648,3,'2026-02-23 12:50:43',1,1),
+(649,4,'2026-02-23 12:50:43',1,1),
+(650,7,'2026-02-23 12:50:43',1,1),
+(651,4,'2026-02-23 12:50:43',2,1),
+(652,5,'2026-02-23 12:50:43',2,1),
+(653,1,'2026-02-23 12:50:43',1,1),
+(654,6,'2026-02-23 12:50:44',1,1),
+(655,6,'2026-02-23 12:50:44',1,1),
+(656,6,'2026-02-23 12:50:44',2,1),
+(657,3,'2026-02-23 12:50:44',3,1),
+(658,7,'2026-02-23 12:50:44',1,1),
+(659,3,'2026-02-23 12:50:44',1,1),
+(660,4,'2026-02-23 12:50:44',2,1),
+(661,4,'2026-02-23 12:50:44',2,1),
+(662,6,'2026-02-23 12:50:44',3,1),
+(663,1,'2026-02-23 12:50:44',3,1),
+(664,5,'2026-02-23 12:50:44',5,1),
+(665,3,'2026-02-23 12:50:44',3,1),
+(666,4,'2026-02-23 12:50:44',5,1),
+(667,3,'2026-02-23 12:50:44',4,1),
+(668,7,'2026-02-23 12:50:44',5,1),
+(669,5,'2026-02-23 12:50:44',4,1),
+(670,5,'2026-02-23 12:50:44',2,1),
+(671,4,'2026-02-23 12:50:44',1,1),
+(672,3,'2026-02-23 12:50:44',3,1),
+(673,1,'2026-02-23 12:50:44',3,1),
+(674,4,'2026-02-23 12:50:44',4,1),
+(675,3,'2026-02-23 12:50:44',4,1),
+(676,5,'2026-02-23 12:50:44',5,1),
+(677,3,'2026-02-23 12:50:44',4,1),
+(678,1,'2026-02-23 12:50:44',4,1),
+(679,4,'2026-02-23 12:50:44',2,1),
+(680,4,'2026-02-23 12:50:44',1,1),
+(681,6,'2026-02-23 12:50:44',5,1),
+(682,3,'2026-02-23 12:50:44',1,1),
+(683,5,'2026-02-23 12:50:44',1,1),
+(684,7,'2026-02-23 12:50:44',5,1),
+(685,3,'2026-02-23 12:50:44',5,1),
+(686,6,'2026-02-23 12:50:44',2,1),
+(687,3,'2026-02-23 12:50:44',5,1),
+(688,7,'2026-02-23 12:50:44',4,1),
+(689,1,'2026-02-23 12:50:44',3,1),
+(690,3,'2026-02-23 12:50:44',3,1),
+(691,7,'2026-02-23 12:50:44',3,1),
+(692,4,'2026-02-23 12:50:44',3,1),
+(693,7,'2026-02-23 12:50:44',2,1),
+(694,4,'2026-02-23 12:50:44',5,1),
+(695,1,'2026-02-23 12:50:44',5,1),
+(696,4,'2026-02-23 12:50:44',4,1),
+(697,3,'2026-02-23 12:50:44',2,1),
+(698,6,'2026-02-23 12:50:44',5,1),
+(699,1,'2026-02-23 12:50:44',2,1),
+(700,3,'2026-02-23 12:50:44',3,1),
+(701,4,'2026-02-23 12:50:44',2,1),
+(702,1,'2026-02-23 12:50:44',5,1),
+(703,1,'2026-02-23 12:50:44',5,1),
+(704,4,'2026-02-23 12:50:44',4,1),
+(705,3,'2026-02-23 12:50:44',1,1),
+(706,6,'2026-02-23 12:50:44',4,1),
+(707,4,'2026-02-23 12:50:44',2,1),
+(708,5,'2026-02-23 14:48:46',4,1),
+(709,7,'2026-02-23 15:15:08',1,1),
+(710,5,'2026-02-23 15:15:09',3,1),
+(711,1,'2026-02-24 09:11:46',1,1),
+(712,5,'2026-02-24 09:11:49',5,1),
+(713,7,'2026-02-24 09:11:51',3,1),
+(714,3,'2026-02-24 09:11:52',2,1),
+(715,1,'2026-02-24 09:11:54',2,1),
+(716,6,'2026-02-24 09:11:57',4,1),
+(717,4,'2026-02-24 09:11:58',3,1),
+(718,5,'2026-02-24 09:12:01',4,1),
+(719,4,'2026-02-24 09:12:03',5,1),
+(720,7,'2026-02-24 09:12:05',5,1),
+(721,1,'2026-02-24 09:12:07',3,1),
+(722,6,'2026-02-24 09:12:09',4,1),
+(723,7,'2026-02-24 09:12:12',4,1),
+(724,6,'2026-02-24 09:12:14',1,1),
+(725,7,'2026-02-24 09:12:16',3,1),
+(726,1,'2026-02-24 09:12:17',3,1),
+(727,1,'2026-02-24 09:12:20',1,1),
+(728,1,'2026-02-24 09:12:21',5,1),
+(729,1,'2026-02-24 09:12:21',1,1),
+(730,4,'2026-02-24 09:12:24',2,1),
+(731,7,'2026-02-24 09:12:26',5,1),
+(732,4,'2026-02-24 09:12:27',3,1),
+(733,1,'2026-02-24 09:12:30',1,1),
+(734,1,'2026-02-24 09:12:31',5,1),
+(735,5,'2026-02-24 09:12:34',3,1),
+(736,3,'2026-02-24 09:12:35',5,1),
+(737,5,'2026-02-24 09:12:38',3,1),
+(738,4,'2026-02-24 09:12:39',1,1),
+(739,6,'2026-02-24 09:12:42',5,1),
+(740,5,'2026-02-24 09:12:44',3,1),
+(741,1,'2026-06-24 15:09:58',4,1),
+(742,4,'2026-06-24 15:10:01',2,1),
+(743,5,'2026-06-24 15:10:03',2,1),
+(744,3,'2026-06-24 15:10:04',4,1),
+(745,7,'2026-06-24 15:10:06',5,1),
+(746,5,'2026-06-24 15:10:07',4,1),
+(747,6,'2026-06-24 15:10:09',4,1),
+(748,1,'2026-06-24 15:10:12',1,1),
+(749,4,'2026-06-24 15:10:13',4,1),
+(750,4,'2026-06-24 15:10:15',3,1),
+(751,3,'2026-06-24 15:10:18',4,1),
+(752,7,'2026-06-24 15:10:20',4,1),
+(753,7,'2026-06-24 15:10:23',4,1),
+(754,7,'2026-06-24 15:10:25',4,1),
+(755,7,'2026-06-24 15:10:27',1,1),
+(756,3,'2026-06-24 15:10:34',28,1),
+(757,3,'2026-06-24 15:10:35',39,1),
+(758,1,'2026-06-24 15:10:36',54,1),
+(759,1,'2026-06-24 15:10:36',64,1),
+(760,6,'2026-06-24 15:10:37',5,1),
+(761,3,'2026-06-24 15:10:38',48,1),
+(762,7,'2026-06-24 15:10:39',7,1),
+(763,6,'2026-06-24 15:10:39',26,1),
+(764,3,'2026-06-24 15:10:40',62,1),
+(765,6,'2026-06-24 15:10:41',14,1),
+(766,5,'2026-06-24 15:10:42',10,1),
+(767,7,'2026-06-24 15:10:43',25,1),
+(768,7,'2026-06-24 15:10:43',13,1),
+(769,7,'2026-06-24 15:10:43',29,1),
+(770,7,'2026-06-24 15:10:44',54,1),
+(771,5,'2026-06-24 15:10:45',49,1),
+(772,4,'2026-06-24 15:10:45',38,1),
+(773,3,'2026-06-24 15:10:46',48,1),
+(774,3,'2026-06-24 15:10:46',24,1),
+(775,4,'2026-06-24 15:10:47',31,1),
+(776,3,'2026-06-24 15:10:47',44,1),
+(777,1,'2026-06-24 15:10:48',64,1),
+(778,3,'2026-06-24 15:10:49',7,1),
+(779,3,'2026-06-24 15:10:49',24,1),
+(780,7,'2026-06-24 15:10:50',3,1),
+(781,4,'2026-06-24 15:10:51',53,1),
+(782,3,'2026-06-24 15:10:51',8,1),
+(783,4,'2026-06-24 15:10:52',11,1),
+(784,4,'2026-06-24 15:10:53',63,1),
+(785,1,'2026-06-24 15:10:54',4,1),
+(786,5,'2026-06-24 15:10:54',45,1),
+(787,6,'2026-06-24 15:10:55',28,1),
+(788,1,'2026-06-24 15:10:56',61,1),
+(789,5,'2026-06-24 15:10:57',41,1),
+(790,5,'2026-06-24 15:10:59',48,1),
+(791,6,'2026-06-24 15:10:59',64,1),
+(792,1,'2026-06-24 15:10:59',32,1),
+(793,7,'2026-06-24 15:10:59',39,1),
+(794,4,'2026-06-24 15:10:59',24,1),
+(795,5,'2026-06-24 15:10:59',47,1),
+(796,7,'2026-06-24 15:10:59',54,1),
+(797,3,'2026-06-24 15:10:59',44,1),
+(798,4,'2026-06-24 15:11:00',1,1),
+(799,4,'2026-06-24 15:11:00',15,1),
+(800,6,'2026-06-24 15:11:00',23,1),
+(801,3,'2026-06-24 15:11:00',36,1),
+(802,5,'2026-06-24 15:11:00',8,1),
+(803,4,'2026-06-24 15:11:00',41,1),
+(804,1,'2026-06-24 15:11:00',57,1),
+(805,1,'2026-06-24 15:11:01',17,1),
+(806,5,'2026-06-24 15:11:01',33,1),
+(807,5,'2026-06-24 15:11:01',41,1),
+(808,3,'2026-06-24 15:11:01',40,1),
+(809,7,'2026-06-24 15:11:01',62,1),
+(810,4,'2026-06-24 15:11:02',49,1),
+(811,5,'2026-06-24 15:11:02',54,1),
+(812,7,'2026-06-24 15:11:02',35,1),
+(813,3,'2026-06-24 15:11:02',36,1),
+(814,1,'2026-06-24 15:11:02',4,1),
+(815,6,'2026-06-24 15:11:02',5,1),
+(816,5,'2026-06-24 15:11:03',37,1),
+(817,4,'2026-06-24 15:11:03',65,1),
+(818,3,'2026-06-24 15:11:03',12,1),
+(819,5,'2026-06-24 15:11:03',62,1),
+(820,4,'2026-06-24 15:11:03',5,1),
+(821,1,'2026-06-24 15:11:03',9,1),
+(822,1,'2026-06-24 15:11:03',45,1),
+(823,1,'2026-06-24 15:11:04',2,1),
+(824,7,'2026-06-24 15:11:04',3,1),
+(825,5,'2026-06-24 15:11:04',4,1),
+(826,3,'2026-06-24 15:11:04',62,1),
+(827,1,'2026-06-24 15:11:04',30,1),
+(828,1,'2026-06-24 15:11:04',42,1),
+(829,1,'2026-06-24 15:11:04',54,1),
+(830,7,'2026-06-24 15:11:04',14,1),
+(831,1,'2026-06-24 15:11:04',25,1),
+(832,5,'2026-06-24 15:11:05',2,1),
+(833,1,'2026-06-24 15:11:05',23,1),
+(834,6,'2026-06-24 15:11:05',26,1),
+(835,4,'2026-06-24 15:11:05',39,1),
+(836,6,'2026-06-24 15:11:05',57,1),
+(837,4,'2026-06-24 15:11:05',42,1),
+(838,6,'2026-06-24 15:11:05',52,1),
+(839,3,'2026-06-24 15:11:05',8,1),
+(840,3,'2026-06-24 15:11:05',57,1),
+(841,1,'2026-06-24 15:11:05',18,1),
+(842,7,'2026-06-24 15:11:06',17,1),
+(843,3,'2026-06-24 15:11:06',10,1),
+(844,3,'2026-06-24 15:11:06',33,1),
+(845,3,'2026-06-24 15:11:06',12,1),
+(846,3,'2026-06-24 15:11:06',23,1),
+(847,1,'2026-06-24 15:11:06',59,1),
+(848,5,'2026-06-24 15:11:06',50,1),
+(849,3,'2026-06-24 15:11:06',46,1),
+(850,1,'2026-06-24 15:11:06',18,1),
+(851,3,'2026-06-24 15:11:07',34,1),
+(852,1,'2026-06-24 15:11:07',45,1),
+(853,1,'2026-06-24 15:11:07',7,1),
+(854,7,'2026-06-24 15:11:07',30,1),
+(855,4,'2026-06-24 15:11:07',58,1),
+(856,5,'2026-06-24 15:11:07',32,1),
+(857,1,'2026-06-24 15:11:07',21,1),
+(858,7,'2026-06-24 15:11:08',56,1),
+(859,4,'2026-06-24 15:11:08',30,1),
+(860,5,'2026-06-24 15:11:08',45,1),
+(861,7,'2026-06-24 15:11:08',24,1),
+(862,4,'2026-06-24 15:11:08',55,1),
+(863,3,'2026-06-24 15:11:08',25,1),
+(864,6,'2026-06-24 15:11:08',59,1),
+(865,6,'2026-06-24 15:11:09',65,1),
+(866,6,'2026-06-24 15:11:09',9,1),
+(867,4,'2026-06-24 15:11:09',26,1),
+(868,1,'2026-06-24 15:11:09',22,1),
+(869,3,'2026-06-24 15:11:09',21,1),
+(870,1,'2026-06-24 15:11:09',3,1),
+(871,7,'2026-06-24 15:11:09',14,1),
+(872,1,'2026-06-24 15:11:10',65,1),
+(873,6,'2026-06-24 15:11:10',32,1),
+(874,6,'2026-06-24 15:11:10',15,1),
+(875,5,'2026-06-24 15:11:10',60,1),
+(876,3,'2026-06-24 15:11:10',50,1),
+(877,1,'2026-06-24 15:11:10',65,1),
+(878,4,'2026-06-24 15:11:11',21,1),
+(879,5,'2026-06-24 15:11:11',65,1),
+(880,6,'2026-06-24 15:11:11',38,1),
+(881,5,'2026-06-24 15:11:11',31,1),
+(882,5,'2026-06-24 15:11:11',50,1),
+(883,7,'2026-06-24 15:11:11',41,1),
+(884,6,'2026-06-24 15:11:11',1,1),
+(885,6,'2026-06-24 15:11:11',57,1),
+(886,3,'2026-06-24 15:11:11',13,1),
+(887,4,'2026-06-24 15:11:12',34,1),
+(888,3,'2026-06-24 15:11:12',45,1),
+(889,7,'2026-06-24 15:11:12',21,1),
+(890,3,'2026-06-24 15:11:12',21,1),
+(891,6,'2026-06-24 15:11:12',53,1),
+(892,7,'2026-06-24 15:11:12',42,1),
+(893,3,'2026-06-24 15:11:12',59,1),
+(894,5,'2026-06-24 15:11:12',50,1),
+(895,3,'2026-06-24 15:11:13',62,1),
+(896,1,'2026-06-24 15:11:13',62,1),
+(897,5,'2026-06-24 15:11:13',56,1),
+(898,1,'2026-06-24 15:11:13',55,1),
+(899,3,'2026-06-24 15:11:13',16,1),
+(900,6,'2026-06-24 15:11:13',5,1),
+(901,5,'2026-06-24 15:11:13',58,1),
+(902,3,'2026-06-24 15:11:14',44,1),
+(903,4,'2026-06-24 15:11:14',60,1),
+(904,7,'2026-06-24 15:11:14',25,1),
+(905,3,'2026-06-24 15:11:14',61,1),
+(906,5,'2026-06-24 15:11:14',58,1),
+(907,7,'2026-06-24 15:11:14',50,1),
+(908,5,'2026-06-24 15:11:14',20,1),
+(909,4,'2026-06-24 15:11:14',40,1),
+(910,4,'2026-06-24 15:11:15',19,1),
+(911,3,'2026-06-24 15:11:15',13,1),
+(912,3,'2026-06-24 15:11:15',63,1),
+(913,4,'2026-06-24 15:11:15',57,1),
+(914,6,'2026-06-24 15:11:15',25,1),
+(915,5,'2026-06-24 15:11:15',50,1),
+(916,4,'2026-06-24 15:11:15',22,1),
+(917,6,'2026-06-24 15:11:15',29,1),
+(918,7,'2026-06-24 15:11:16',65,1),
+(919,7,'2026-06-24 15:11:16',24,1),
+(920,6,'2026-06-24 15:11:16',53,1),
+(921,6,'2026-06-24 15:11:16',39,1),
+(922,7,'2026-06-24 15:11:16',24,1),
+(923,7,'2026-06-24 15:11:16',53,1),
+(924,4,'2026-06-24 15:11:16',4,1),
+(925,1,'2026-06-24 15:11:16',11,1),
+(926,6,'2026-06-24 15:11:17',27,1),
+(927,5,'2026-06-24 15:11:17',7,1),
+(928,4,'2026-06-24 15:11:17',40,1),
+(929,3,'2026-06-24 15:11:17',54,1),
+(930,6,'2026-06-24 15:11:17',5,1),
+(931,6,'2026-06-24 15:11:17',24,1),
+(932,4,'2026-06-24 15:11:17',12,1),
+(933,3,'2026-06-24 15:11:17',32,1),
+(934,7,'2026-06-24 15:11:18',30,1),
+(935,7,'2026-06-24 15:11:18',60,1),
+(936,1,'2026-06-24 15:11:18',37,1),
+(937,7,'2026-06-24 15:11:18',37,1),
+(938,1,'2026-06-24 15:11:18',30,1),
+(939,3,'2026-06-24 15:11:18',23,1),
+(940,1,'2026-06-24 15:11:18',57,1),
+(941,5,'2026-06-24 15:11:19',1,1),
+(942,5,'2026-06-24 15:11:19',40,1),
+(943,3,'2026-06-24 15:11:19',64,1),
+(944,4,'2026-06-24 15:11:20',45,1),
+(945,6,'2026-06-24 15:11:20',40,1),
+(946,5,'2026-06-24 15:11:20',51,1),
+(947,7,'2026-06-24 15:11:20',22,1),
+(948,1,'2026-06-24 15:11:21',6,1),
+(949,6,'2026-06-24 15:11:21',5,1),
+(950,3,'2026-06-24 15:11:21',1,1),
+(951,7,'2026-06-24 15:11:21',24,1),
+(952,7,'2026-06-24 15:11:22',43,1),
+(953,3,'2026-06-24 15:11:23',18,1),
+(954,6,'2026-06-24 15:11:23',31,1),
+(955,4,'2026-06-24 15:11:25',7,1),
+(956,3,'2026-06-24 15:11:26',31,1),
+(957,3,'2026-06-24 15:11:26',64,1),
+(958,3,'2026-06-24 15:11:26',39,1),
+(959,6,'2026-06-24 15:11:27',47,1),
+(960,7,'2026-06-24 15:11:27',45,1),
+(961,1,'2026-06-24 15:11:27',65,1),
+(962,3,'2026-06-24 15:11:27',43,1),
+(963,7,'2026-06-24 15:11:27',42,1),
+(964,7,'2026-06-24 15:11:28',7,1),
+(965,6,'2026-06-24 15:11:28',6,1),
+(966,1,'2026-06-24 15:11:29',12,1),
+(967,4,'2026-06-24 15:11:29',30,1),
+(968,6,'2026-06-24 15:11:30',33,1),
+(969,3,'2026-06-24 15:11:30',11,1),
+(970,6,'2026-06-24 15:11:30',29,1),
+(971,6,'2026-06-24 15:11:30',61,1),
+(972,3,'2026-06-24 15:11:30',59,1),
+(973,6,'2026-06-24 15:11:30',3,1),
+(974,5,'2026-06-24 15:11:30',44,1),
+(975,1,'2026-06-24 15:11:31',17,1),
+(976,5,'2026-06-24 15:11:31',14,1),
+(977,3,'2026-06-24 15:11:31',56,1),
+(978,7,'2026-06-24 15:11:31',13,1),
+(979,4,'2026-06-24 15:11:31',13,1),
+(980,5,'2026-06-24 15:11:31',16,1),
+(981,5,'2026-06-24 15:11:31',51,1),
+(982,5,'2026-06-24 15:11:31',14,1),
+(983,4,'2026-06-24 15:11:32',47,1),
+(984,3,'2026-06-24 15:11:32',38,1),
+(985,1,'2026-06-24 15:11:32',23,1),
+(986,1,'2026-06-24 15:11:32',57,1),
+(987,7,'2026-06-24 15:11:32',27,1),
+(988,6,'2026-06-24 15:11:32',10,1),
+(989,7,'2026-06-24 15:11:33',23,1),
+(990,7,'2026-06-24 15:11:33',32,1),
+(991,7,'2026-06-24 15:11:33',11,1),
+(992,6,'2026-06-24 15:11:33',15,1),
+(993,4,'2026-06-24 15:11:33',47,1),
+(994,6,'2026-06-24 15:11:34',63,1),
+(995,4,'2026-06-24 15:11:36',11,1),
+(996,4,'2026-06-24 15:11:36',65,1),
+(997,4,'2026-06-24 15:11:37',26,1),
+(998,6,'2026-06-24 15:11:37',10,1),
+(999,7,'2026-06-24 15:11:37',50,1),
+(1000,3,'2026-06-24 15:11:37',55,1),
+(1001,5,'2026-06-24 15:11:37',50,1),
+(1002,1,'2026-06-24 15:11:37',28,1),
+(1003,4,'2026-06-24 15:11:38',2,1),
+(1004,1,'2026-06-24 15:11:38',24,1),
+(1005,4,'2026-06-24 15:11:38',24,1),
+(1006,1,'2026-06-24 15:11:38',50,1),
+(1007,3,'2026-06-24 15:11:38',16,1),
+(1008,7,'2026-06-24 15:11:38',54,1),
+(1009,1,'2026-06-24 15:11:38',6,1),
+(1010,5,'2026-06-24 15:11:38',28,1),
+(1011,6,'2026-06-24 15:11:38',43,1),
+(1012,7,'2026-06-24 15:11:39',59,1),
+(1013,6,'2026-06-24 15:11:39',59,1),
+(1014,5,'2026-06-24 15:11:39',13,1),
+(1015,6,'2026-06-24 15:11:39',12,1),
+(1016,6,'2026-06-24 15:11:39',31,1),
+(1017,6,'2026-06-24 15:11:39',10,1),
+(1018,7,'2026-06-24 15:11:40',63,1),
+(1019,5,'2026-06-24 15:11:40',34,1),
+(1020,4,'2026-06-24 15:11:40',57,1),
+(1021,6,'2026-06-24 15:11:40',14,1),
+(1022,4,'2026-06-24 15:11:40',31,1),
+(1023,3,'2026-06-24 15:11:40',31,1),
+(1024,1,'2026-06-24 15:11:41',46,1),
+(1025,7,'2026-06-24 15:11:41',61,1),
+(1026,1,'2026-06-24 15:11:41',35,1),
+(1027,5,'2026-06-24 15:11:41',37,1),
+(1028,6,'2026-06-24 15:11:41',26,1),
+(1029,5,'2026-06-24 15:11:41',33,1),
+(1030,3,'2026-06-24 15:11:42',60,1),
+(1031,4,'2026-06-24 15:11:42',33,1),
+(1032,3,'2026-06-24 15:11:42',17,1),
+(1033,6,'2026-06-24 15:11:42',25,1),
+(1034,4,'2026-06-24 15:11:42',25,1),
+(1035,6,'2026-06-24 15:11:42',42,1),
+(1036,4,'2026-06-24 15:11:42',46,1),
+(1037,5,'2026-06-24 15:11:42',46,1),
+(1038,6,'2026-06-24 15:11:43',29,1),
+(1039,3,'2026-06-24 15:11:43',57,1),
+(1040,1,'2026-06-24 15:11:43',44,1),
+(1041,6,'2026-06-24 15:11:43',28,1),
+(1042,5,'2026-06-24 15:11:43',46,1),
+(1043,4,'2026-06-24 15:11:43',34,1),
+(1044,6,'2026-06-24 15:11:43',38,1),
+(1045,3,'2026-06-24 15:11:44',21,1),
+(1046,1,'2026-06-24 15:11:44',61,1),
+(1047,5,'2026-06-24 15:11:44',51,1),
+(1048,6,'2026-06-24 15:11:44',41,1),
+(1049,4,'2026-06-24 15:11:44',5,1),
+(1050,6,'2026-06-24 15:11:44',53,1),
+(1051,1,'2026-06-24 15:11:44',61,1),
+(1052,6,'2026-06-24 15:11:44',34,1),
+(1053,5,'2026-06-24 15:11:44',47,1),
+(1054,5,'2026-06-24 15:11:44',52,1),
+(1055,5,'2026-06-24 15:11:44',47,1),
+(1056,3,'2026-06-24 15:11:45',31,1),
+(1057,1,'2026-06-24 15:11:45',50,1),
+(1058,4,'2026-06-24 15:11:45',5,1),
+(1059,4,'2026-06-24 15:11:45',51,1),
+(1060,1,'2026-06-24 15:11:45',49,1),
+(1061,6,'2026-06-24 15:11:45',18,1),
+(1062,3,'2026-06-24 15:11:45',37,1),
+(1063,6,'2026-06-24 15:11:45',59,1),
+(1064,5,'2026-06-24 15:11:46',53,1),
+(1065,1,'2026-06-24 15:11:46',1,1),
+(1066,1,'2026-06-24 15:11:46',64,1),
+(1067,5,'2026-06-24 15:11:46',48,1),
+(1068,4,'2026-06-24 15:11:46',20,1),
+(1069,3,'2026-06-24 15:11:46',64,1),
+(1070,4,'2026-06-24 15:11:46',54,1),
+(1071,1,'2026-06-24 15:11:47',43,1),
+(1072,5,'2026-06-24 15:11:47',32,1),
+(1073,6,'2026-06-24 15:11:47',44,1),
+(1074,4,'2026-06-24 15:11:47',20,1),
+(1075,5,'2026-06-24 15:11:47',33,1),
+(1076,6,'2026-06-24 15:11:47',44,1),
+(1077,7,'2026-06-24 15:11:48',8,1),
+(1078,1,'2026-06-24 15:11:48',8,1),
+(1079,3,'2026-06-24 15:11:48',22,1),
+(1080,5,'2026-06-24 15:11:48',8,1),
+(1081,6,'2026-06-24 15:11:48',12,1),
+(1082,6,'2026-06-24 15:11:48',53,1),
+(1083,1,'2026-06-24 15:11:48',24,1),
+(1084,4,'2026-06-24 15:11:48',40,1),
+(1085,3,'2026-06-24 15:11:49',51,1),
+(1086,3,'2026-06-24 15:11:49',27,1),
+(1087,7,'2026-06-24 15:11:49',30,1),
+(1088,3,'2026-06-24 15:11:49',25,1),
+(1089,5,'2026-06-24 15:11:49',24,1),
+(1090,3,'2026-06-24 15:11:49',12,1),
+(1091,6,'2026-06-24 15:11:49',31,1),
+(1092,6,'2026-06-24 15:11:50',3,1),
+(1093,6,'2026-06-24 15:11:50',60,1),
+(1094,7,'2026-06-24 15:11:50',45,1),
+(1095,5,'2026-06-24 15:11:50',42,1),
+(1096,1,'2026-06-24 15:11:50',33,1),
+(1097,4,'2026-06-24 15:11:50',18,1),
+(1098,1,'2026-06-24 15:11:50',16,1),
+(1099,6,'2026-06-24 15:11:51',10,1),
+(1100,1,'2026-06-24 15:11:51',34,1),
+(1101,1,'2026-06-24 15:11:51',7,1),
+(1102,4,'2026-06-24 15:11:51',35,1),
+(1103,4,'2026-06-24 15:11:51',15,1),
+(1104,7,'2026-06-24 15:11:51',55,1),
+(1105,7,'2026-06-24 15:11:51',6,1),
+(1106,1,'2026-06-24 15:11:51',55,1),
+(1107,1,'2026-06-24 15:11:52',52,1),
+(1108,3,'2026-06-24 15:11:52',65,1),
+(1109,7,'2026-06-24 15:11:52',43,1),
+(1110,6,'2026-06-24 15:11:52',64,1),
+(1111,4,'2026-06-24 15:11:52',7,1),
+(1112,3,'2026-06-24 15:11:52',22,1),
+(1113,1,'2026-06-24 15:11:53',9,1),
+(1114,3,'2026-06-24 15:11:53',44,1),
+(1115,7,'2026-06-24 15:11:53',35,1),
+(1116,1,'2026-06-24 15:11:53',49,1),
+(1117,4,'2026-06-24 15:11:53',61,1),
+(1118,6,'2026-06-24 15:11:53',14,1),
+(1119,4,'2026-06-24 15:11:53',51,1),
+(1120,4,'2026-06-24 15:11:53',40,1),
+(1121,5,'2026-06-24 15:11:54',35,1),
+(1122,7,'2026-06-24 15:11:54',48,1),
+(1123,7,'2026-06-24 15:11:54',23,1),
+(1124,5,'2026-06-24 15:11:54',18,1),
+(1125,3,'2026-06-24 15:11:54',38,1),
+(1126,6,'2026-06-24 15:11:54',55,1),
+(1127,1,'2026-06-24 15:11:54',32,1),
+(1128,5,'2026-06-24 15:11:54',8,1),
+(1129,5,'2026-06-24 15:11:55',56,1),
+(1130,5,'2026-06-24 15:11:55',5,1),
+(1131,7,'2026-06-24 15:11:55',13,1),
+(1132,1,'2026-06-24 15:11:55',51,1),
+(1133,5,'2026-06-24 15:11:55',12,1),
+(1134,7,'2026-06-24 15:11:55',63,1),
+(1135,4,'2026-06-24 15:11:56',49,1),
+(1136,6,'2026-06-24 15:11:56',24,1),
+(1137,5,'2026-06-24 15:11:56',62,1),
+(1138,1,'2026-06-24 15:11:56',50,1),
+(1139,6,'2026-06-24 15:11:56',24,1),
+(1140,1,'2026-06-24 15:11:56',54,1),
+(1141,5,'2026-06-24 15:11:56',1,1),
+(1142,4,'2026-06-24 15:11:56',12,1),
+(1143,6,'2026-06-24 15:11:56',12,1),
+(1144,4,'2026-06-24 15:11:57',29,1),
+(1145,7,'2026-06-24 15:11:57',65,1),
+(1146,4,'2026-06-24 15:11:57',57,1),
+(1147,7,'2026-06-24 15:11:57',16,1),
+(1148,6,'2026-06-24 15:11:57',47,1),
+(1149,6,'2026-06-24 15:11:57',35,1),
+(1150,1,'2026-06-24 15:11:58',64,1),
+(1151,5,'2026-06-24 15:11:58',33,1),
+(1152,1,'2026-06-24 15:11:58',62,1),
+(1153,1,'2026-06-24 15:11:58',33,1),
+(1154,6,'2026-06-24 15:11:58',42,1),
+(1155,1,'2026-06-24 15:11:58',39,1),
+(1156,1,'2026-06-24 15:11:58',40,1),
+(1157,1,'2026-06-24 15:11:58',44,1),
+(1158,7,'2026-06-24 15:11:58',11,1),
+(1159,6,'2026-06-24 15:11:58',62,1),
+(1160,5,'2026-06-24 15:11:59',27,1),
+(1161,6,'2026-06-24 15:11:59',34,1),
+(1162,7,'2026-06-24 15:11:59',47,1),
+(1163,6,'2026-06-24 15:11:59',29,1),
+(1164,4,'2026-06-24 15:11:59',21,1),
+(1165,1,'2026-06-24 15:11:59',50,1),
+(1166,1,'2026-06-24 15:11:59',59,1),
+(1167,3,'2026-06-24 15:11:59',63,1),
+(1168,1,'2026-06-24 15:11:59',9,1),
+(1169,4,'2026-06-24 15:11:59',37,1),
+(1170,5,'2026-06-24 15:12:00',32,1),
+(1171,5,'2026-06-24 15:12:00',13,1),
+(1172,1,'2026-06-24 15:12:00',7,1),
+(1173,5,'2026-06-24 15:12:00',57,1),
+(1174,1,'2026-06-24 15:12:00',54,1),
+(1175,6,'2026-06-24 15:12:00',38,1),
+(1176,4,'2026-06-24 15:12:01',55,1),
+(1177,4,'2026-06-24 15:12:01',33,1),
+(1178,3,'2026-06-24 15:12:01',11,1),
+(1179,1,'2026-06-24 15:12:01',16,1),
+(1180,6,'2026-06-24 15:12:01',48,1),
+(1181,3,'2026-06-24 15:12:01',38,1),
+(1182,4,'2026-06-24 15:12:01',28,1),
+(1183,1,'2026-06-24 15:12:02',46,1),
+(1184,3,'2026-06-24 15:12:02',52,1),
+(1185,6,'2026-06-24 15:12:02',38,1),
+(1186,3,'2026-06-24 15:12:02',19,1),
+(1187,5,'2026-06-24 15:12:02',8,1),
+(1188,5,'2026-06-24 15:12:02',56,1),
+(1189,4,'2026-06-24 15:12:02',10,1),
+(1190,6,'2026-06-24 15:12:03',14,1),
+(1191,3,'2026-06-24 15:12:03',13,1),
+(1192,6,'2026-06-24 15:12:03',40,1),
+(1193,5,'2026-06-24 15:12:03',3,1),
+(1194,4,'2026-06-24 15:12:03',34,1),
+(1195,4,'2026-06-24 15:12:03',30,1),
+(1196,4,'2026-06-24 15:12:03',52,1),
+(1197,3,'2026-06-24 15:12:03',33,1),
+(1198,4,'2026-06-24 15:12:04',24,1),
+(1199,6,'2026-06-24 15:12:04',55,1),
+(1200,4,'2026-06-24 15:12:04',5,1),
+(1201,1,'2026-06-24 15:12:04',27,1),
+(1202,3,'2026-06-24 15:12:04',20,1),
+(1203,4,'2026-06-24 15:12:04',56,1),
+(1204,6,'2026-06-24 15:12:04',4,1),
+(1205,5,'2026-06-24 15:12:04',2,1),
+(1206,5,'2026-06-24 15:12:05',16,1),
+(1207,7,'2026-06-24 15:12:05',7,1),
+(1208,3,'2026-06-24 15:12:05',20,1),
+(1209,1,'2026-06-24 15:12:05',25,1),
+(1210,6,'2026-06-24 15:12:05',29,1),
+(1211,4,'2026-06-24 15:12:05',21,1),
+(1212,6,'2026-06-24 15:12:06',45,1),
+(1213,6,'2026-06-24 15:12:06',22,1),
+(1214,1,'2026-06-24 15:12:06',45,1),
+(1215,7,'2026-06-24 15:12:06',41,1),
+(1216,6,'2026-06-24 15:12:06',33,1),
+(1217,1,'2026-06-24 15:12:06',37,1),
+(1218,1,'2026-06-24 15:12:06',8,1),
+(1219,4,'2026-06-24 15:12:06',57,1),
+(1220,1,'2026-06-24 15:12:06',49,1),
+(1221,3,'2026-06-24 15:12:07',43,1),
+(1222,3,'2026-06-24 15:12:07',20,1),
+(1223,3,'2026-06-24 15:12:07',60,1),
+(1224,4,'2026-06-24 15:12:07',46,1),
+(1225,3,'2026-06-24 15:12:07',39,1),
+(1226,6,'2026-06-24 15:12:08',3,1),
+(1227,6,'2026-06-24 15:12:08',51,1),
+(1228,7,'2026-06-24 15:12:08',64,1),
+(1229,1,'2026-06-24 15:12:08',1,1),
+(1230,6,'2026-06-24 15:12:08',57,1),
+(1231,4,'2026-06-24 15:12:08',64,1),
+(1232,3,'2026-06-24 15:12:08',57,1),
+(1233,5,'2026-06-24 15:12:09',60,1),
+(1234,7,'2026-06-24 15:12:09',59,1),
+(1235,4,'2026-06-24 15:12:09',7,1),
+(1236,1,'2026-06-24 15:12:09',50,1),
+(1237,1,'2026-06-24 15:12:09',6,1),
+(1238,7,'2026-06-24 15:12:09',61,1),
+(1239,4,'2026-06-24 15:12:09',18,1),
+(1240,3,'2026-06-24 15:12:09',2,1),
+(1241,7,'2026-06-24 15:12:09',8,1),
+(1242,7,'2026-06-24 15:12:10',8,1),
+(1243,5,'2026-06-24 15:12:10',26,1),
+(1244,1,'2026-06-24 15:12:10',7,1),
+(1245,3,'2026-06-24 15:12:10',7,1),
+(1246,3,'2026-06-24 15:12:10',41,1),
+(1247,6,'2026-06-24 15:12:10',59,1),
+(1248,6,'2026-06-24 15:12:10',46,1),
+(1249,4,'2026-06-24 15:12:10',40,1),
+(1250,6,'2026-06-24 15:12:10',2,1),
+(1251,3,'2026-06-24 15:12:11',62,1),
+(1252,1,'2026-06-24 15:12:11',62,1),
+(1253,1,'2026-06-24 15:12:11',52,1),
+(1254,6,'2026-06-24 15:12:11',57,1),
+(1255,1,'2026-06-24 15:12:11',22,1),
+(1256,5,'2026-06-24 15:12:11',58,1),
+(1257,3,'2026-06-24 15:12:11',15,1),
+(1258,1,'2026-06-24 15:12:11',50,1),
+(1259,1,'2026-06-24 15:12:12',53,1),
+(1260,1,'2026-06-24 15:12:12',7,1),
+(1261,6,'2026-06-24 15:12:12',60,1),
+(1262,1,'2026-06-24 15:12:12',36,1),
+(1263,4,'2026-06-24 15:12:12',11,1),
+(1264,6,'2026-06-24 15:12:12',59,1),
+(1265,5,'2026-06-24 15:12:12',58,1),
+(1266,4,'2026-06-24 15:12:12',59,1),
+(1267,1,'2026-06-24 15:12:13',38,1),
+(1268,6,'2026-06-24 15:12:13',21,1),
+(1269,3,'2026-06-24 15:12:13',5,1),
+(1270,4,'2026-06-24 15:12:13',43,1),
+(1271,1,'2026-06-24 15:12:13',50,1),
+(1272,6,'2026-06-24 15:12:13',37,1),
+(1273,5,'2026-06-24 15:12:13',56,1),
+(1274,1,'2026-06-24 15:12:13',33,1),
+(1275,3,'2026-06-24 15:12:14',38,1),
+(1276,3,'2026-06-24 15:12:14',10,1),
+(1277,3,'2026-06-24 15:12:14',37,1),
+(1278,5,'2026-06-24 15:12:14',2,1),
+(1279,4,'2026-06-24 15:12:14',50,1),
+(1280,5,'2026-06-24 15:12:14',46,1),
+(1281,4,'2026-06-24 15:12:14',25,1),
+(1282,1,'2026-06-24 15:12:14',13,1),
+(1283,5,'2026-06-24 15:12:15',43,1),
+(1284,1,'2026-06-24 15:12:15',13,1),
+(1285,4,'2026-06-24 15:12:15',61,1),
+(1286,6,'2026-06-24 15:12:15',57,1),
+(1287,3,'2026-06-24 15:12:15',19,1),
+(1288,6,'2026-06-24 15:12:15',22,1),
+(1289,4,'2026-06-24 15:12:15',5,1),
+(1290,4,'2026-06-24 15:12:15',38,1),
+(1291,7,'2026-06-24 15:12:15',26,1),
+(1292,1,'2026-06-24 15:12:16',14,1),
+(1293,6,'2026-06-24 15:12:16',53,1),
+(1294,4,'2026-06-24 15:12:16',58,1),
+(1295,4,'2026-06-24 15:12:16',7,1),
+(1296,6,'2026-06-24 15:12:16',48,1),
+(1297,3,'2026-06-24 15:12:16',62,1),
+(1298,7,'2026-06-24 15:12:16',44,1),
+(1299,7,'2026-06-24 15:12:17',6,1),
+(1300,3,'2026-06-24 15:12:17',10,1),
+(1301,1,'2026-06-24 15:12:17',45,1),
+(1302,6,'2026-06-24 15:12:17',18,1),
+(1303,3,'2026-06-24 15:12:17',27,1),
+(1304,7,'2026-06-24 15:12:17',6,1),
+(1305,6,'2026-06-24 15:12:18',35,1),
+(1306,3,'2026-06-24 15:12:18',24,1),
+(1307,3,'2026-06-24 15:12:18',6,1),
+(1308,6,'2026-06-24 15:12:18',29,1),
+(1309,4,'2026-06-24 15:12:18',55,1),
+(1310,5,'2026-06-24 15:12:18',44,1),
+(1311,6,'2026-06-24 15:12:18',26,1),
+(1312,6,'2026-06-24 15:12:18',41,1),
+(1313,3,'2026-06-24 15:12:19',31,1),
+(1314,5,'2026-06-24 15:12:19',17,1),
+(1315,3,'2026-06-24 15:12:19',31,1),
+(1316,6,'2026-06-24 15:12:19',51,1),
+(1317,5,'2026-06-24 15:12:19',61,1),
+(1318,3,'2026-06-24 15:12:19',14,1),
+(1319,1,'2026-06-24 15:12:19',35,1),
+(1320,4,'2026-06-24 15:12:19',62,1),
+(1321,4,'2026-06-24 15:12:19',9,1),
+(1322,7,'2026-06-24 15:12:20',21,1),
+(1323,1,'2026-06-24 15:12:20',44,1),
+(1324,1,'2026-06-24 15:12:20',61,1),
+(1325,3,'2026-06-24 15:12:20',58,1),
+(1326,4,'2026-06-24 15:12:20',20,1),
+(1327,7,'2026-06-24 15:12:20',17,1),
+(1328,1,'2026-06-24 15:12:20',54,1),
+(1329,6,'2026-06-24 15:12:20',9,1),
+(1330,4,'2026-06-24 15:12:20',39,1),
+(1331,3,'2026-06-24 15:12:21',11,1),
+(1332,1,'2026-06-24 15:12:21',8,1),
+(1333,4,'2026-06-24 15:12:21',8,1),
+(1334,1,'2026-06-24 15:12:21',7,1),
+(1335,4,'2026-06-24 15:12:21',59,1),
+(1336,1,'2026-06-24 15:12:21',3,1),
+(1337,3,'2026-06-24 15:12:21',39,1),
+(1338,4,'2026-06-24 15:12:22',14,1),
+(1339,3,'2026-06-24 15:12:22',64,1),
+(1340,3,'2026-06-24 15:12:22',43,1),
+(1341,1,'2026-06-24 15:12:22',23,1),
+(1342,1,'2026-06-24 15:12:22',32,1),
+(1343,1,'2026-06-24 15:12:22',11,1),
+(1344,5,'2026-06-24 15:12:22',4,1),
+(1345,5,'2026-06-24 15:12:22',51,1),
+(1346,4,'2026-06-24 15:12:23',57,1),
+(1347,5,'2026-06-24 15:12:23',8,1),
+(1348,1,'2026-06-24 15:12:23',40,1),
+(1349,7,'2026-06-24 15:12:23',15,1),
+(1350,7,'2026-06-24 15:12:23',45,1),
+(1351,7,'2026-06-24 15:12:23',30,1),
+(1352,5,'2026-06-24 15:12:23',45,1),
+(1353,5,'2026-06-24 15:12:23',26,1),
+(1354,3,'2026-06-24 15:12:23',5,1),
+(1355,1,'2026-06-24 15:12:24',26,1),
+(1356,3,'2026-06-24 15:12:24',4,1),
+(1357,5,'2026-06-24 15:12:24',25,1),
+(1358,1,'2026-06-24 15:12:24',65,1),
+(1359,3,'2026-06-24 15:12:24',23,1),
+(1360,5,'2026-06-24 15:12:24',55,1),
+(1361,1,'2026-06-24 15:12:24',13,1),
+(1362,6,'2026-06-24 15:12:25',45,1),
+(1363,4,'2026-06-24 15:12:25',42,1),
+(1364,1,'2026-06-24 15:12:25',30,1),
+(1365,1,'2026-06-24 15:12:25',21,1),
+(1366,3,'2026-06-24 15:12:25',30,1),
+(1367,3,'2026-06-24 15:12:25',1,1),
+(1368,7,'2026-06-24 15:12:25',31,1),
+(1369,6,'2026-06-24 15:12:25',2,1),
+(1370,1,'2026-06-24 15:12:26',49,1),
+(1371,6,'2026-06-24 15:12:26',39,1),
+(1372,3,'2026-06-24 15:12:26',21,1),
+(1373,6,'2026-06-24 15:12:26',29,1),
+(1374,5,'2026-06-24 15:12:26',16,1),
+(1375,5,'2026-06-24 15:12:26',10,1),
+(1376,6,'2026-06-24 15:12:26',21,1),
+(1377,5,'2026-06-24 15:12:26',53,1),
+(1378,7,'2026-06-24 15:12:27',37,1),
+(1379,7,'2026-06-24 15:12:27',11,1),
+(1380,1,'2026-06-24 15:12:27',42,1),
+(1381,7,'2026-06-24 15:12:27',44,1),
+(1382,5,'2026-06-24 15:12:27',54,1),
+(1383,6,'2026-06-24 15:12:27',47,1),
+(1384,7,'2026-06-24 15:12:27',32,1),
+(1385,7,'2026-06-24 15:12:27',17,1),
+(1386,7,'2026-06-24 15:12:28',33,1),
+(1387,3,'2026-06-24 15:12:28',65,1),
+(1388,7,'2026-06-24 15:12:28',47,1),
+(1389,3,'2026-06-24 15:12:28',33,1),
+(1390,5,'2026-06-24 15:12:28',4,1),
+(1391,7,'2026-06-24 15:12:28',6,1),
+(1392,6,'2026-06-24 15:12:28',26,1),
+(1393,1,'2026-06-24 15:12:28',16,1),
+(1394,4,'2026-06-24 15:12:29',52,1),
+(1395,7,'2026-06-24 15:12:29',21,1),
+(1396,1,'2026-06-24 15:12:29',54,1),
+(1397,4,'2026-06-24 15:12:29',6,1),
+(1398,6,'2026-06-24 15:12:29',41,1),
+(1399,1,'2026-06-24 15:12:29',27,1),
+(1400,7,'2026-06-24 15:12:29',45,1),
+(1401,1,'2026-06-24 15:12:29',24,1),
+(1402,7,'2026-06-24 15:12:30',36,1),
+(1403,4,'2026-06-24 15:12:30',6,1),
+(1404,4,'2026-06-24 15:12:30',22,1),
+(1405,7,'2026-06-24 15:12:30',10,1),
+(1406,7,'2026-06-24 15:12:30',26,1),
+(1407,7,'2026-06-24 15:12:30',25,1),
+(1408,7,'2026-06-24 15:12:30',63,1),
+(1409,4,'2026-06-24 15:12:31',52,1),
+(1410,7,'2026-06-24 15:12:31',10,1),
+(1411,3,'2026-06-24 15:12:31',24,1),
+(1412,4,'2026-06-24 15:12:31',42,1),
+(1413,5,'2026-06-24 15:12:31',62,1),
+(1414,5,'2026-06-24 15:12:31',30,1),
+(1415,1,'2026-06-24 15:12:31',57,1),
+(1416,4,'2026-06-24 15:12:31',64,1),
+(1417,6,'2026-06-24 15:12:31',57,1),
+(1418,7,'2026-06-24 15:12:32',19,1),
+(1419,6,'2026-06-24 15:12:32',55,1),
+(1420,7,'2026-06-24 15:12:32',10,1),
+(1421,7,'2026-06-24 15:12:32',24,1),
+(1422,7,'2026-06-24 15:12:32',37,1),
+(1423,5,'2026-06-24 15:12:32',17,1),
+(1424,5,'2026-06-24 15:12:32',18,1),
+(1425,5,'2026-06-24 15:12:33',58,1),
+(1426,4,'2026-06-24 15:12:33',53,1),
+(1427,1,'2026-06-24 15:12:33',28,1),
+(1428,5,'2026-06-24 15:12:33',42,1),
+(1429,7,'2026-06-24 15:12:33',56,1),
+(1430,7,'2026-06-24 15:12:33',35,1),
+(1431,5,'2026-06-24 15:12:33',38,1),
+(1432,5,'2026-06-24 15:12:33',54,1),
+(1433,6,'2026-06-24 15:12:33',62,1),
+(1434,6,'2026-06-24 15:12:34',15,1),
+(1435,6,'2026-06-24 15:12:34',64,1),
+(1436,3,'2026-06-24 15:12:34',6,1),
+(1437,1,'2026-06-24 15:12:34',64,1),
+(1438,1,'2026-06-24 15:12:34',63,1),
+(1439,6,'2026-06-24 15:12:34',55,1),
+(1440,3,'2026-06-24 15:12:34',8,1),
+(1441,1,'2026-06-24 15:12:34',24,1),
+(1442,7,'2026-06-24 15:12:35',33,1),
+(1443,1,'2026-06-24 15:12:35',43,1),
+(1444,4,'2026-06-24 15:12:35',38,1),
+(1445,5,'2026-06-24 15:12:35',51,1),
+(1446,5,'2026-06-24 15:12:35',50,1),
+(1447,6,'2026-06-24 15:12:35',17,1),
+(1448,5,'2026-06-24 15:12:35',48,1),
+(1449,3,'2026-06-24 15:12:36',18,1),
+(1450,7,'2026-06-24 15:12:36',53,1),
+(1451,1,'2026-06-24 15:12:36',9,1),
+(1452,5,'2026-06-24 15:12:36',22,1),
+(1453,6,'2026-06-24 15:12:36',41,1),
+(1454,4,'2026-06-24 15:12:36',20,1),
+(1455,4,'2026-06-24 15:12:36',65,1),
+(1456,3,'2026-06-24 15:12:37',46,1),
+(1457,5,'2026-06-24 15:12:37',33,1),
+(1458,6,'2026-06-24 15:12:37',52,1),
+(1459,5,'2026-06-24 15:12:37',8,1),
+(1460,7,'2026-06-24 15:12:37',27,1),
+(1461,5,'2026-06-24 15:12:37',21,1),
+(1462,4,'2026-06-24 15:12:37',17,1),
+(1463,5,'2026-06-24 15:12:38',44,1),
+(1464,1,'2026-06-24 15:12:38',37,1),
+(1465,6,'2026-06-24 15:12:38',5,1),
+(1466,4,'2026-06-24 15:12:38',41,1),
+(1467,6,'2026-06-24 15:12:38',59,1),
+(1468,4,'2026-06-24 15:12:38',19,1),
+(1469,6,'2026-06-24 15:12:38',33,1),
+(1470,4,'2026-06-24 15:12:39',40,1),
+(1471,3,'2026-06-24 15:12:39',47,1),
+(1472,7,'2026-06-24 15:12:39',26,1),
+(1473,7,'2026-06-24 15:12:39',31,1),
+(1474,5,'2026-06-24 15:12:39',59,1),
+(1475,1,'2026-06-24 15:12:40',56,1),
+(1476,3,'2026-06-24 15:12:40',15,1),
+(1477,5,'2026-06-24 15:12:40',51,1),
+(1478,5,'2026-06-24 15:12:40',53,1),
+(1479,3,'2026-06-24 15:12:40',56,1),
+(1480,4,'2026-06-24 15:12:40',27,1),
+(1481,1,'2026-06-24 15:12:40',27,1),
+(1482,4,'2026-06-24 15:12:41',34,1),
+(1483,4,'2026-06-24 15:12:41',44,1),
+(1484,6,'2026-06-24 15:12:41',5,1),
+(1485,7,'2026-06-24 15:12:41',29,1),
+(1486,6,'2026-06-24 15:12:41',65,1),
+(1487,3,'2026-06-24 15:12:41',5,1),
+(1488,7,'2026-06-24 15:12:41',4,1),
+(1489,4,'2026-06-24 15:12:42',61,1),
+(1490,6,'2026-06-24 15:12:42',6,1),
+(1491,5,'2026-06-24 15:12:42',53,1),
+(1492,4,'2026-06-24 15:12:42',32,1),
+(1493,6,'2026-06-24 15:12:42',52,1),
+(1494,5,'2026-06-24 15:12:42',16,1),
+(1495,6,'2026-06-24 15:12:42',16,1),
+(1496,3,'2026-06-24 15:12:42',7,1),
+(1497,5,'2026-06-24 15:12:42',3,1),
+(1498,1,'2026-06-24 15:12:43',42,1),
+(1499,5,'2026-06-24 15:12:43',48,1),
+(1500,5,'2026-06-24 15:12:43',28,1),
+(1501,7,'2026-06-24 15:12:43',57,1),
+(1502,1,'2026-06-24 15:12:43',23,1),
+(1503,7,'2026-06-24 15:12:43',32,1),
+(1504,5,'2026-06-24 15:12:43',60,1),
+(1505,6,'2026-06-24 15:12:43',45,1),
+(1506,3,'2026-06-24 15:12:43',7,1),
+(1507,5,'2026-06-24 15:12:44',3,1),
+(1508,1,'2026-06-24 15:12:44',13,1),
+(1509,4,'2026-06-24 15:12:44',57,1),
+(1510,5,'2026-06-24 15:12:44',18,1),
+(1511,3,'2026-06-24 15:12:44',38,1),
+(1512,6,'2026-06-24 15:12:44',41,1),
+(1513,3,'2026-06-24 15:12:44',24,1),
+(1514,6,'2026-06-24 15:12:44',46,1),
+(1515,7,'2026-06-24 15:12:45',46,1),
+(1516,5,'2026-06-24 15:12:45',43,1),
+(1517,4,'2026-06-24 15:12:45',38,1),
+(1518,5,'2026-06-24 15:12:45',15,1),
+(1519,5,'2026-06-24 15:12:45',39,1),
+(1520,3,'2026-06-24 15:12:45',35,1),
+(1521,7,'2026-06-24 15:12:45',18,1),
+(1522,1,'2026-06-24 15:12:46',34,1),
+(1523,4,'2026-06-24 15:12:46',56,1),
+(1524,1,'2026-06-24 15:12:46',29,1),
+(1525,7,'2026-06-24 15:12:46',57,1),
+(1526,1,'2026-06-24 15:12:46',54,1),
+(1527,7,'2026-06-24 15:12:46',4,1),
+(1528,6,'2026-06-24 15:12:47',52,1),
+(1529,7,'2026-06-24 15:12:47',57,1),
+(1530,3,'2026-06-24 15:12:47',53,1),
+(1531,6,'2026-06-24 15:12:47',10,1),
+(1532,3,'2026-06-24 15:12:47',3,1),
+(1533,3,'2026-06-24 15:12:47',42,1),
+(1534,6,'2026-06-24 15:12:47',46,1),
+(1535,4,'2026-06-24 15:12:47',19,1),
+(1536,3,'2026-06-24 15:12:48',26,1),
+(1537,5,'2026-06-24 15:12:48',41,1),
+(1538,7,'2026-06-24 15:12:48',8,1),
+(1539,4,'2026-06-24 15:12:48',28,1),
+(1540,5,'2026-06-24 15:12:48',55,1),
+(1541,1,'2026-06-24 15:12:48',40,1),
+(1542,3,'2026-06-24 15:12:49',53,1),
+(1543,4,'2026-06-24 15:12:49',65,1),
+(1544,1,'2026-06-24 15:12:49',10,1),
+(1545,3,'2026-06-24 15:12:49',34,1),
+(1546,1,'2026-06-24 15:12:49',23,1),
+(1547,7,'2026-06-24 15:12:49',10,1),
+(1548,6,'2026-06-24 15:12:49',63,1),
+(1549,7,'2026-06-24 15:12:49',50,1),
+(1550,4,'2026-06-24 15:12:50',64,1),
+(1551,1,'2026-06-24 15:12:50',19,1),
+(1552,5,'2026-06-24 15:12:50',19,1),
+(1553,5,'2026-06-24 15:12:50',34,1),
+(1554,7,'2026-06-24 15:12:50',50,1),
+(1555,7,'2026-06-24 15:12:50',62,1),
+(1556,3,'2026-06-24 15:12:50',26,1),
+(1557,6,'2026-06-24 15:12:50',41,1),
+(1558,1,'2026-06-24 15:12:51',53,1),
+(1559,6,'2026-06-24 15:12:51',58,1),
+(1560,1,'2026-06-24 15:12:51',22,1),
+(1561,6,'2026-06-24 15:12:51',51,1),
+(1562,3,'2026-06-24 15:12:51',23,1),
+(1563,3,'2026-06-24 15:12:51',61,1),
+(1564,4,'2026-06-24 15:12:52',46,1),
+(1565,5,'2026-06-24 15:12:52',39,1),
+(1566,5,'2026-06-24 15:12:52',36,1),
+(1567,5,'2026-06-24 15:12:52',22,1),
+(1568,1,'2026-06-24 15:12:52',10,1),
+(1569,4,'2026-06-24 15:12:52',41,1),
+(1570,1,'2026-06-24 15:12:52',32,1),
+(1571,1,'2026-06-24 15:12:53',6,1),
+(1572,5,'2026-06-24 15:12:53',24,1),
+(1573,3,'2026-06-24 15:12:53',6,1),
+(1574,6,'2026-06-24 15:12:53',12,1),
+(1575,7,'2026-06-24 15:12:53',16,1),
+(1576,7,'2026-06-24 15:12:53',6,1),
+(1577,1,'2026-06-24 15:12:53',8,1),
+(1578,5,'2026-06-24 15:12:54',51,1),
+(1579,7,'2026-06-24 15:12:54',41,1),
+(1580,6,'2026-06-24 15:12:54',60,1),
+(1581,1,'2026-06-24 15:12:54',32,1),
+(1582,7,'2026-06-24 15:12:54',7,1),
+(1583,6,'2026-06-24 15:12:54',16,1),
+(1584,7,'2026-06-24 15:12:54',54,1),
+(1585,5,'2026-06-24 15:12:54',44,1),
+(1586,6,'2026-06-24 15:12:55',5,1),
+(1587,4,'2026-06-24 15:12:55',3,1),
+(1588,5,'2026-06-24 15:12:55',5,1),
+(1589,3,'2026-06-24 15:12:55',10,1),
+(1590,7,'2026-06-24 15:12:55',30,1),
+(1591,7,'2026-06-24 15:12:55',6,1),
+(1592,6,'2026-06-24 15:12:55',53,1),
+(1593,1,'2026-06-24 15:12:55',48,1),
+(1594,3,'2026-06-24 15:12:55',54,1),
+(1595,5,'2026-06-24 15:12:56',41,1),
+(1596,1,'2026-06-24 15:12:56',9,1),
+(1597,1,'2026-06-24 15:12:56',27,1),
+(1598,6,'2026-06-24 15:12:56',49,1),
+(1599,7,'2026-06-24 15:12:56',15,1),
+(1600,6,'2026-06-24 15:12:56',13,1),
+(1601,7,'2026-06-24 15:12:56',28,1),
+(1602,3,'2026-06-24 15:12:56',53,1),
+(1603,7,'2026-06-24 15:12:56',55,1),
+(1604,3,'2026-06-24 15:12:57',9,1),
+(1605,5,'2026-06-24 15:12:57',54,1),
+(1606,6,'2026-06-24 15:12:57',30,1),
+(1607,4,'2026-06-24 15:12:57',53,1),
+(1608,4,'2026-06-24 15:12:57',24,1),
+(1609,5,'2026-06-24 15:12:57',8,1),
+(1610,4,'2026-06-24 15:12:58',26,1),
+(1611,6,'2026-06-24 15:12:58',11,1),
+(1612,5,'2026-06-24 15:12:58',65,1),
+(1613,3,'2026-06-24 15:12:58',9,1),
+(1614,5,'2026-06-24 15:12:58',50,1),
+(1615,7,'2026-06-24 15:12:58',54,1),
+(1616,1,'2026-06-24 15:12:58',10,1),
+(1617,3,'2026-06-24 15:12:58',52,1),
+(1618,7,'2026-06-24 15:12:58',45,1),
+(1619,4,'2026-06-24 15:12:59',34,1),
+(1620,3,'2026-06-24 15:12:59',10,1),
+(1621,6,'2026-06-24 15:12:59',52,1),
+(1622,5,'2026-06-24 15:12:59',56,1),
+(1623,6,'2026-06-24 15:12:59',20,1),
+(1624,5,'2026-06-24 15:12:59',56,1),
+(1625,6,'2026-06-24 15:12:59',65,1),
+(1626,5,'2026-06-24 15:12:59',9,1),
+(1627,1,'2026-06-24 15:13:00',21,1),
+(1628,4,'2026-06-24 15:13:00',19,1),
+(1629,3,'2026-06-24 15:13:00',17,1),
+(1630,1,'2026-06-24 15:13:00',21,1),
+(1631,1,'2026-06-24 15:13:00',62,1),
+(1632,5,'2026-06-24 15:13:00',28,1),
+(1633,1,'2026-06-24 15:13:00',15,1),
+(1634,1,'2026-06-24 15:13:00',43,1),
+(1635,6,'2026-06-24 15:13:00',37,1),
+(1636,4,'2026-06-24 15:13:01',40,1),
+(1637,5,'2026-06-24 15:13:01',44,1),
+(1638,3,'2026-06-24 15:13:01',57,1),
+(1639,7,'2026-06-24 15:13:01',63,1),
+(1640,7,'2026-06-24 15:13:01',24,1),
+(1641,5,'2026-06-24 15:13:01',31,1),
+(1642,6,'2026-06-24 15:13:01',5,1),
+(1643,6,'2026-06-24 15:13:02',9,1),
+(1644,7,'2026-06-24 15:13:02',30,1),
+(1645,3,'2026-06-24 15:13:02',7,1),
+(1646,7,'2026-06-24 15:13:02',11,1),
+(1647,5,'2026-06-24 15:13:02',40,1),
+(1648,4,'2026-06-24 15:13:02',31,1),
+(1649,7,'2026-06-24 15:13:02',20,1),
+(1650,1,'2026-06-24 15:13:03',41,1),
+(1651,7,'2026-06-24 15:13:03',63,1),
+(1652,6,'2026-06-24 15:13:03',6,1),
+(1653,3,'2026-06-24 15:13:03',43,1),
+(1654,7,'2026-06-24 15:13:03',18,1),
+(1655,3,'2026-06-24 15:13:03',48,1),
+(1656,6,'2026-06-24 15:13:03',5,1),
+(1657,5,'2026-06-24 15:13:04',63,1),
+(1658,1,'2026-06-24 15:13:04',35,1),
+(1659,5,'2026-06-24 15:13:04',10,1),
+(1660,7,'2026-06-24 15:13:04',4,1),
+(1661,4,'2026-06-24 15:13:04',18,1),
+(1662,6,'2026-06-24 15:13:04',15,1),
+(1663,3,'2026-06-24 15:13:04',50,1),
+(1664,5,'2026-06-24 15:13:05',13,1),
+(1665,1,'2026-06-24 15:13:05',50,1),
+(1666,3,'2026-06-24 15:13:05',37,1),
+(1667,7,'2026-06-24 16:12:53',17,1),
+(1668,1,'2026-06-24 16:12:54',37,1),
+(1669,1,'2026-06-24 16:12:54',51,1),
+(1670,6,'2026-06-24 16:12:54',47,1),
+(1671,5,'2026-06-24 16:12:54',43,1),
+(1672,4,'2026-06-24 16:12:54',45,1),
+(1673,1,'2026-06-24 16:12:54',5,1),
+(1674,6,'2026-06-24 16:12:54',5,1),
+(1675,4,'2026-06-24 16:12:55',62,1),
+(1676,5,'2026-06-24 16:12:55',49,1),
+(1677,4,'2026-06-24 16:12:55',53,1),
+(1678,7,'2026-06-24 16:12:55',21,1),
+(1679,7,'2026-06-24 16:12:55',65,1),
+(1680,3,'2026-06-24 16:12:55',2,1),
+(1681,3,'2026-06-24 16:12:55',34,1),
+(1682,6,'2026-06-24 16:12:56',26,1),
+(1683,7,'2026-06-24 16:12:56',29,1),
+(1684,6,'2026-06-24 16:12:56',42,1),
+(1685,7,'2026-06-24 16:12:56',50,1),
+(1686,1,'2026-06-24 16:12:56',30,1),
+(1687,7,'2026-06-24 16:12:56',18,1),
+(1688,5,'2026-06-24 16:12:57',59,1),
+(1689,5,'2026-06-24 16:12:57',40,1),
+(1690,1,'2026-06-24 16:12:57',38,1),
+(1691,1,'2026-06-24 16:12:57',40,1),
+(1692,4,'2026-06-24 16:12:57',51,1),
+(1693,6,'2026-06-24 16:12:57',6,1),
+(1694,5,'2026-06-24 16:12:57',50,1),
+(1695,6,'2026-06-24 16:12:58',9,1),
+(1696,5,'2026-06-24 16:12:58',16,1),
+(1697,1,'2026-06-24 16:12:58',25,1),
+(1698,6,'2026-06-24 16:12:58',57,1),
+(1699,7,'2026-06-24 16:12:58',12,1),
+(1700,5,'2026-06-24 16:12:58',44,1),
+(1701,4,'2026-06-24 16:12:58',28,1),
+(1702,7,'2026-06-24 16:12:58',47,1),
+(1703,5,'2026-06-24 16:12:59',50,1),
+(1704,4,'2026-06-24 16:12:59',16,1),
+(1705,7,'2026-06-24 16:12:59',49,1),
+(1706,7,'2026-06-24 16:12:59',5,1),
+(1707,4,'2026-06-24 16:12:59',42,1),
+(1708,1,'2026-06-24 16:12:59',57,1),
+(1709,1,'2026-06-24 16:13:00',61,1),
+(1710,4,'2026-06-24 16:13:00',18,1),
+(1711,1,'2026-06-24 16:13:00',35,1),
+(1712,7,'2026-06-24 16:13:00',47,1),
+(1713,7,'2026-06-24 16:13:00',49,1),
+(1714,1,'2026-06-24 16:13:00',15,1),
+(1715,3,'2026-06-24 16:13:00',58,1),
+(1716,4,'2026-06-24 16:13:01',5,1),
+(1717,7,'2026-06-24 16:13:01',10,1),
+(1718,5,'2026-06-24 16:13:01',2,1),
+(1719,3,'2026-06-24 16:13:01',40,1),
+(1720,1,'2026-06-24 16:13:01',18,1),
+(1721,5,'2026-06-24 16:13:01',45,1),
+(1722,3,'2026-06-24 16:13:01',31,1),
+(1723,6,'2026-06-24 16:13:02',16,1),
+(1724,4,'2026-06-24 16:13:02',34,1),
+(1725,5,'2026-06-24 16:13:02',41,1),
+(1726,3,'2026-06-24 16:13:02',16,1),
+(1727,1,'2026-06-24 16:13:02',15,1),
+(1728,6,'2026-06-24 16:13:02',55,1),
+(1729,7,'2026-06-24 16:13:02',9,1),
+(1730,7,'2026-06-24 16:13:02',49,1),
+(1731,3,'2026-06-24 16:13:03',14,1),
+(1732,3,'2026-06-24 16:13:04',39,1),
+(1733,1,'2026-06-24 16:13:04',51,1),
+(1734,1,'2026-06-24 16:13:04',37,1),
+(1735,6,'2026-06-24 16:13:04',30,1),
+(1736,6,'2026-06-24 16:13:04',61,1),
+(1737,5,'2026-06-24 16:13:04',65,1),
+(1738,1,'2026-06-24 16:13:04',63,1),
+(1739,4,'2026-06-24 16:13:04',27,1),
+(1740,7,'2026-06-24 16:13:05',29,1),
+(1741,6,'2026-06-24 16:13:05',5,1),
+(1742,5,'2026-06-24 16:13:05',41,1),
+(1743,1,'2026-06-24 16:13:05',6,1),
+(1744,4,'2026-06-24 16:13:05',54,1),
+(1745,4,'2026-06-24 16:13:05',23,1),
+(1746,1,'2026-06-24 16:13:06',4,1),
+(1747,3,'2026-06-24 16:13:06',48,1),
+(1748,4,'2026-06-24 16:13:06',37,1),
+(1749,3,'2026-06-24 16:13:06',59,1),
+(1750,6,'2026-06-24 16:13:06',11,1),
+(1751,1,'2026-06-24 16:13:06',27,1),
+(1752,3,'2026-06-24 16:13:06',43,1),
+(1753,4,'2026-06-24 16:13:07',19,1),
+(1754,7,'2026-06-24 16:13:07',8,1),
+(1755,5,'2026-06-24 16:13:07',6,1),
+(1756,5,'2026-06-24 16:13:07',52,1),
+(1757,4,'2026-06-24 16:13:07',48,1),
+(1758,7,'2026-06-24 16:13:07',62,1),
+(1759,6,'2026-06-24 16:13:08',62,1),
+(1760,6,'2026-06-24 16:13:08',13,1),
+(1761,3,'2026-06-24 16:13:08',44,1),
+(1762,5,'2026-06-24 16:13:08',54,1),
+(1763,5,'2026-06-24 16:13:08',34,1),
+(1764,1,'2026-06-24 16:13:08',22,1),
+(1765,1,'2026-06-24 16:13:08',11,1),
+(1766,3,'2026-06-24 16:13:08',64,1),
+(1767,5,'2026-06-24 16:13:08',27,1),
+(1768,1,'2026-06-24 16:13:09',64,1),
+(1769,1,'2026-06-24 16:13:09',62,1),
+(1770,6,'2026-06-24 16:13:09',20,1),
+(1771,5,'2026-06-24 16:13:09',63,1),
+(1772,1,'2026-06-24 16:13:09',19,1),
+(1773,1,'2026-06-24 16:13:09',54,1),
+(1774,6,'2026-06-24 16:13:10',63,1),
+(1775,5,'2026-06-24 16:13:10',14,1),
+(1776,4,'2026-06-24 16:13:10',51,1),
+(1777,6,'2026-06-24 16:13:10',43,1),
+(1778,3,'2026-06-24 16:13:10',60,1),
+(1779,4,'2026-06-24 16:13:10',12,1),
+(1780,3,'2026-06-24 16:13:11',20,1),
+(1781,5,'2026-06-24 16:13:11',5,1),
+(1782,7,'2026-06-24 16:13:11',46,1),
+(1783,6,'2026-06-24 16:13:11',46,1),
+(1784,4,'2026-06-24 16:13:11',49,1),
+(1785,7,'2026-06-24 16:13:11',26,1),
+(1786,4,'2026-06-24 16:13:11',47,1),
+(1787,5,'2026-06-24 16:13:11',61,1),
+(1788,5,'2026-06-24 16:13:11',24,1),
+(1789,3,'2026-06-24 16:13:12',38,1),
+(1790,4,'2026-06-24 16:13:12',47,1),
+(1791,3,'2026-06-24 16:13:12',45,1),
+(1792,7,'2026-06-24 16:13:12',45,1),
+(1793,6,'2026-06-24 16:13:12',28,1),
+(1794,5,'2026-06-24 16:13:12',16,1),
+(1795,6,'2026-06-24 16:13:12',14,1),
+(1796,5,'2026-06-24 16:13:12',53,1),
+(1797,3,'2026-06-24 16:13:12',16,1),
+(1798,1,'2026-06-24 16:13:12',56,1),
+(1799,4,'2026-06-24 16:13:13',54,1),
+(1800,1,'2026-06-24 16:13:13',57,1),
+(1801,1,'2026-06-24 16:13:13',45,1),
+(1802,5,'2026-06-24 16:13:13',14,1),
+(1803,3,'2026-06-24 16:13:13',58,1),
+(1804,6,'2026-06-24 16:13:13',44,1),
+(1805,4,'2026-06-24 16:13:13',39,1),
+(1806,3,'2026-06-24 16:13:14',58,1),
+(1807,6,'2026-06-24 16:13:14',21,1),
+(1808,5,'2026-06-24 16:13:14',7,1),
+(1809,3,'2026-06-24 16:13:14',61,1),
+(1810,1,'2026-06-24 16:13:14',31,1),
+(1811,6,'2026-06-24 16:13:14',36,1),
+(1812,1,'2026-06-24 16:13:14',57,1),
+(1813,5,'2026-06-24 16:13:15',43,1),
+(1814,6,'2026-06-24 16:13:15',59,1),
+(1815,4,'2026-06-24 16:13:15',42,1),
+(1816,5,'2026-06-24 16:13:15',58,1),
+(1817,3,'2026-06-24 16:13:15',65,1),
+(1818,1,'2026-06-24 16:13:15',38,1),
+(1819,3,'2026-06-24 16:13:16',32,1),
+(1820,7,'2026-06-24 16:13:16',14,1),
+(1821,5,'2026-06-24 16:13:16',41,1),
+(1822,4,'2026-06-24 16:13:16',9,1),
+(1823,3,'2026-06-24 16:13:16',33,1),
+(1824,6,'2026-06-24 16:13:16',5,1),
+(1825,7,'2026-06-24 16:13:16',41,1),
+(1826,7,'2026-06-24 16:13:17',40,1),
+(1827,7,'2026-06-24 16:13:17',30,1),
+(1828,5,'2026-06-24 16:13:17',36,1),
+(1829,3,'2026-06-24 16:13:17',49,1),
+(1830,3,'2026-06-24 16:13:17',10,1),
+(1831,5,'2026-06-24 16:13:17',33,1),
+(1832,5,'2026-06-24 16:13:17',8,1),
+(1833,7,'2026-06-24 16:13:17',56,1),
+(1834,6,'2026-06-24 16:13:17',15,1),
+(1835,5,'2026-06-24 16:13:17',39,1),
+(1836,3,'2026-06-24 16:13:17',64,1),
+(1837,5,'2026-06-24 16:13:18',38,1),
+(1838,3,'2026-06-24 16:13:18',5,1),
+(1839,3,'2026-06-24 16:13:18',57,1),
+(1840,5,'2026-06-24 16:13:18',40,1),
+(1841,7,'2026-06-24 16:13:18',21,1),
+(1842,3,'2026-06-24 16:13:18',60,1),
+(1843,1,'2026-06-24 16:13:18',3,1),
+(1844,3,'2026-06-24 16:13:18',40,1),
+(1845,7,'2026-06-24 16:13:18',58,1),
+(1846,5,'2026-06-24 16:13:19',40,1),
+(1847,5,'2026-06-24 16:13:19',50,1),
+(1848,4,'2026-06-24 16:13:19',4,1),
+(1849,5,'2026-06-24 16:13:19',29,1),
+(1850,4,'2026-06-24 16:13:19',46,1),
+(1851,7,'2026-06-24 16:13:19',57,1),
+(1852,3,'2026-06-24 16:13:19',22,1),
+(1853,1,'2026-06-24 16:13:19',43,1),
+(1854,4,'2026-06-24 16:13:20',19,1),
+(1855,4,'2026-06-24 16:13:20',52,1),
+(1856,3,'2026-06-24 16:13:20',19,1),
+(1857,7,'2026-06-24 16:13:20',23,1),
+(1858,6,'2026-06-24 16:13:20',47,1),
+(1859,3,'2026-06-24 16:13:20',13,1),
+(1860,7,'2026-06-24 16:13:20',58,1),
+(1861,4,'2026-06-24 16:13:21',32,1),
+(1862,7,'2026-06-24 16:13:21',40,1),
+(1863,7,'2026-06-24 16:13:21',50,1),
+(1864,4,'2026-06-24 16:13:21',19,1),
+(1865,7,'2026-06-24 16:13:21',28,1),
+(1866,6,'2026-06-24 16:13:21',58,1),
+(1867,5,'2026-06-24 16:13:21',29,1),
+(1868,4,'2026-06-24 16:13:21',55,1),
+(1869,7,'2026-06-24 16:13:22',60,1),
+(1870,5,'2026-06-24 16:13:22',22,1),
+(1871,4,'2026-06-24 16:13:22',2,1),
+(1872,4,'2026-06-24 16:13:22',63,1),
+(1873,1,'2026-06-24 16:13:22',46,1),
+(1874,5,'2026-06-24 16:13:22',64,1),
+(1875,5,'2026-06-24 16:13:22',33,1),
+(1876,4,'2026-06-24 16:13:23',50,1),
+(1877,3,'2026-06-24 16:13:23',4,1),
+(1878,4,'2026-06-24 16:13:23',33,1),
+(1879,6,'2026-06-24 16:13:23',64,1),
+(1880,3,'2026-06-24 16:13:23',63,1),
+(1881,5,'2026-06-24 16:13:23',48,1),
+(1882,5,'2026-06-24 16:13:23',39,1),
+(1883,4,'2026-06-24 16:13:23',7,1),
+(1884,4,'2026-06-24 16:13:24',52,1),
+(1885,4,'2026-06-24 16:13:24',2,1),
+(1886,4,'2026-06-24 16:13:24',37,1),
+(1887,6,'2026-06-24 16:13:24',18,1),
+(1888,5,'2026-06-24 16:13:24',58,1),
+(1889,3,'2026-06-24 16:13:24',33,1),
+(1890,5,'2026-06-24 16:13:24',29,1),
+(1891,1,'2026-06-24 16:13:24',64,1),
+(1892,5,'2026-06-24 16:13:24',29,1),
+(1893,5,'2026-06-24 16:13:24',40,1),
+(1894,6,'2026-06-24 16:13:25',25,1),
+(1895,3,'2026-06-24 16:13:25',53,1),
+(1896,7,'2026-06-24 16:13:25',31,1),
+(1897,6,'2026-06-24 16:13:25',34,1),
+(1898,4,'2026-06-24 16:13:25',9,1),
+(1899,4,'2026-06-24 16:13:25',6,1),
+(1900,7,'2026-06-24 16:13:25',3,1),
+(1901,5,'2026-06-24 16:13:26',60,1),
+(1902,3,'2026-06-24 16:13:26',16,1),
+(1903,5,'2026-06-24 16:13:26',12,1),
+(1904,7,'2026-06-24 16:13:26',64,1),
+(1905,7,'2026-06-24 16:13:26',5,1),
+(1906,7,'2026-06-24 16:13:26',28,1),
+(1907,3,'2026-06-24 16:13:27',5,1),
+(1908,4,'2026-06-24 16:13:27',9,1),
+(1909,5,'2026-06-24 16:13:27',17,1),
+(1910,7,'2026-06-24 16:13:27',7,1),
+(1911,3,'2026-06-24 16:13:27',23,1),
+(1912,5,'2026-06-24 16:13:27',35,1),
+(1913,4,'2026-06-24 16:13:27',45,1),
+(1914,3,'2026-06-24 16:13:27',45,1),
+(1915,6,'2026-06-24 16:13:28',11,1),
+(1916,6,'2026-06-24 16:13:28',22,1),
+(1917,4,'2026-06-24 16:13:28',34,1),
+(1918,5,'2026-06-24 16:13:28',21,1),
+(1919,4,'2026-06-24 16:13:28',42,1),
+(1920,6,'2026-06-24 16:13:28',13,1),
+(1921,3,'2026-06-24 16:13:28',30,1),
+(1922,5,'2026-06-24 16:13:28',4,1),
+(1923,4,'2026-06-24 16:13:28',57,1),
+(1924,7,'2026-06-24 16:13:29',64,1),
+(1925,1,'2026-06-24 16:13:29',5,1),
+(1926,5,'2026-06-24 16:13:29',65,1),
+(1927,6,'2026-06-24 16:13:29',45,1),
+(1928,5,'2026-06-24 16:13:29',51,1),
+(1929,5,'2026-06-24 16:13:29',52,1),
+(1930,4,'2026-06-24 16:13:30',39,1),
+(1931,7,'2026-06-24 16:13:30',56,1),
+(1932,6,'2026-06-24 16:13:30',60,1),
+(1933,6,'2026-06-24 16:13:30',17,1),
+(1934,7,'2026-06-24 16:13:30',55,1),
+(1935,7,'2026-06-24 16:13:30',34,1),
+(1936,1,'2026-06-24 16:13:31',62,1),
+(1937,4,'2026-06-24 16:13:31',64,1),
+(1938,7,'2026-06-24 16:13:31',47,1),
+(1939,3,'2026-06-24 16:13:31',28,1),
+(1940,7,'2026-06-24 16:13:31',32,1),
+(1941,5,'2026-06-24 16:13:31',14,1),
+(1942,5,'2026-06-24 16:13:31',6,1),
+(1943,3,'2026-06-24 16:13:32',7,1),
+(1944,7,'2026-06-24 16:13:32',28,1),
+(1945,6,'2026-06-24 16:13:32',2,1),
+(1946,5,'2026-06-24 16:13:32',55,1),
+(1947,1,'2026-06-24 16:13:32',58,1),
+(1948,4,'2026-06-24 16:13:32',61,1),
+(1949,5,'2026-06-24 16:13:32',44,1),
+(1950,3,'2026-06-24 16:13:33',50,1),
+(1951,6,'2026-06-24 16:13:33',14,1),
+(1952,7,'2026-06-24 16:13:33',12,1),
+(1953,3,'2026-06-24 16:13:33',46,1),
+(1954,1,'2026-06-24 16:13:33',50,1),
+(1955,7,'2026-06-24 16:13:33',9,1),
+(1956,5,'2026-06-24 16:13:34',11,1),
+(1957,6,'2026-06-24 16:13:34',39,1),
+(1958,1,'2026-06-24 16:13:34',40,1),
+(1959,4,'2026-06-24 16:13:34',34,1),
+(1960,1,'2026-06-24 16:13:34',56,1),
+(1961,7,'2026-06-24 16:13:34',12,1),
+(1962,4,'2026-06-24 16:13:34',50,1),
+(1963,3,'2026-06-24 16:13:35',41,1),
+(1964,6,'2026-06-24 16:13:35',11,1),
+(1965,3,'2026-06-24 16:13:35',15,1),
+(1966,3,'2026-06-24 16:13:35',25,1),
+(1967,7,'2026-06-24 16:13:35',19,1),
+(1968,5,'2026-06-24 16:13:35',63,1),
+(1969,7,'2026-06-24 16:13:35',10,1),
+(1970,4,'2026-06-24 16:13:35',60,1),
+(1971,7,'2026-06-24 16:13:36',48,1),
+(1972,4,'2026-06-24 16:13:36',7,1),
+(1973,6,'2026-06-24 16:13:36',49,1),
+(1974,7,'2026-06-24 16:13:36',35,1),
+(1975,4,'2026-06-24 16:13:36',58,1),
+(1976,7,'2026-06-24 16:13:36',29,1),
+(1977,7,'2026-06-24 16:13:36',9,1),
+(1978,1,'2026-06-24 16:13:36',47,1),
+(1979,5,'2026-06-24 16:13:36',36,1),
+(1980,7,'2026-06-24 16:13:36',7,1),
+(1981,6,'2026-06-24 16:13:37',47,1),
+(1982,6,'2026-06-24 16:13:37',9,1),
+(1983,4,'2026-06-24 16:13:37',24,1),
+(1984,6,'2026-06-24 16:13:37',42,1),
+(1985,5,'2026-06-24 16:13:37',39,1),
+(1986,4,'2026-06-24 16:13:37',15,1),
+(1987,3,'2026-06-24 16:13:37',65,1),
+(1988,4,'2026-06-24 16:13:38',65,1),
+(1989,4,'2026-06-24 16:13:38',61,1),
+(1990,5,'2026-06-24 16:13:38',16,1),
+(1991,7,'2026-06-24 16:13:38',44,1),
+(1992,6,'2026-06-24 16:13:38',51,1),
+(1993,3,'2026-06-24 16:13:38',22,1),
+(1994,3,'2026-06-24 16:13:38',48,1),
+(1995,4,'2026-06-24 16:13:39',20,1),
+(1996,6,'2026-06-24 16:13:39',61,1),
+(1997,1,'2026-06-24 16:13:39',23,1),
+(1998,5,'2026-06-24 16:13:39',1,1),
+(1999,6,'2026-06-24 16:13:39',18,1),
+(2000,1,'2026-06-24 16:13:39',15,1),
+(2001,6,'2026-06-24 16:13:40',24,1),
+(2002,6,'2026-06-24 16:13:40',26,1),
+(2003,4,'2026-06-24 16:13:40',30,1),
+(2004,3,'2026-06-24 16:13:40',23,1),
+(2005,5,'2026-06-24 16:13:40',1,1),
+(2006,3,'2026-06-24 16:13:40',51,1),
+(2007,3,'2026-06-24 16:13:40',49,1),
+(2008,3,'2026-06-24 16:13:41',31,1),
+(2009,4,'2026-06-24 16:13:41',7,1),
+(2010,3,'2026-06-24 16:13:41',54,1),
+(2011,3,'2026-06-24 16:13:41',11,1),
+(2012,1,'2026-06-24 16:13:41',64,1),
+(2013,5,'2026-06-24 16:13:41',65,1),
+(2014,6,'2026-06-24 16:13:42',50,1),
+(2015,4,'2026-06-24 16:13:42',46,1),
+(2016,6,'2026-06-24 16:13:42',39,1),
+(2017,5,'2026-06-24 16:13:42',27,1),
+(2018,6,'2026-06-24 16:13:42',3,1),
+(2019,1,'2026-06-24 16:13:42',32,1),
+(2020,4,'2026-06-24 16:13:43',35,1),
+(2021,1,'2026-06-24 16:13:43',8,1),
+(2022,1,'2026-06-24 16:13:43',24,1),
+(2023,6,'2026-06-24 16:13:43',12,1),
+(2024,1,'2026-06-24 16:13:43',31,1),
+(2025,6,'2026-06-24 16:13:43',49,1),
+(2026,4,'2026-06-24 16:13:43',22,1),
+(2027,7,'2026-06-24 16:13:43',31,1),
+(2028,6,'2026-06-24 16:13:43',33,1),
+(2029,7,'2026-06-24 16:13:44',8,1),
+(2030,4,'2026-06-24 16:13:44',59,1),
+(2031,7,'2026-06-24 16:13:44',38,1),
+(2032,5,'2026-06-24 16:13:44',41,1),
+(2033,1,'2026-06-24 16:13:44',3,1),
+(2034,3,'2026-06-24 16:13:44',16,1),
+(2035,1,'2026-06-24 16:13:44',52,1),
+(2036,1,'2026-06-24 16:13:45',40,1),
+(2037,6,'2026-06-24 16:13:45',30,1),
+(2038,1,'2026-06-24 16:13:45',31,1),
+(2039,1,'2026-06-24 16:13:45',18,1),
+(2040,3,'2026-06-24 16:13:45',16,1),
+(2041,3,'2026-06-24 16:13:45',4,1),
+(2042,4,'2026-06-24 16:13:46',52,1),
+(2043,3,'2026-06-24 16:13:46',34,1),
+(2044,7,'2026-06-24 16:13:46',48,1),
+(2045,1,'2026-06-24 16:13:46',22,1),
+(2046,6,'2026-06-24 16:13:46',40,1),
+(2047,1,'2026-06-24 16:13:46',35,1),
+(2048,6,'2026-06-24 16:13:46',36,1),
+(2049,7,'2026-06-24 16:13:46',54,1),
+(2050,7,'2026-06-24 16:13:46',6,1),
+(2051,5,'2026-06-24 16:13:47',4,1),
+(2052,7,'2026-06-24 16:13:47',24,1),
+(2053,4,'2026-06-24 16:13:47',15,1),
+(2054,5,'2026-06-24 16:13:47',47,1),
+(2055,5,'2026-06-24 16:13:47',11,1),
+(2056,5,'2026-06-24 16:13:47',39,1),
+(2057,6,'2026-06-24 16:13:47',50,1),
+(2058,3,'2026-06-24 16:13:48',60,1),
+(2059,7,'2026-06-24 16:13:48',34,1),
+(2060,3,'2026-06-24 16:13:48',54,1),
+(2061,6,'2026-06-24 16:13:48',17,1),
+(2062,3,'2026-06-24 16:13:48',57,1),
+(2063,6,'2026-06-24 16:13:48',18,1),
+(2064,3,'2026-06-24 16:13:48',48,1),
+(2065,1,'2026-06-24 16:13:48',52,1),
+(2066,7,'2026-06-24 16:13:48',55,1),
+(2067,1,'2026-06-24 16:13:49',16,1),
+(2068,3,'2026-06-24 16:13:49',9,1),
+(2069,5,'2026-06-24 16:13:49',38,1),
+(2070,3,'2026-06-24 16:13:49',56,1),
+(2071,3,'2026-06-24 16:13:49',62,1),
+(2072,5,'2026-06-24 16:13:49',31,1),
+(2073,1,'2026-06-24 16:13:49',31,1),
+(2074,1,'2026-06-24 16:13:49',11,1),
+(2075,1,'2026-06-24 16:13:50',16,1),
+(2076,6,'2026-06-24 16:13:50',28,1),
+(2077,3,'2026-06-24 16:13:50',36,1),
+(2078,5,'2026-06-24 16:13:50',30,1),
+(2079,3,'2026-06-24 16:13:50',39,1),
+(2080,7,'2026-06-24 16:13:51',59,1),
+(2081,5,'2026-06-24 16:13:51',64,1),
+(2082,6,'2026-06-24 16:13:51',14,1),
+(2083,6,'2026-06-24 16:13:51',65,1),
+(2084,3,'2026-06-24 16:13:51',6,1),
+(2085,6,'2026-06-24 16:13:51',1,1),
+(2086,3,'2026-06-24 16:13:51',11,1),
+(2087,7,'2026-06-24 16:13:52',9,1),
+(2088,4,'2026-06-24 16:13:52',32,1),
+(2089,7,'2026-06-24 16:13:52',53,1),
+(2090,3,'2026-06-24 16:13:52',6,1),
+(2091,5,'2026-06-24 16:13:52',6,1),
+(2092,5,'2026-06-24 16:13:52',34,1),
+(2093,1,'2026-06-24 16:13:53',51,1),
+(2094,4,'2026-06-24 16:13:53',46,1),
+(2095,6,'2026-06-24 16:13:53',28,1),
+(2096,4,'2026-06-24 16:13:53',63,1),
+(2097,7,'2026-06-24 16:13:53',55,1),
+(2098,1,'2026-06-24 16:13:53',5,1),
+(2099,4,'2026-06-24 16:13:53',19,1),
+(2100,5,'2026-06-24 16:13:53',30,1),
+(2101,4,'2026-06-24 16:13:53',47,1),
+(2102,5,'2026-06-24 16:13:54',42,1),
+(2103,7,'2026-06-24 16:13:54',42,1),
+(2104,6,'2026-06-24 16:13:54',41,1),
+(2105,6,'2026-06-24 16:13:54',13,1),
+(2106,6,'2026-06-24 16:13:54',21,1),
+(2107,4,'2026-06-24 16:13:54',21,1),
+(2108,6,'2026-06-24 16:13:54',39,1),
+(2109,6,'2026-06-24 16:13:55',13,1),
+(2110,5,'2026-06-24 16:13:55',63,1),
+(2111,1,'2026-06-24 16:13:55',7,1),
+(2112,4,'2026-06-24 16:13:55',36,1),
+(2113,6,'2026-06-24 16:13:55',59,1),
+(2114,4,'2026-06-24 16:13:55',18,1),
+(2115,3,'2026-06-24 16:13:56',13,1),
+(2116,7,'2026-06-24 16:13:56',32,1),
+(2117,3,'2026-06-24 16:13:56',64,1),
+(2118,6,'2026-06-24 16:13:56',6,1),
+(2119,4,'2026-06-24 16:13:56',10,1),
+(2120,3,'2026-06-24 16:13:56',2,1),
+(2121,5,'2026-06-24 16:13:56',27,1),
+(2122,6,'2026-06-24 16:13:57',59,1),
+(2123,4,'2026-06-24 16:13:57',51,1),
+(2124,3,'2026-06-24 16:13:57',44,1),
+(2125,7,'2026-06-24 16:13:57',55,1),
+(2126,5,'2026-06-24 16:13:57',63,1),
+(2127,7,'2026-06-24 16:13:57',7,1),
+(2128,4,'2026-06-24 16:13:57',44,1),
+(2129,5,'2026-06-24 16:13:57',4,1),
+(2130,1,'2026-06-24 16:13:58',10,1),
+(2131,3,'2026-06-24 16:13:58',65,1),
+(2132,5,'2026-06-24 16:13:58',25,1),
+(2133,4,'2026-06-24 16:13:58',30,1),
+(2134,5,'2026-06-24 16:13:58',54,1),
+(2135,3,'2026-06-24 16:13:58',43,1),
+(2136,3,'2026-06-24 16:13:58',63,1),
+(2137,6,'2026-06-24 16:13:59',20,1),
+(2138,1,'2026-06-24 16:13:59',58,1),
+(2139,6,'2026-06-24 16:13:59',31,1),
+(2140,3,'2026-06-24 16:13:59',24,1),
+(2141,7,'2026-06-24 16:13:59',4,1),
+(2142,4,'2026-06-24 16:13:59',7,1),
+(2143,5,'2026-06-24 16:13:59',27,1),
+(2144,4,'2026-06-24 16:13:59',48,1),
+(2145,7,'2026-06-24 16:13:59',12,1),
+(2146,5,'2026-06-24 16:13:59',51,1),
+(2147,5,'2026-06-24 16:14:00',57,1),
+(2148,3,'2026-06-24 16:14:00',58,1),
+(2149,3,'2026-06-24 16:14:00',33,1),
+(2150,5,'2026-06-24 16:14:00',2,1),
+(2151,4,'2026-06-24 16:14:00',50,1),
+(2152,5,'2026-06-24 16:14:00',20,1),
+(2153,6,'2026-06-24 16:14:00',3,1),
+(2154,7,'2026-06-24 16:14:01',18,1),
+(2155,7,'2026-06-24 16:14:01',64,1),
+(2156,7,'2026-06-24 16:14:01',12,1),
+(2157,5,'2026-06-24 16:14:01',48,1),
+(2158,6,'2026-06-24 16:14:01',28,1),
+(2159,5,'2026-06-24 16:14:01',14,1),
+(2160,7,'2026-06-24 16:14:01',38,1),
+(2161,3,'2026-06-24 16:14:01',29,1),
+(2162,5,'2026-06-24 16:14:02',56,1),
+(2163,7,'2026-06-24 16:14:02',47,1),
+(2164,5,'2026-06-24 16:14:02',36,1),
+(2165,3,'2026-06-24 16:14:02',34,1),
+(2166,7,'2026-06-24 16:14:02',65,1),
+(2167,7,'2026-06-24 16:14:03',50,1),
+(2168,3,'2026-06-24 16:14:03',12,1),
+(2169,3,'2026-06-24 16:14:03',50,1),
+(2170,1,'2026-06-24 16:14:03',53,1),
+(2171,3,'2026-06-24 16:14:03',65,1),
+(2172,4,'2026-06-24 16:14:03',12,1),
+(2173,3,'2026-06-24 16:14:03',29,1),
+(2174,7,'2026-06-24 16:14:03',10,1),
+(2175,7,'2026-06-24 16:14:04',58,1),
+(2176,3,'2026-06-24 16:14:04',37,1),
+(2177,7,'2026-06-24 16:14:04',1,1),
+(2178,4,'2026-06-24 16:14:04',24,1),
+(2179,1,'2026-06-24 16:14:04',46,1),
+(2180,1,'2026-06-24 16:14:04',15,1),
+(2181,4,'2026-06-24 16:14:04',29,1),
+(2182,1,'2026-06-24 16:14:04',64,1),
+(2183,1,'2026-06-24 16:14:04',2,1),
+(2184,7,'2026-06-24 16:14:04',8,1),
+(2185,3,'2026-06-24 16:14:05',30,1),
+(2186,4,'2026-06-24 16:14:05',37,1),
+(2187,7,'2026-06-24 16:14:05',65,1),
+(2188,1,'2026-06-24 16:14:05',35,1),
+(2189,7,'2026-06-24 16:14:05',42,1),
+(2190,7,'2026-06-24 16:14:05',28,1),
+(2191,5,'2026-06-24 16:14:05',6,1),
+(2192,1,'2026-06-24 16:14:05',44,1),
+(2193,3,'2026-06-24 16:14:06',24,1),
+(2194,1,'2026-06-24 16:14:06',61,1),
+(2195,1,'2026-06-24 16:14:06',43,1),
+(2196,1,'2026-06-24 16:14:06',53,1),
+(2197,7,'2026-06-24 16:14:06',8,1),
+(2198,6,'2026-06-24 16:14:06',37,1),
+(2199,5,'2026-06-24 16:14:06',38,1),
+(2200,4,'2026-06-24 16:14:06',56,1),
+(2201,5,'2026-06-24 16:14:07',20,1),
+(2202,6,'2026-06-24 16:14:07',8,1),
+(2203,7,'2026-06-24 16:14:07',34,1),
+(2204,7,'2026-06-24 16:14:07',65,1),
+(2205,5,'2026-06-24 16:14:07',30,1),
+(2206,7,'2026-06-24 16:14:07',6,1),
+(2207,1,'2026-06-24 16:14:07',26,1),
+(2208,5,'2026-06-24 16:14:07',50,1),
+(2209,3,'2026-06-24 16:14:07',43,1),
+(2210,7,'2026-06-24 16:14:08',54,1),
+(2211,1,'2026-06-24 16:14:08',1,1),
+(2212,6,'2026-06-24 16:14:08',50,1),
+(2213,7,'2026-06-24 16:14:08',16,1),
+(2214,3,'2026-06-24 16:14:08',19,1),
+(2215,7,'2026-06-24 16:14:08',57,1),
+(2216,3,'2026-06-24 16:14:09',1,1),
+(2217,3,'2026-06-24 16:14:09',59,1),
+(2218,6,'2026-06-24 16:14:09',2,1),
+(2219,7,'2026-06-24 16:14:09',13,1),
+(2220,3,'2026-06-24 16:14:09',6,1),
+(2221,7,'2026-06-24 16:14:09',35,1),
+(2222,7,'2026-06-24 16:14:09',31,1),
+(2223,7,'2026-06-24 16:14:09',56,1),
+(2224,1,'2026-06-24 16:14:10',13,1),
+(2225,7,'2026-06-24 16:14:10',17,1),
+(2226,1,'2026-06-24 16:14:10',12,1),
+(2227,4,'2026-06-24 16:14:10',49,1),
+(2228,1,'2026-06-24 16:14:10',44,1),
+(2229,3,'2026-06-24 16:14:10',24,1),
+(2230,7,'2026-06-24 16:14:10',61,1),
+(2231,3,'2026-06-24 16:14:10',37,1),
+(2232,4,'2026-06-24 16:14:10',51,1),
+(2233,6,'2026-06-24 16:14:11',2,1),
+(2234,5,'2026-06-24 16:14:11',20,1),
+(2235,4,'2026-06-24 16:14:11',21,1),
+(2236,6,'2026-06-24 16:14:11',12,1),
+(2237,1,'2026-06-24 16:14:11',6,1),
+(2238,4,'2026-06-24 16:14:11',28,1),
+(2239,4,'2026-06-24 16:14:11',29,1),
+(2240,3,'2026-06-24 16:14:12',11,1),
+(2241,4,'2026-06-24 16:14:12',56,1),
+(2242,5,'2026-06-24 16:14:12',28,1),
+(2243,4,'2026-06-24 16:14:12',12,1),
+(2244,7,'2026-06-24 16:14:12',18,1),
+(2245,7,'2026-06-24 16:14:12',8,1),
+(2246,6,'2026-06-24 16:14:13',39,1),
+(2247,3,'2026-06-24 16:14:13',2,1),
+(2248,5,'2026-06-24 16:14:13',7,1),
+(2249,7,'2026-06-24 16:14:13',33,1),
+(2250,7,'2026-06-24 16:14:13',3,1),
+(2251,5,'2026-06-24 16:14:13',44,1),
+(2252,7,'2026-06-24 16:14:13',8,1),
+(2253,4,'2026-06-24 16:14:13',18,1),
+(2254,1,'2026-06-24 16:14:14',31,1),
+(2255,4,'2026-06-24 16:14:14',23,1),
+(2256,3,'2026-06-24 16:14:14',41,1),
+(2257,6,'2026-06-24 16:14:14',43,1),
+(2258,7,'2026-06-24 16:14:14',29,1),
+(2259,3,'2026-06-24 16:14:14',34,1),
+(2260,7,'2026-06-24 16:14:15',50,1),
+(2261,6,'2026-06-24 16:14:15',28,1),
+(2262,5,'2026-06-24 16:14:15',62,1),
+(2263,5,'2026-06-24 16:14:15',26,1),
+(2264,7,'2026-06-24 16:14:15',22,1),
+(2265,5,'2026-06-24 16:14:15',46,1),
+(2266,1,'2026-06-24 16:14:15',3,1),
+(2267,6,'2026-06-24 16:14:16',32,1),
+(2268,5,'2026-06-24 16:14:16',24,1),
+(2269,5,'2026-06-24 16:14:16',21,1),
+(2270,3,'2026-06-24 16:14:16',20,1),
+(2271,6,'2026-06-24 16:14:16',14,1),
+(2272,1,'2026-06-24 16:14:16',53,1),
+(2273,5,'2026-06-24 16:14:17',36,1),
+(2274,5,'2026-06-24 16:14:17',48,1),
+(2275,6,'2026-06-24 16:14:17',22,1),
+(2276,4,'2026-06-24 16:14:17',29,1),
+(2277,1,'2026-06-24 16:14:17',5,1),
+(2278,6,'2026-06-24 16:14:17',42,1),
+(2279,3,'2026-06-24 16:14:17',20,1),
+(2280,4,'2026-06-24 16:14:18',49,1),
+(2281,3,'2026-06-24 16:14:18',54,1),
+(2282,3,'2026-06-24 16:14:18',8,1),
+(2283,6,'2026-06-24 16:14:18',17,1),
+(2284,1,'2026-06-24 16:14:18',30,1),
+(2285,3,'2026-06-24 16:14:18',2,1),
+(2286,4,'2026-06-24 16:14:18',18,1),
+(2287,4,'2026-06-24 16:14:19',26,1),
+(2288,5,'2026-06-24 16:14:19',6,1),
+(2289,3,'2026-06-24 16:14:19',42,1),
+(2290,3,'2026-06-24 16:14:19',48,1),
+(2291,4,'2026-06-24 16:14:19',31,1),
+(2292,1,'2026-06-24 16:14:20',37,1),
+(2293,6,'2026-06-24 16:14:20',33,1),
+(2294,4,'2026-06-24 16:14:20',34,1),
+(2295,4,'2026-06-24 16:14:20',21,1),
+(2296,5,'2026-06-24 16:14:20',63,1),
+(2297,4,'2026-06-24 16:14:20',9,1),
+(2298,6,'2026-06-24 16:14:20',51,1),
+(2299,1,'2026-06-24 16:14:21',43,1),
+(2300,3,'2026-06-24 16:14:21',60,1),
+(2301,4,'2026-06-24 16:14:21',29,1),
+(2302,6,'2026-06-24 16:14:21',24,1),
+(2303,6,'2026-06-24 16:14:21',63,1),
+(2304,1,'2026-06-24 16:14:21',1,1),
+(2305,5,'2026-06-24 16:14:21',11,1),
+(2306,3,'2026-06-24 16:14:21',5,1),
+(2307,4,'2026-06-24 16:14:22',4,1),
+(2308,4,'2026-06-24 16:14:22',61,1),
+(2309,7,'2026-06-24 16:14:22',58,1),
+(2310,5,'2026-06-24 16:14:22',17,1),
+(2311,4,'2026-06-24 16:14:22',2,1),
+(2312,7,'2026-06-24 16:14:22',12,1),
+(2313,3,'2026-06-24 16:14:22',1,1),
+(2314,5,'2026-06-24 16:14:22',24,1),
+(2315,1,'2026-06-24 16:14:22',8,1),
+(2316,5,'2026-06-24 16:14:23',14,1),
+(2317,6,'2026-06-24 16:14:23',39,1),
+(2318,6,'2026-06-24 16:14:23',8,1),
+(2319,5,'2026-06-24 16:14:23',44,1),
+(2320,4,'2026-06-24 16:14:23',30,1),
+(2321,3,'2026-06-24 16:14:23',24,1),
+(2322,3,'2026-06-24 16:14:23',34,1),
+(2323,3,'2026-06-24 16:14:23',54,1),
+(2324,4,'2026-06-24 16:14:23',22,1),
+(2325,6,'2026-06-24 16:14:24',11,1),
+(2326,3,'2026-06-24 16:14:24',56,1),
+(2327,1,'2026-06-24 16:14:24',52,1),
+(2328,5,'2026-06-24 16:14:24',59,1),
+(2329,1,'2026-06-24 16:14:24',2,1),
+(2330,7,'2026-06-24 16:14:24',31,1),
+(2331,5,'2026-06-24 16:14:24',62,1),
+(2332,5,'2026-06-24 16:14:25',55,1),
+(2333,7,'2026-06-24 16:14:25',52,1),
+(2334,6,'2026-06-24 16:14:25',13,1),
+(2335,7,'2026-06-24 16:14:25',64,1),
+(2336,6,'2026-06-24 16:14:25',25,1),
+(2337,6,'2026-06-24 16:14:25',41,1),
+(2338,1,'2026-06-24 16:14:26',20,1),
+(2339,6,'2026-06-24 16:14:26',28,1),
+(2340,4,'2026-06-24 16:14:26',45,1),
+(2341,4,'2026-06-24 16:14:26',35,1),
+(2342,5,'2026-06-24 16:14:26',37,1),
+(2343,6,'2026-06-24 16:14:26',58,1),
+(2344,5,'2026-06-24 16:14:26',45,1),
+(2345,4,'2026-06-24 16:14:27',64,1),
+(2346,7,'2026-06-24 16:14:27',30,1),
+(2347,1,'2026-06-24 16:14:27',1,1),
+(2348,5,'2026-06-24 16:14:27',17,1),
+(2349,4,'2026-06-24 16:14:27',43,1),
+(2350,3,'2026-06-24 16:14:27',38,1),
+(2351,7,'2026-06-24 16:14:27',49,1),
+(2352,5,'2026-06-24 16:14:27',6,1),
+(2353,4,'2026-06-24 16:14:27',24,1),
+(2354,5,'2026-06-24 16:14:28',41,1),
+(2355,1,'2026-06-24 16:14:28',49,1),
+(2356,5,'2026-06-24 16:14:28',33,1),
+(2357,3,'2026-06-24 16:14:28',56,1),
+(2358,1,'2026-06-24 16:14:28',50,1),
+(2359,5,'2026-06-24 16:14:28',62,1),
+(2360,1,'2026-06-24 16:14:28',4,1),
+(2361,1,'2026-06-24 16:14:28',50,1),
+(2362,1,'2026-06-24 16:14:28',16,1),
+(2363,4,'2026-06-24 16:14:29',14,1),
+(2364,1,'2026-06-24 16:14:29',29,1),
+(2365,6,'2026-06-24 16:14:29',40,1),
+(2366,3,'2026-06-24 16:14:29',20,1),
+(2367,7,'2026-06-24 16:14:29',17,1),
+(2368,4,'2026-06-24 16:14:30',38,1),
+(2369,1,'2026-06-24 16:14:30',1,1),
+(2370,1,'2026-06-24 16:14:30',50,1),
+(2371,6,'2026-06-24 16:14:30',60,1),
+(2372,4,'2026-06-24 16:14:30',51,1),
+(2373,5,'2026-06-24 16:14:30',44,1),
+(2374,5,'2026-06-24 16:14:30',25,1),
+(2375,4,'2026-06-24 16:14:31',45,1),
+(2376,4,'2026-06-24 16:14:31',54,1),
+(2377,6,'2026-06-24 16:14:31',59,1),
+(2378,5,'2026-06-24 16:14:31',36,1),
+(2379,4,'2026-06-24 16:14:31',21,1),
+(2380,6,'2026-06-24 16:14:31',29,1),
+(2381,4,'2026-06-24 16:14:31',6,1),
+(2382,4,'2026-06-24 16:14:31',9,1),
+(2383,3,'2026-06-24 16:14:32',32,1),
+(2384,5,'2026-06-24 16:14:32',3,1),
+(2385,1,'2026-06-24 16:14:32',34,1),
+(2386,7,'2026-06-24 16:14:32',52,1),
+(2387,3,'2026-06-24 16:14:32',39,1),
+(2388,6,'2026-06-24 16:14:32',56,1),
+(2389,5,'2026-06-24 16:14:32',57,1),
+(2390,6,'2026-06-24 16:14:33',26,1),
+(2391,4,'2026-06-24 16:14:33',64,1),
+(2392,3,'2026-06-24 16:14:33',16,1),
+(2393,4,'2026-06-24 16:14:33',32,1),
+(2394,5,'2026-06-24 16:14:33',57,1),
+(2395,7,'2026-06-24 16:14:33',60,1),
+(2396,1,'2026-06-24 16:14:33',53,1),
+(2397,7,'2026-06-24 16:14:33',60,1),
+(2398,5,'2026-06-24 16:14:33',7,1),
+(2399,3,'2026-06-24 16:14:34',16,1),
+(2400,5,'2026-06-24 16:14:34',2,1),
+(2401,4,'2026-06-24 16:14:34',5,1),
+(2402,4,'2026-06-24 16:14:34',7,1),
+(2403,6,'2026-06-24 16:14:34',52,1),
+(2404,7,'2026-06-24 16:14:34',34,1),
+(2405,3,'2026-06-24 16:14:34',48,1),
+(2406,7,'2026-06-24 16:14:35',35,1),
+(2407,1,'2026-06-24 16:14:35',4,1),
+(2408,6,'2026-06-24 16:14:35',62,1),
+(2409,7,'2026-06-24 16:14:35',9,1),
+(2410,7,'2026-06-24 16:14:35',57,1),
+(2411,6,'2026-06-24 16:14:35',61,1),
+(2412,7,'2026-06-24 16:14:35',8,1),
+(2413,3,'2026-06-24 16:14:35',45,1),
+(2414,6,'2026-06-24 16:14:35',54,1),
+(2415,6,'2026-06-24 16:14:36',41,1),
+(2416,1,'2026-06-24 16:14:36',32,1),
+(2417,1,'2026-06-24 16:14:36',3,1),
+(2418,5,'2026-06-24 16:14:36',4,1),
+(2419,4,'2026-06-24 16:14:36',52,1),
+(2420,4,'2026-06-24 16:14:36',53,1),
+(2421,3,'2026-06-24 16:14:36',50,1),
+(2422,3,'2026-06-24 16:14:36',45,1),
+(2423,1,'2026-06-24 16:14:37',33,1),
+(2424,3,'2026-06-24 16:14:37',24,1),
+(2425,4,'2026-06-24 16:14:37',21,1),
+(2426,1,'2026-06-24 16:14:37',58,1),
+(2427,1,'2026-06-24 16:14:37',9,1),
+(2428,4,'2026-06-24 16:14:38',2,1),
+(2429,7,'2026-06-24 16:14:38',24,1),
+(2430,4,'2026-06-24 16:14:38',60,1),
+(2431,3,'2026-06-24 16:14:38',18,1),
+(2432,3,'2026-06-24 16:14:38',46,1),
+(2433,5,'2026-06-24 16:14:38',6,1),
+(2434,6,'2026-06-24 16:14:38',22,1),
+(2435,7,'2026-06-24 16:14:38',43,1),
+(2436,6,'2026-06-24 16:14:39',26,1),
+(2437,7,'2026-06-24 16:14:39',8,1),
+(2438,1,'2026-06-24 16:14:39',23,1),
+(2439,4,'2026-06-24 16:14:39',3,1),
+(2440,5,'2026-06-24 16:14:39',58,1),
+(2441,5,'2026-06-24 16:14:39',65,1),
+(2442,7,'2026-06-24 16:14:39',7,1),
+(2443,6,'2026-06-24 16:14:40',54,1),
+(2444,1,'2026-06-24 16:14:40',41,1),
+(2445,3,'2026-06-24 16:14:40',12,1),
+(2446,5,'2026-06-24 16:14:40',57,1),
+(2447,4,'2026-06-24 16:14:40',22,1),
+(2448,4,'2026-06-24 16:14:40',60,1),
+(2449,4,'2026-06-24 16:14:40',33,1),
+(2450,6,'2026-06-24 16:14:41',18,1),
+(2451,7,'2026-06-24 16:14:41',11,1),
+(2452,1,'2026-06-24 16:14:41',57,1),
+(2453,4,'2026-06-24 16:14:41',60,1),
+(2454,6,'2026-06-24 16:14:41',22,1),
+(2455,7,'2026-06-24 16:14:41',63,1),
+(2456,6,'2026-06-24 16:14:41',50,1),
+(2457,7,'2026-06-24 16:14:42',53,1),
+(2458,5,'2026-06-24 16:14:42',22,1),
+(2459,6,'2026-06-24 16:14:42',10,1),
+(2460,1,'2026-06-24 16:14:42',5,1),
+(2461,4,'2026-06-24 16:14:42',47,1),
+(2462,5,'2026-06-24 16:14:43',47,1),
+(2463,3,'2026-06-24 16:14:43',61,1),
+(2464,1,'2026-06-24 16:14:43',56,1),
+(2465,6,'2026-06-24 16:14:43',63,1),
+(2466,6,'2026-06-24 16:14:43',38,1),
+(2467,3,'2026-06-24 16:14:43',60,1),
+(2468,7,'2026-06-24 16:14:43',59,1),
+(2469,3,'2026-06-24 16:14:44',15,1),
+(2470,5,'2026-06-24 16:14:44',20,1),
+(2471,3,'2026-06-24 16:14:44',1,1),
+(2472,4,'2026-06-24 16:14:44',64,1),
+(2473,3,'2026-06-24 16:14:44',60,1),
+(2474,3,'2026-06-24 16:14:44',20,1),
+(2475,3,'2026-06-24 16:14:44',6,1),
+(2476,5,'2026-06-24 16:14:45',4,1),
+(2477,7,'2026-06-24 16:14:45',49,1),
+(2478,5,'2026-06-24 16:14:45',56,1),
+(2479,5,'2026-06-24 16:14:45',56,1),
+(2480,3,'2026-06-24 16:14:45',65,1),
+(2481,1,'2026-06-24 16:14:45',8,1),
+(2482,5,'2026-06-24 16:14:45',15,1),
+(2483,7,'2026-06-24 16:14:45',25,1),
+(2484,5,'2026-06-24 16:14:46',6,1),
+(2485,4,'2026-06-24 16:14:46',7,1),
+(2486,1,'2026-06-24 16:14:46',11,1),
+(2487,3,'2026-06-24 16:14:46',1,1),
+(2488,7,'2026-06-24 16:14:46',29,1),
+(2489,1,'2026-06-24 16:14:46',30,1),
+(2490,3,'2026-06-24 16:14:46',45,1),
+(2491,5,'2026-06-24 16:14:46',27,1),
+(2492,5,'2026-06-24 16:14:47',42,1),
+(2493,5,'2026-06-24 16:14:47',41,1),
+(2494,6,'2026-06-24 16:14:47',10,1),
+(2495,6,'2026-06-24 16:14:47',31,1),
+(2496,1,'2026-06-24 16:14:47',30,1),
+(2497,1,'2026-06-24 16:14:47',46,1),
+(2498,1,'2026-06-24 16:14:47',58,1),
+(2499,4,'2026-06-24 16:14:47',45,1),
+(2500,5,'2026-06-24 16:14:48',26,1),
+(2501,1,'2026-06-24 16:14:48',18,1),
+(2502,1,'2026-06-24 16:14:48',38,1),
+(2503,3,'2026-06-24 16:14:48',38,1),
+(2504,1,'2026-06-24 16:14:48',47,1),
+(2505,6,'2026-06-24 16:14:48',42,1),
+(2506,1,'2026-06-24 16:14:48',61,1),
+(2507,3,'2026-06-24 16:14:48',20,1),
+(2508,5,'2026-06-24 16:14:48',62,1),
+(2509,7,'2026-06-24 16:14:48',5,1),
+(2510,3,'2026-06-24 16:14:49',9,1),
+(2511,4,'2026-06-24 16:14:49',4,1),
+(2512,3,'2026-06-24 16:14:49',54,1),
+(2513,7,'2026-06-24 16:14:49',23,1),
+(2514,3,'2026-06-24 16:14:49',58,1),
+(2515,3,'2026-06-24 16:14:50',28,1),
+(2516,7,'2026-06-24 16:14:50',26,1),
+(2517,1,'2026-06-24 16:14:50',62,1),
+(2518,7,'2026-06-24 16:14:50',33,1),
+(2519,3,'2026-06-24 16:14:50',17,1),
+(2520,6,'2026-06-24 16:14:50',8,1),
+(2521,7,'2026-06-24 16:14:50',62,1),
+(2522,4,'2026-06-24 16:14:50',27,1),
+(2523,7,'2026-06-24 16:14:51',43,1),
+(2524,7,'2026-06-24 16:14:51',12,1),
+(2525,3,'2026-06-24 16:14:51',26,1),
+(2526,6,'2026-06-24 16:14:51',30,1),
+(2527,6,'2026-06-24 16:14:51',63,1),
+(2528,6,'2026-06-24 16:14:51',31,1),
+(2529,5,'2026-06-24 16:14:51',47,1),
+(2530,3,'2026-06-24 16:14:52',45,1),
+(2531,7,'2026-06-24 16:14:52',4,1),
+(2532,5,'2026-06-24 16:14:52',47,1),
+(2533,5,'2026-06-24 16:14:52',50,1),
+(2534,6,'2026-06-24 16:14:52',21,1),
+(2535,7,'2026-06-24 16:14:52',7,1),
+(2536,4,'2026-06-24 16:14:52',5,1),
+(2537,7,'2026-06-24 16:14:52',61,1),
+(2538,4,'2026-06-24 16:14:53',59,1),
+(2539,5,'2026-06-24 16:14:53',30,1),
+(2540,6,'2026-06-24 16:14:53',59,1),
+(2541,3,'2026-06-24 16:14:53',18,1),
+(2542,6,'2026-06-24 16:14:53',61,1),
+(2543,4,'2026-06-24 16:14:53',5,1),
+(2544,7,'2026-06-24 16:14:53',16,1),
+(2545,5,'2026-06-24 16:14:54',41,1),
+(2546,5,'2026-06-24 16:14:54',61,1),
+(2547,6,'2026-06-24 16:14:54',56,1),
+(2548,1,'2026-06-24 16:14:54',37,1),
+(2549,3,'2026-06-24 16:14:54',48,1),
+(2550,4,'2026-06-24 16:14:54',7,1),
+(2551,1,'2026-06-24 16:14:54',41,1),
+(2552,6,'2026-06-24 16:14:54',1,1),
+(2553,1,'2026-06-24 16:14:54',26,1),
+(2554,6,'2026-06-24 16:14:54',45,1),
+(2555,3,'2026-06-24 16:14:55',62,1),
+(2556,7,'2026-06-24 16:14:55',5,1),
+(2557,7,'2026-06-24 16:14:55',28,1),
+(2558,6,'2026-06-24 16:14:55',1,1),
+(2559,3,'2026-06-24 16:14:55',21,1),
+(2560,1,'2026-06-24 16:14:55',5,1),
+(2561,4,'2026-06-24 16:14:55',30,1),
+(2562,5,'2026-06-24 16:14:56',37,1),
+(2563,7,'2026-06-24 16:14:56',19,1),
+(2564,6,'2026-06-24 16:14:56',48,1),
+(2565,6,'2026-06-24 16:14:56',37,1),
+(2566,3,'2026-06-24 16:14:56',28,1),
+(2567,1,'2026-06-24 16:14:56',10,1),
+(2568,3,'2026-06-24 16:14:56',28,1),
+(2569,7,'2026-06-24 16:14:56',5,1),
+(2570,3,'2026-06-24 16:14:57',42,1),
+(2571,3,'2026-06-24 16:14:57',30,1),
+(2572,4,'2026-06-24 16:14:57',41,1),
+(2573,4,'2026-06-24 16:14:57',33,1),
+(2574,5,'2026-06-24 16:14:57',7,1),
+(2575,1,'2026-06-24 16:14:57',23,1),
+(2576,7,'2026-06-24 16:14:58',45,1),
+(2577,3,'2026-06-24 16:14:58',17,1),
+(2578,3,'2026-06-24 16:14:58',24,1),
+(2579,6,'2026-06-24 16:14:58',3,1),
+(2580,4,'2026-06-24 16:14:58',65,1),
+(2581,5,'2026-06-24 16:14:58',12,1),
+(2582,5,'2026-06-24 16:14:58',2,1),
+(2583,3,'2026-06-24 16:14:58',62,1),
+(2584,6,'2026-06-24 16:14:58',35,1),
+(2585,5,'2026-06-24 16:14:59',29,1),
+(2586,7,'2026-06-24 16:14:59',44,1),
+(2587,5,'2026-06-24 16:14:59',7,1),
+(2588,3,'2026-06-24 16:14:59',21,1),
+(2589,6,'2026-06-24 16:14:59',31,1),
+(2590,4,'2026-06-24 16:14:59',10,1),
+(2591,4,'2026-06-24 16:14:59',62,1),
+(2592,7,'2026-06-24 16:15:00',60,1),
+(2593,1,'2026-06-24 16:15:00',32,1),
+(2594,5,'2026-06-24 16:15:00',45,1),
+(2595,4,'2026-06-24 16:15:00',39,1),
+(2596,1,'2026-06-24 16:15:00',46,1),
+(2597,7,'2026-06-24 16:15:00',58,1),
+(2598,3,'2026-06-24 16:15:00',6,1),
+(2599,7,'2026-06-24 16:15:01',51,1),
+(2600,7,'2026-06-24 16:15:01',35,1),
+(2601,7,'2026-06-24 16:15:01',7,1),
+(2602,5,'2026-06-24 16:15:01',1,1),
+(2603,5,'2026-06-24 16:15:01',47,1),
+(2604,6,'2026-06-24 16:15:01',51,1),
+(2605,6,'2026-06-24 16:15:01',23,1),
+(2606,5,'2026-06-24 16:15:02',9,1),
+(2607,1,'2026-06-24 16:15:02',65,1),
+(2608,7,'2026-06-24 16:15:02',62,1),
+(2609,4,'2026-06-24 16:15:02',49,1),
+(2610,4,'2026-06-24 16:15:02',17,1),
+(2611,1,'2026-06-24 16:15:02',44,1),
+(2612,7,'2026-06-24 16:15:02',9,1),
+(2613,1,'2026-06-24 16:15:02',62,1),
+(2614,5,'2026-06-24 16:15:03',55,1),
+(2615,3,'2026-06-24 16:15:03',26,1),
+(2616,4,'2026-06-24 16:15:03',56,1),
+(2617,3,'2026-06-24 16:15:03',40,1),
+(2618,4,'2026-06-24 16:15:03',15,1),
+(2619,1,'2026-06-24 16:15:03',12,1),
+(2620,7,'2026-06-24 16:15:03',45,1),
+(2621,1,'2026-06-24 16:15:03',64,1),
+(2622,5,'2026-06-24 16:15:04',9,1),
+(2623,1,'2026-06-24 16:15:04',38,1),
+(2624,6,'2026-06-24 16:15:04',17,1),
+(2625,1,'2026-06-24 16:15:04',59,1),
+(2626,7,'2026-06-24 16:15:04',16,1),
+(2627,1,'2026-06-24 16:15:04',62,1),
+(2628,4,'2026-06-24 16:15:04',63,1),
+(2629,5,'2026-06-24 16:15:04',39,1),
+(2630,6,'2026-06-24 16:15:04',38,1),
+(2631,4,'2026-06-24 16:15:05',33,1),
+(2632,4,'2026-06-24 16:15:05',48,1),
+(2633,5,'2026-06-24 16:15:05',40,1),
+(2634,6,'2026-06-24 16:15:05',42,1),
+(2635,6,'2026-06-24 16:15:05',17,1),
+(2636,6,'2026-06-24 16:15:05',52,1),
+(2637,5,'2026-06-24 16:15:05',64,1),
+(2638,1,'2026-06-24 16:15:06',11,1),
+(2639,5,'2026-06-24 16:15:06',9,1),
+(2640,1,'2026-06-24 16:15:06',14,1),
+(2641,6,'2026-06-24 16:15:06',42,1),
+(2642,5,'2026-06-24 16:15:06',62,1),
+(2643,4,'2026-06-24 16:15:06',42,1),
+(2644,4,'2026-06-24 16:15:07',40,1),
+(2645,1,'2026-06-24 16:15:07',59,1),
+(2646,3,'2026-06-24 16:15:07',5,1),
+(2647,4,'2026-06-24 16:15:07',59,1),
+(2648,1,'2026-06-24 16:15:07',52,1),
+(2649,6,'2026-06-24 16:15:08',11,1),
+(2650,6,'2026-06-24 16:15:08',52,1),
+(2651,6,'2026-06-24 16:15:08',63,1),
+(2652,6,'2026-06-24 16:15:08',34,1),
+(2653,1,'2026-06-24 16:15:08',36,1),
+(2654,7,'2026-06-24 16:15:08',23,1),
+(2655,3,'2026-06-24 16:15:08',45,1),
+(2656,5,'2026-06-24 16:15:09',53,1),
+(2657,6,'2026-06-24 16:15:09',7,1),
+(2658,3,'2026-06-24 16:15:09',60,1),
+(2659,4,'2026-06-24 16:15:09',14,1),
+(2660,4,'2026-06-24 16:15:09',19,1),
+(2661,3,'2026-06-24 16:15:09',47,1),
+(2662,1,'2026-06-24 16:15:09',43,1),
+(2663,1,'2026-06-24 16:15:09',46,1),
+(2664,1,'2026-06-24 16:15:09',57,1),
+(2665,4,'2026-06-24 16:15:09',9,1),
+(2666,4,'2026-06-24 16:15:10',33,1),
+(2667,7,'2026-06-24 16:15:10',48,1),
+(2668,1,'2026-06-24 16:15:10',25,1),
+(2669,6,'2026-06-24 16:15:10',49,1),
+(2670,1,'2026-06-24 16:15:10',14,1),
+(2671,4,'2026-06-24 16:15:10',19,1),
+(2672,4,'2026-06-24 16:15:11',4,1),
+(2673,1,'2026-06-24 16:15:11',51,1),
+(2674,3,'2026-06-24 16:15:11',35,1),
+(2675,6,'2026-06-24 16:15:11',15,1),
+(2676,6,'2026-06-24 16:15:11',18,1),
+(2677,7,'2026-06-24 16:15:11',12,1),
+(2678,3,'2026-06-24 16:15:11',30,1),
+(2679,1,'2026-06-24 16:15:11',21,1),
+(2680,4,'2026-06-24 16:15:12',19,1),
+(2681,1,'2026-06-24 16:15:12',31,1),
+(2682,6,'2026-06-24 16:15:12',21,1),
+(2683,6,'2026-06-24 16:15:12',25,1),
+(2684,1,'2026-06-24 16:15:12',11,1),
+(2685,7,'2026-06-24 16:15:12',55,1),
+(2686,3,'2026-06-24 16:15:12',38,1),
+(2687,4,'2026-06-24 16:15:13',24,1),
+(2688,4,'2026-06-24 16:15:13',4,1),
+(2689,5,'2026-06-24 16:15:13',36,1),
+(2690,1,'2026-06-24 16:15:13',30,1),
+(2691,7,'2026-06-24 16:15:13',44,1),
+(2692,1,'2026-06-24 16:15:13',24,1),
+(2693,6,'2026-06-24 16:15:13',54,1),
+(2694,3,'2026-06-24 16:15:13',7,1),
+(2695,3,'2026-06-24 16:15:13',5,1),
+(2696,7,'2026-06-24 16:15:14',1,1),
+(2697,4,'2026-06-24 16:15:14',45,1),
+(2698,5,'2026-06-24 16:15:14',43,1),
+(2699,6,'2026-06-24 16:15:14',39,1),
+(2700,7,'2026-06-24 16:15:14',27,1),
+(2701,1,'2026-06-24 16:15:14',59,1),
+(2702,3,'2026-06-24 16:15:14',63,1),
+(2703,3,'2026-06-24 16:15:15',62,1),
+(2704,6,'2026-06-24 16:15:15',32,1),
+(2705,6,'2026-06-24 16:15:15',19,1),
+(2706,6,'2026-06-24 16:15:15',16,1),
+(2707,4,'2026-06-24 16:15:15',49,1),
+(2708,7,'2026-06-24 16:15:15',49,1),
+(2709,6,'2026-06-24 16:15:16',36,1),
+(2710,3,'2026-06-24 16:15:16',27,1),
+(2711,4,'2026-06-24 16:15:16',11,1),
+(2712,6,'2026-06-24 16:15:16',5,1),
+(2713,4,'2026-06-24 16:15:16',28,1),
+(2714,6,'2026-06-24 16:15:16',9,1),
+(2715,6,'2026-06-24 16:15:16',48,1),
+(2716,7,'2026-06-24 16:15:16',35,1),
+(2717,4,'2026-06-24 16:15:16',13,1),
+(2718,4,'2026-06-24 16:15:17',56,1),
+(2719,5,'2026-06-24 16:15:17',28,1),
+(2720,4,'2026-06-24 16:15:17',43,1),
+(2721,7,'2026-06-24 16:15:17',31,1),
+(2722,5,'2026-06-24 16:15:17',52,1),
+(2723,7,'2026-06-24 16:15:17',50,1),
+(2724,1,'2026-06-24 16:15:17',59,1),
+(2725,5,'2026-06-24 16:15:18',29,1),
+(2726,3,'2026-06-24 16:15:18',55,1),
+(2727,3,'2026-06-24 16:15:18',63,1),
+(2728,6,'2026-06-24 16:15:18',6,1),
+(2729,3,'2026-06-24 16:15:18',63,1),
+(2730,4,'2026-06-24 16:15:18',57,1),
+(2731,6,'2026-06-24 16:15:18',1,1),
+(2732,4,'2026-06-24 16:15:18',23,1),
+(2733,5,'2026-06-24 16:15:19',47,1),
+(2734,3,'2026-06-24 16:15:19',10,1),
+(2735,6,'2026-06-24 16:15:19',6,1),
+(2736,6,'2026-06-24 16:15:19',62,1),
+(2737,7,'2026-06-24 16:15:19',42,1),
+(2738,4,'2026-06-24 16:15:19',29,1),
+(2739,3,'2026-06-24 16:15:20',53,1),
+(2740,6,'2026-06-24 16:15:20',8,1),
+(2741,7,'2026-06-24 16:15:20',57,1),
+(2742,6,'2026-06-24 16:15:20',31,1),
+(2743,3,'2026-06-24 16:15:20',53,1),
+(2744,7,'2026-06-24 16:15:20',4,1),
+(2745,3,'2026-06-24 16:15:20',44,1),
+(2746,4,'2026-06-24 16:15:21',63,1),
+(2747,3,'2026-06-24 16:15:21',9,1),
+(2748,7,'2026-06-24 16:15:21',16,1),
+(2749,1,'2026-06-24 16:15:21',32,1),
+(2750,3,'2026-06-24 16:15:21',43,1),
+(2751,3,'2026-06-24 16:15:21',27,1),
+(2752,3,'2026-06-24 16:15:21',48,1),
+(2753,4,'2026-06-24 16:15:22',20,1),
+(2754,3,'2026-06-24 16:15:22',39,1),
+(2755,4,'2026-06-24 16:15:22',11,1),
+(2756,4,'2026-06-24 16:15:22',21,1),
+(2757,7,'2026-06-24 16:15:22',37,1),
+(2758,6,'2026-06-24 16:15:22',29,1),
+(2759,7,'2026-06-24 16:15:22',16,1),
+(2760,3,'2026-06-24 16:15:22',51,1),
+(2761,5,'2026-06-24 16:15:23',5,1),
+(2762,3,'2026-06-24 16:15:23',38,1),
+(2763,7,'2026-06-24 16:15:23',5,1),
+(2764,7,'2026-06-24 16:15:23',52,1),
+(2765,5,'2026-06-24 16:15:23',44,1),
+(2766,4,'2026-06-24 16:15:23',58,1),
+(2767,4,'2026-06-24 16:15:23',15,1),
+(2768,5,'2026-06-24 16:15:23',33,1),
+(2769,5,'2026-06-24 16:15:24',11,1),
+(2770,6,'2026-06-24 16:15:24',39,1),
+(2771,4,'2026-06-24 16:15:24',7,1),
+(2772,7,'2026-06-24 16:15:24',6,1),
+(2773,1,'2026-06-24 16:15:24',15,1),
+(2774,6,'2026-06-24 16:15:24',24,1),
+(2775,3,'2026-06-24 16:15:24',50,1),
+(2776,6,'2026-06-24 16:15:24',65,1),
+(2777,6,'2026-06-24 16:15:25',32,1),
+(2778,4,'2026-06-24 16:15:25',53,1),
+(2779,6,'2026-06-24 16:15:25',15,1),
+(2780,4,'2026-06-24 16:15:25',18,1),
+(2781,6,'2026-06-24 16:15:25',40,1),
+(2782,7,'2026-06-24 16:15:25',15,1),
+(2783,6,'2026-06-24 16:15:25',43,1),
+(2784,5,'2026-06-24 16:15:26',9,1),
+(2785,4,'2026-06-24 16:15:26',31,1),
+(2786,4,'2026-06-24 16:15:26',52,1),
+(2787,1,'2026-06-24 16:15:26',62,1),
+(2788,6,'2026-06-24 16:15:26',39,1),
+(2789,3,'2026-06-24 16:15:26',29,1),
+(2790,1,'2026-06-24 16:15:27',35,1),
+(2791,7,'2026-06-24 16:15:27',43,1),
+(2792,5,'2026-06-24 16:15:27',38,1),
+(2793,3,'2026-06-24 16:15:27',27,1),
+(2794,5,'2026-06-24 16:15:27',23,1),
+(2795,3,'2026-06-24 16:15:27',35,1),
+(2796,6,'2026-06-24 16:15:27',52,1),
+(2797,7,'2026-06-24 16:15:27',48,1),
+(2798,1,'2026-06-24 16:15:28',15,1),
+(2799,7,'2026-06-24 16:15:28',2,1),
+(2800,6,'2026-06-24 16:15:28',63,1),
+(2801,7,'2026-06-24 16:15:28',23,1),
+(2802,3,'2026-06-24 16:15:28',56,1),
+(2803,6,'2026-06-24 16:15:28',56,1),
+(2804,7,'2026-06-24 16:15:28',25,1),
+(2805,3,'2026-06-24 16:15:28',34,1),
+(2806,6,'2026-06-24 16:15:29',63,1),
+(2807,6,'2026-06-24 16:15:29',53,1),
+(2808,1,'2026-06-24 16:15:29',44,1),
+(2809,5,'2026-06-24 16:15:29',28,1),
+(2810,3,'2026-06-24 16:15:29',65,1),
+(2811,6,'2026-06-24 16:15:29',44,1),
+(2812,5,'2026-06-24 16:15:29',28,1),
+(2813,7,'2026-06-24 16:15:30',9,1),
+(2814,4,'2026-06-24 16:15:30',25,1),
+(2815,7,'2026-06-24 16:15:30',15,1),
+(2816,3,'2026-06-24 16:15:30',16,1),
+(2817,3,'2026-06-24 16:15:30',1,1),
+(2818,6,'2026-06-24 16:15:30',30,1),
+(2819,1,'2026-06-24 16:15:30',29,1),
+(2820,7,'2026-06-24 16:15:30',43,1),
+(2821,5,'2026-06-24 16:15:30',54,1),
+(2822,5,'2026-06-24 16:15:31',8,1),
+(2823,3,'2026-06-24 16:15:31',6,1),
+(2824,3,'2026-06-24 16:15:31',10,1),
+(2825,4,'2026-06-24 16:15:31',26,1),
+(2826,1,'2026-06-24 16:15:31',39,1),
+(2827,6,'2026-06-24 16:15:31',34,1),
+(2828,5,'2026-06-24 16:15:31',38,1),
+(2829,6,'2026-06-24 16:15:31',52,1),
+(2830,4,'2026-06-24 16:15:32',3,1),
+(2831,4,'2026-06-24 16:15:32',39,1),
+(2832,1,'2026-06-24 16:15:32',27,1),
+(2833,4,'2026-06-24 16:15:32',39,1),
+(2834,5,'2026-06-24 16:15:32',64,1),
+(2835,6,'2026-06-24 16:15:32',52,1),
+(2836,4,'2026-06-24 16:15:32',29,1),
+(2837,7,'2026-06-24 16:15:33',39,1),
+(2838,4,'2026-06-24 16:15:33',28,1),
+(2839,1,'2026-06-24 16:15:33',52,1),
+(2840,7,'2026-06-24 16:15:33',34,1),
+(2841,4,'2026-06-24 16:15:33',61,1),
+(2842,1,'2026-06-24 16:15:33',24,1),
+(2843,1,'2026-06-24 16:15:33',49,1),
+(2844,7,'2026-06-24 16:15:34',12,1),
+(2845,3,'2026-06-24 16:15:34',57,1),
+(2846,6,'2026-06-24 16:15:34',17,1),
+(2847,5,'2026-06-24 16:15:34',64,1),
+(2848,4,'2026-06-24 16:15:34',49,1),
+(2849,6,'2026-06-24 16:15:34',26,1),
+(2850,7,'2026-06-24 16:15:34',34,1),
+(2851,1,'2026-06-24 16:15:34',64,1),
+(2852,1,'2026-06-24 16:15:35',18,1),
+(2853,7,'2026-06-24 16:15:35',16,1),
+(2854,1,'2026-06-24 16:15:35',3,1),
+(2855,6,'2026-06-24 16:15:35',46,1),
+(2856,3,'2026-06-24 16:15:35',31,1),
+(2857,1,'2026-06-24 16:15:35',60,1),
+(2858,5,'2026-06-24 16:15:35',63,1),
+(2859,6,'2026-06-24 16:15:36',27,1),
+(2860,5,'2026-06-24 16:15:36',53,1),
+(2861,7,'2026-06-24 16:15:36',46,1),
+(2862,6,'2026-06-24 16:15:36',4,1),
+(2863,1,'2026-06-24 16:15:36',62,1),
+(2864,1,'2026-06-24 16:15:36',40,1),
+(2865,5,'2026-06-24 16:15:36',37,1),
+(2866,4,'2026-06-24 16:15:36',40,1),
+(2867,3,'2026-06-24 16:15:37',31,1),
+(2868,7,'2026-06-24 16:15:37',4,1),
+(2869,7,'2026-06-24 16:15:37',51,1),
+(2870,7,'2026-06-24 16:15:37',11,1),
+(2871,6,'2026-06-24 16:15:37',35,1),
+(2872,1,'2026-06-24 16:15:37',17,1),
+(2873,5,'2026-06-24 16:15:37',55,1),
+(2874,7,'2026-06-24 16:15:38',6,1),
+(2875,1,'2026-06-24 16:15:38',39,1),
+(2876,5,'2026-06-24 16:15:38',57,1),
+(2877,4,'2026-06-24 16:15:38',18,1),
+(2878,1,'2026-06-24 16:15:38',50,1),
+(2879,6,'2026-06-24 16:15:38',62,1),
+(2880,5,'2026-06-24 16:15:38',34,1),
+(2881,1,'2026-06-24 16:15:38',44,1),
+(2882,1,'2026-06-24 16:15:39',20,1),
+(2883,4,'2026-06-24 16:15:39',19,1),
+(2884,1,'2026-06-24 16:15:39',56,1),
+(2885,1,'2026-06-24 16:15:39',33,1),
+(2886,5,'2026-06-24 16:15:39',26,1),
+(2887,6,'2026-06-24 16:15:39',47,1),
+(2888,3,'2026-06-24 16:15:39',36,1),
+(2889,4,'2026-06-24 16:15:40',24,1),
+(2890,7,'2026-06-24 16:15:40',24,1),
+(2891,3,'2026-06-24 16:15:40',63,1),
+(2892,1,'2026-06-24 16:15:40',34,1),
+(2893,7,'2026-06-24 16:15:40',22,1),
+(2894,4,'2026-06-24 16:15:40',56,1),
+(2895,6,'2026-06-24 16:15:41',20,1),
+(2896,6,'2026-06-24 16:15:41',20,1),
+(2897,5,'2026-06-24 16:15:41',27,1),
+(2898,1,'2026-06-24 16:15:41',36,1),
+(2899,6,'2026-06-24 16:15:41',40,1),
+(2900,7,'2026-06-24 16:15:41',33,1),
+(2901,1,'2026-06-24 16:15:41',9,1),
+(2902,4,'2026-06-24 16:15:42',15,1),
+(2903,4,'2026-06-24 16:15:42',9,1),
+(2904,4,'2026-06-24 16:15:42',49,1),
+(2905,5,'2026-06-24 16:15:42',54,1),
+(2906,1,'2026-06-24 16:15:42',47,1),
+(2907,5,'2026-06-24 16:15:42',25,1),
+(2908,5,'2026-06-24 16:15:42',10,1),
+(2909,3,'2026-06-24 16:15:42',3,1),
+(2910,1,'2026-06-24 16:15:42',30,1),
+(2911,1,'2026-06-24 16:15:42',53,1),
+(2912,3,'2026-06-24 16:15:43',59,1),
+(2913,1,'2026-06-24 16:15:43',57,1),
+(2914,4,'2026-06-24 16:15:43',26,1),
+(2915,3,'2026-06-24 16:15:43',40,1),
+(2916,6,'2026-06-24 16:15:43',49,1),
+(2917,6,'2026-06-24 16:15:43',40,1),
+(2918,4,'2026-06-24 16:15:43',21,1),
+(2919,6,'2026-06-24 16:15:43',13,1),
+(2920,3,'2026-06-24 16:15:43',15,1),
+(2921,5,'2026-06-24 16:15:43',49,1),
+(2922,5,'2026-06-24 16:15:44',39,1),
+(2923,7,'2026-06-24 16:15:44',20,1),
+(2924,3,'2026-06-24 16:15:44',53,1),
+(2925,7,'2026-06-24 16:15:44',41,1),
+(2926,1,'2026-06-24 16:15:44',17,1),
+(2927,5,'2026-06-24 16:15:44',26,1),
+(2928,4,'2026-06-24 16:15:44',19,1),
+(2929,4,'2026-06-24 16:15:44',5,1),
+(2930,4,'2026-06-24 16:15:44',19,1),
+(2931,5,'2026-06-24 16:15:45',17,1),
+(2932,6,'2026-06-24 16:15:45',53,1),
+(2933,3,'2026-06-24 16:15:45',51,1),
+(2934,4,'2026-06-24 16:15:45',57,1),
+(2935,7,'2026-06-24 16:15:45',18,1),
+(2936,1,'2026-06-24 16:15:45',20,1),
+(2937,7,'2026-06-24 16:15:46',6,1),
+(2938,1,'2026-06-24 16:15:46',42,1),
+(2939,3,'2026-06-24 16:15:46',11,1),
+(2940,7,'2026-06-24 16:15:46',33,1),
+(2941,3,'2026-06-24 16:15:46',24,1),
+(2942,3,'2026-06-24 16:15:46',40,1),
+(2943,3,'2026-06-24 16:15:46',9,1),
+(2944,5,'2026-06-24 16:15:47',33,1),
+(2945,4,'2026-06-24 16:15:47',61,1),
+(2946,3,'2026-06-24 16:15:47',45,1),
+(2947,1,'2026-06-24 16:15:47',53,1),
+(2948,3,'2026-06-24 16:15:47',48,1),
+(2949,1,'2026-06-24 16:15:47',32,1),
+(2950,7,'2026-06-24 16:15:47',21,1),
+(2951,1,'2026-06-24 16:15:48',48,1),
+(2952,6,'2026-06-24 16:15:48',46,0),
+(2953,5,'2026-06-24 16:15:48',10,0),
+(2954,4,'2026-06-24 16:15:48',22,0),
+(2955,3,'2026-06-24 16:15:48',23,0),
+(2956,6,'2026-06-24 16:15:48',21,0),
+(2957,1,'2026-06-24 16:15:49',17,0),
+(2958,1,'2026-06-24 16:15:49',40,0),
+(2959,7,'2026-06-24 16:15:49',23,0),
+(2960,5,'2026-06-24 16:15:49',34,0),
+(2961,3,'2026-06-24 16:15:49',36,0),
+(2962,3,'2026-06-24 16:15:49',45,0),
+(2963,5,'2026-06-24 16:15:49',53,0),
+(2964,6,'2026-06-24 16:15:49',43,0),
+(2965,5,'2026-06-24 16:15:50',20,0),
+(2966,1,'2026-06-24 16:15:50',26,0),
+(2967,7,'2026-06-24 16:15:50',26,0),
+(2968,6,'2026-06-24 16:15:50',47,0),
+(2969,5,'2026-06-24 16:15:50',29,0),
+(2970,3,'2026-06-24 16:15:50',30,0),
+(2971,7,'2026-06-24 16:15:50',55,0),
+(2972,5,'2026-06-24 16:15:50',55,0),
+(2973,7,'2026-06-24 16:15:50',62,0),
+(2974,7,'2026-06-24 16:15:50',42,0),
+(2975,5,'2026-06-24 16:15:50',10,0),
+(2976,6,'2026-06-24 16:15:50',17,0),
+(2977,4,'2026-06-24 16:15:51',7,0),
+(2978,6,'2026-06-24 16:15:51',13,0),
+(2979,5,'2026-06-24 16:15:51',37,0),
+(2980,5,'2026-06-24 16:15:51',10,0),
+(2981,7,'2026-06-24 16:15:51',6,0),
+(2982,3,'2026-06-24 16:15:51',40,0),
+(2983,3,'2026-06-24 16:15:52',42,0),
+(2984,5,'2026-06-24 16:15:52',29,0),
+(2985,6,'2026-06-24 16:15:52',21,0),
+(2986,1,'2026-06-24 16:15:52',34,0),
+(2987,1,'2026-06-24 16:15:52',64,0),
+(2988,6,'2026-06-24 16:15:52',57,0),
+(2989,1,'2026-06-24 16:15:52',56,0),
+(2990,7,'2026-06-24 16:15:52',4,0),
+(2991,7,'2026-06-24 16:15:52',21,0),
+(2992,5,'2026-06-24 16:15:53',23,0),
+(2993,7,'2026-06-24 16:15:53',63,0),
+(2994,6,'2026-06-24 16:15:53',38,0),
+(2995,1,'2026-06-24 16:15:53',16,0),
+(2996,4,'2026-06-24 16:15:53',8,0),
+(2997,4,'2026-06-24 16:15:53',47,0),
+(2998,6,'2026-06-24 16:15:53',14,0),
+(2999,6,'2026-06-24 16:15:53',54,0),
+(3000,1,'2026-06-24 16:15:54',15,0),
+(3001,7,'2026-06-24 16:15:54',9,0),
+(3002,5,'2026-06-24 16:15:54',21,0),
+(3003,4,'2026-06-24 16:15:54',41,0),
+(3004,7,'2026-06-24 16:15:54',25,0),
+(3005,1,'2026-06-24 16:15:54',33,0),
+(3006,4,'2026-06-24 16:15:55',40,0),
+(3007,6,'2026-06-24 16:15:55',39,0),
+(3008,6,'2026-06-24 16:15:55',57,0),
+(3009,4,'2026-06-24 16:15:55',30,0),
+(3010,7,'2026-06-24 16:15:55',39,0),
+(3011,7,'2026-06-24 16:15:55',6,0),
+(3012,1,'2026-06-24 16:15:55',30,0),
+(3013,6,'2026-06-24 16:15:55',29,0),
+(3014,6,'2026-06-24 16:15:56',56,0),
+(3015,5,'2026-06-24 16:15:56',40,0),
+(3016,3,'2026-06-24 16:15:56',25,0),
+(3017,4,'2026-06-24 16:15:56',19,0),
+(3018,5,'2026-06-24 16:15:56',40,0),
+(3019,7,'2026-06-24 16:15:56',55,0),
+(3020,1,'2026-06-24 16:15:57',52,0),
+(3021,7,'2026-06-24 16:15:57',27,0),
+(3022,5,'2026-06-24 16:15:57',35,0),
+(3023,4,'2026-06-24 16:15:57',45,0),
+(3024,5,'2026-06-24 16:15:57',11,0),
+(3025,5,'2026-06-24 16:15:57',44,0),
+(3026,6,'2026-06-24 16:15:57',13,0),
+(3027,7,'2026-06-24 16:15:57',58,0),
+(3028,3,'2026-06-24 16:15:58',7,0),
+(3029,4,'2026-06-24 16:15:58',43,0),
+(3030,1,'2026-06-24 16:15:58',54,0),
+(3031,4,'2026-06-24 16:15:58',46,0),
+(3032,7,'2026-06-24 16:15:58',34,0),
+(3033,1,'2026-06-24 16:15:59',55,0),
+(3034,7,'2026-06-24 16:15:59',47,0),
+(3035,7,'2026-06-24 16:15:59',59,0),
+(3036,3,'2026-06-24 16:15:59',21,0),
+(3037,6,'2026-06-24 16:15:59',54,0),
+(3038,1,'2026-06-24 16:15:59',2,0);
+/*!40000 ALTER TABLE `wago` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2026-06-24 16:40:43
